@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        NeuroGame — Prova
+    </title>
+
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<main class="game">
+
+
+    <!-- ==================================================
+         TÍTULO
+         ================================================== -->
+
+    <h1>
+        NeuroGame
+    </h1>
+
+
+    <!-- ==================================================
+         AÇÕES
+         ================================================== -->
+
+    <div
+        id="acoesPartida"
+        class="acoes-partida"
+    >
+
+        <button
+            id="reiniciarPartida"
+            class="botao-acao"
+            type="button"
+        >
+            🔄 Reiniciar prova
+        </button>
+
+
+        <button
+            id="voltarMenu"
+            class="botao-acao"
+            type="button"
+        >
+            ← Voltar ao menu
+        </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         PERGUNTA
+         ================================================== -->
+
+    <h2 id="pergunta">
+        Preparando prova...
+    </h2>
+
+
+    <!-- ==================================================
+         PAINEL
+         ================================================== -->
+
+    <div class="painel">
+
+
+        <span>
+
+            Pontos:
+
+            <strong id="pontos">
+                0
+            </strong>
+
+        </span>
+
+
+        <span>
+
+            Questão:
+
+            <strong id="numeroQuestao">
+                1
+            </strong>
+
+            /
+
+            <strong id="totalQuestoes">
+                0
+            </strong>
+
+        </span>
+
+
+        <span>
+
+            Erros:
+
+            <strong id="erros">
+                0
+            </strong>
+
+        </span>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         FEEDBACK
+         ================================================== -->
+
+    <p id="feedback"></p>
+
+
+    <!-- ==================================================
+         DIGITAR
+         ================================================== -->
+
+    <div
+        id="areaDigitar"
+        class="area-digitar"
+    >
+
+        <input
+            id="respostaDigitada"
+            type="text"
+            placeholder="Digite o nome da estrutura"
+            autocomplete="off"
+        >
+
+
+        <button
+            id="confirmarResposta"
+            type="button"
+        >
+            Responder
+        </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         INFORMAÇÕES
+         ================================================== -->
+
+    <div
+        id="infoEstrutura"
+        class="info-estrutura"
+    >
+    </div>
+
+
+    <!-- ==================================================
+         IMAGEM + SVG
+         ================================================== -->
+
+    <div class="cerebro">
+
+
+        <img
+            id="imagemAnatomica"
+            alt="Imagem anatômica"
+        >
+
+
+        <svg
+            id="camadaHotspots"
+            class="hotspots"
+        >
+        </svg>
+
+
+    </div>
+
+
+</main>
+
+
+<!-- ==================================================
+     ANALYTICS
+     ================================================== -->
+
+<script src="js/analytics.js"></script>
+
+
+<!-- ==================================================
+     CARREGADOR ÚNICO DOS MAPAS
+     ================================================== -->
+
+<script src="Mapas/carregarMapas.js"></script>
+
+
+<!-- ==================================================
+     INICIAR PROVA SOMENTE DEPOIS DOS MAPAS
+     ================================================== -->
+
+<script>
+
+    mapasProntos
+        .then(
+            function() {
+
+                console.log(
+                    "✅ Mapas carregados. Iniciando prova..."
+                );
+
+
+                console.log(
+                    "Catálogo disponível:",
+                    catalogoMapas
+                );
+
+
+                const script =
+                    document.createElement(
+                        "script"
+                    );
+
+
+                script.src =
+                    "js/prova.js";
+
+
+                script.onload =
+                    function() {
+
+                        console.log(
+                            "✅ prova.js carregado."
+                        );
+
+                    };
+
+
+                script.onerror =
+                    function() {
+
+                        console.error(
+                            "❌ Erro ao carregar js/prova.js"
+                        );
+
+
+                        const pergunta =
+                            document.getElementById(
+                                "pergunta"
+                            );
+
+
+                        if (
+                            pergunta
+                        ) {
+
+                            pergunta.textContent =
+                                "Erro ao carregar a prova.";
+
+                        }
+
+                    };
+
+
+                document.body.appendChild(
+                    script
+                );
+
+            }
+        )
+        .catch(
+            function(erro) {
+
+                console.error(
+                    "❌ Erro ao iniciar prova:",
+                    erro
+                );
+
+
+                const pergunta =
+                    document.getElementById(
+                        "pergunta"
+                    );
+
+
+                if (
+                    pergunta
+                ) {
+
+                    pergunta.textContent =
+                        "Erro ao carregar os mapas.";
+
+                }
+
+            }
+        );
+
+</script>
+<footer class="assinatura-site">
+    Criado por: Hiroshi "Nagasa" Uchikado
+</footer>
+
+</body>
+
+</html>

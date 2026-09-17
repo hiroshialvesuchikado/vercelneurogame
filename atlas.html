@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        NeuroGame — Atlas Interativo
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="../style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<main class="game">
+
+
+    <!-- ==================================================
+         TÍTULO
+         ================================================== -->
+
+    <h1>
+        Atlas Interativo
+    </h1>
+
+
+    <!-- ==================================================
+         SELEÇÃO DE MAPAS
+         ================================================== -->
+
+    <section id="telaSelecaoAtlas">
+
+        <h2>
+            Escolha um mapa
+        </h2>
+
+        <div
+            id="menuMapasAtlas"
+            class="menu-mapas"
+        >
+        </div>
+
+        <div class="acoes-atlas">
+
+            <button
+                id="voltarPrincipal"
+                class="botao-acao"
+                type="button"
+            >
+                ← Voltar ao menu principal
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         MAPA ABERTO
+         ================================================== -->
+
+    <section
+        id="telaMapaAtlas"
+        style="display: none;"
+    >
+
+        <h2 id="tituloMapaAtlas">
+            Carregando mapa...
+        </h2>
+
+        <p>
+            Clique ou toque em uma estrutura para identificá-la.
+        </p>
+
+        <div
+            id="infoAtlas"
+            class="info-atlas"
+        >
+
+            <span>
+                Estrutura selecionada:
+            </span>
+
+            <strong id="nomeEstruturaAtlas">
+                Nenhuma
+            </strong>
+
+        </div>
+
+
+        <!-- ==============================================
+             IMAGEM + SVG
+             ============================================== -->
+
+        <div class="cerebro">
+
+            <img
+                id="imagemAnatomica"
+                alt="Imagem anatômica"
+                draggable="false"
+            >
+
+            <svg
+                id="camadaHotspots"
+                class="hotspots"
+                aria-label="Estruturas anatômicas interativas"
+            >
+            </svg>
+
+        </div>
+
+
+        <div class="acoes-atlas">
+
+            <button
+                id="trocarMapaAtlas"
+                class="botao-acao"
+                type="button"
+            >
+                ← Escolher outro mapa
+            </button>
+
+        </div>
+
+    </section>
+
+
+</main>
+
+
+<!-- ==================================================
+     CARREGADOR DOS MAPAS
+     ================================================== -->
+
+<script src="../Mapas/carregarMapas.js"></script>
+
+
+<script>
+
+
+// ======================================================
+// 1. ELEMENTOS
+// ======================================================
+
+const telaSelecaoAtlas =
+    document.getElementById(
+        "telaSelecaoAtlas"
+    );
+
+
+const telaMapaAtlas =
+    document.getElementById(
+        "telaMapaAtlas"
+    );
+
+
+const menuMapasAtlas =
+    document.getElementById(
+        "menuMapasAtlas"
+    );
+
+
+const tituloMapaAtlas =
+    document.getElementById(
+        "tituloMapaAtlas"
+    );
+
+
+const nomeEstruturaAtlas =
+    document.getElementById(
+        "nomeEstruturaAtlas"
+    );
+
+
+const imagemAtlas =
+    document.getElementById(
+        "imagemAnatomica"
+    );
+
+
+const svgAtlas =
+    document.getElementById(
+        "camadaHotspots"
+    );
+
+
+const botaoVoltarPrincipal =
+    document.getElementById(
+        "voltarPrincipal"
+    );
+
+
+const botaoTrocarMapa =
+    document.getElementById(
+        "trocarMapaAtlas"
+    );
+
+
+// ======================================================
+// 2. CONFIGURAÇÕES VISUAIS
+// ======================================================
+
+const LARGURA_LINHA_NORMAL =
+    10;
+
+
+const LARGURA_LINHA_SELECIONADA =
+    14;
+
+
+const OPACIDADE_LINHA_NORMAL =
+    0.75;
+
+
+const OPACIDADE_LINHA_SELECIONADA =
+    1;
+
+
+const OPACIDADE_POLIGONO =
+    0.30;
+
+
+const OPACIDADE_CONTORNO_POLIGONO =
+    0.85;
+
+
+// ======================================================
+// 3. CONFIGURAÇÃO DO TOQUE MOBILE
+// ======================================================
+
+const RAIO_TOQUE_LINHA_MOBILE =
+    8;
+
+
+// ======================================================
+// 4. URL
+// ======================================================
+
+const parametrosAtlas =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+const idMapaSelecionado =
+    parametrosAtlas.get(
+        "mapa"
+    );
+
+
+// ======================================================
+// 5. CRIAR CARDS DOS MAPAS
+// ======================================================
+
+function criarCardsAtlas() {
+
+    menuMapasAtlas.innerHTML =
+        "";
+
+
+    catalogoMapas.forEach(
+        function(mapa) {
+
+            const card =
+                document.createElement(
+                    "button"
+                );
+
+
+            card.classList.add(
+                "card-atlas"
+            );
+
+
+            card.type =
+                "button";
+
+
+            card.dataset.mapa =
+                mapa.id;
+
+
+            const imagemCard =
+                document.createElement(
+                    "img"
+                );
+
+
+            imagemCard.src =
+                mapa.imagem;
+
+
+            imagemCard.alt =
+                mapa.titulo;
+
+
+            const titulo =
+                document.createElement(
+                    "span"
+                );
+
+
+            titulo.textContent =
+                mapa.titulo;
+
+
+            card.appendChild(
+                imagemCard
+            );
+
+
+            card.appendChild(
+                titulo
+            );
+
+
+            card.addEventListener(
+                "click",
+
+                function() {
+
+                    window.location.href =
+                        `atlas.html?mapa=${encodeURIComponent(
+                            mapa.id
+                        )}`;
+
+                }
+            );
+
+
+            menuMapasAtlas.appendChild(
+                card
+            );
+
+        }
+    );
+
+
+    console.log(
+        "Cards criados:",
+        catalogoMapas.length
+    );
+
+}
+
+
+// ======================================================
+// 6. MOSTRAR SELEÇÃO DE MAPAS
+// ======================================================
+
+function mostrarSelecaoAtlas() {
+
+    telaSelecaoAtlas.style.display =
+        "block";
+
+
+    telaMapaAtlas.style.display =
+        "none";
+
+
+    criarCardsAtlas();
+
+}
+
+
+// ======================================================
+// 7. ABRIR MAPA
+// ======================================================
+
+function abrirAtlas(
+    idMapa
+) {
+
+    const mapa =
+        catalogoMapas.find(
+            function(item) {
+
+                return (
+                    item.id ===
+                    idMapa
+                );
+
+            }
+        );
+
+
+    if (
+        !mapa
+    ) {
+
+        telaSelecaoAtlas.style.display =
+            "none";
+
+
+        telaMapaAtlas.style.display =
+            "block";
+
+
+        tituloMapaAtlas.textContent =
+            "Mapa não encontrado";
+
+
+        return;
+
+    }
+
+
+    telaSelecaoAtlas.style.display =
+        "none";
+
+
+    telaMapaAtlas.style.display =
+        "block";
+
+
+    tituloMapaAtlas.textContent =
+        mapa.titulo;
+
+
+    nomeEstruturaAtlas.textContent =
+        "Nenhuma";
+
+
+    carregarImagemAtlas(
+        mapa
+    );
+
+}
+
+
+// ======================================================
+// 8. CARREGAR IMAGEM
+// ======================================================
+
+function carregarImagemAtlas(
+    mapa
+) {
+
+    imagemAtlas.onload =
+        function() {
+
+            criarEstruturasAtlas(
+                mapa
+            );
+
+        };
+
+
+    imagemAtlas.onerror =
+        function() {
+
+            tituloMapaAtlas.textContent =
+                "Erro ao carregar imagem";
+
+
+            console.error(
+                "Imagem não encontrada:",
+                mapa.imagem
+            );
+
+        };
+
+
+    imagemAtlas.src =
+        mapa.imagem;
+
+}
+
+
+// ======================================================
+// 9. GERAR COR
+// ======================================================
+
+function gerarCorAtlas(
+    indice,
+    total
+) {
+
+    const tonalidade =
+        Math.round(
+            (360 / total) *
+            indice
+        );
+
+
+    return (
+        `hsl(${tonalidade}, 75%, 50%)`
+    );
+
+}
+
+
+// ======================================================
+// 10. CONVERTER PONTO DA TELA PARA SVG
+// ======================================================
+
+function obterPontoSVGAtlas(
+    evento
+) {
+
+    const matrizTela =
+        svgAtlas.getScreenCTM();
+
+
+    if (
+        !matrizTela
+    ) {
+
+        return null;
+
+    }
+
+
+    const ponto =
+        svgAtlas.createSVGPoint();
+
+
+    ponto.x =
+        evento.clientX;
+
+
+    ponto.y =
+        evento.clientY;
+
+
+    return ponto.matrixTransform(
+        matrizTela.inverse()
+    );
+
+}
+
+
+// ======================================================
+// 11. DISTÂNCIA ENTRE PONTO E SEGMENTO
+// ======================================================
+
+function distanciaPontoSegmento(
+    px,
+    py,
+    x1,
+    y1,
+    x2,
+    y2
+) {
+
+    const dx =
+        x2 - x1;
+
+
+    const dy =
+        y2 - y1;
+
+
+    if (
+        dx === 0 &&
+        dy === 0
+    ) {
+
+        return Math.hypot(
+            px - x1,
+            py - y1
+        );
+
+    }
+
+
+    let t =
+        (
+            (
+                px - x1
+            ) * dx +
+
+            (
+                py - y1
+            ) * dy
+        )
+        /
+        (
+            dx * dx +
+            dy * dy
+        );
+
+
+    t =
+        Math.max(
+            0,
+            Math.min(
+                1,
+                t
+            )
+        );
+
+
+    const pontoX =
+        x1 +
+        t * dx;
+
+
+    const pontoY =
+        y1 +
+        t * dy;
+
+
+    return Math.hypot(
+        px - pontoX,
+        py - pontoY
+    );
+
+}
+
+
+// ======================================================
+// 12. OBTER PONTOS DE UMA LINHA
+// ======================================================
+
+function obterPontosLinhaAtlas(
+    elemento
+) {
+
+    const atributo =
+        elemento.getAttribute(
+            "points"
+        );
+
+
+    if (
+        !atributo
+    ) {
+
+        return [];
+
+    }
+
+
+    const numeros =
+        atributo
+            .trim()
+            .split(
+                /[\s,]+/
+            )
+            .map(
+                Number
+            )
+            .filter(
+                function(valor) {
+
+                    return Number.isFinite(
+                        valor
+                    );
+
+                }
+            );
+
+
+    const pontos =
+        [];
+
+
+    for (
+        let i = 0;
+        i < numeros.length - 1;
+        i += 2
+    ) {
+
+        pontos.push(
+            {
+
+                x:
+                    numeros[i],
+
+                y:
+                    numeros[i + 1]
+
+            }
+        );
+
+    }
+
+
+    return pontos;
+
+}
+
+
+// ======================================================
+// 13. DISTÂNCIA ATÉ UMA LINHA
+// ======================================================
+
+function distanciaAteLinhaAtlas(
+    elemento,
+    ponto
+) {
+
+    if (
+        !ponto
+    ) {
+
+        return Infinity;
+
+    }
+
+
+    const listaPontos =
+        obterPontosLinhaAtlas(
+            elemento
+        );
+
+
+    if (
+        listaPontos.length <
+        2
+    ) {
+
+        return Infinity;
+
+    }
+
+
+    let menorDistancia =
+        Infinity;
+
+
+    for (
+        let i = 0;
+        i <
+        listaPontos.length - 1;
+        i++
+    ) {
+
+        const atual =
+            listaPontos[i];
+
+
+        const proximo =
+            listaPontos[
+                i + 1
+            ];
+
+
+        const distancia =
+            distanciaPontoSegmento(
+
+                ponto.x,
+                ponto.y,
+
+                atual.x,
+                atual.y,
+
+                proximo.x,
+                proximo.y
+
+            );
+
+
+        if (
+            distancia <
+            menorDistancia
+        ) {
+
+            menorDistancia =
+                distancia;
+
+        }
+
+    }
+
+
+    return menorDistancia;
+
+}
+
+
+// ======================================================
+// 14. ENCONTRAR LINHA MAIS PRÓXIMA
+// ======================================================
+
+function encontrarLinhaMaisProximaAtlas(
+    evento
+) {
+
+    const linhas =
+        Array.from(
+            svgAtlas.querySelectorAll(
+                '.estrutura-atlas[data-tipo="linha"]'
+            )
+        );
+
+
+    if (
+        linhas.length ===
+        0
+    ) {
+
+        return null;
+
+    }
+
+
+    const ponto =
+        obterPontoSVGAtlas(
+            evento
+        );
+
+
+    if (
+        !ponto
+    ) {
+
+        return null;
+
+    }
+
+
+    const retanguloSVG =
+        svgAtlas.getBoundingClientRect();
+
+
+    const viewBox =
+        svgAtlas.viewBox.baseVal;
+
+
+    if (
+        !retanguloSVG.width ||
+        !viewBox.width
+    ) {
+
+        return null;
+
+    }
+
+
+    const escalaX =
+        viewBox.width /
+        retanguloSVG.width;
+
+
+    const limite =
+        RAIO_TOQUE_LINHA_MOBILE *
+        escalaX;
+
+
+    let melhorLinha =
+        null;
+
+
+    let melhorDistancia =
+        Infinity;
+
+
+    linhas.forEach(
+        function(linha) {
+
+            const distancia =
+                distanciaAteLinhaAtlas(
+                    linha,
+                    ponto
+                );
+
+
+            if (
+                distancia <
+                melhorDistancia
+            ) {
+
+                melhorDistancia =
+                    distancia;
+
+
+                melhorLinha =
+                    linha;
+
+            }
+
+        }
+    );
+
+
+    if (
+        melhorDistancia <=
+        limite
+    ) {
+
+        return melhorLinha;
+
+    }
+
+
+    return null;
+
+}
+
+
+// ======================================================
+// 15. CRIAR ESTRUTURAS
+// ======================================================
+
+function criarEstruturasAtlas(
+    mapa
+) {
+
+    svgAtlas.innerHTML =
+        "";
+
+
+    svgAtlas.setAttribute(
+        "viewBox",
+        `0 0 ${imagemAtlas.naturalWidth} ${imagemAtlas.naturalHeight}`
+    );
+
+
+    const totalEstruturas =
+        mapa.estruturas.length;
+
+
+    mapa.estruturas.forEach(
+        function(
+            estrutura,
+            indice
+        ) {
+
+            let elemento;
+
+
+            const cor =
+                gerarCorAtlas(
+                    indice,
+                    totalEstruturas
+                );
+
+
+            // ==========================================
+            // LINHA
+            // ==========================================
+
+            if (
+                estrutura.tipo ===
+                "linha"
+            ) {
+
+                elemento =
+                    document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "polyline"
+                    );
+
+
+                elemento.classList.add(
+                    "estrutura",
+                    "estrutura-linha",
+                    "estrutura-atlas"
+                );
+
+
+                elemento.style.fill =
+                    "none";
+
+
+                elemento.style.stroke =
+                    cor;
+
+
+                /*
+                    Agora a linha fica levemente
+                    transparente.
+                */
+
+                elemento.style.strokeOpacity =
+                    OPACIDADE_LINHA_NORMAL;
+
+
+                elemento.style.strokeWidth =
+                    LARGURA_LINHA_NORMAL;
+
+
+                elemento.style.strokeLinecap =
+                    "round";
+
+
+                elemento.style.strokeLinejoin =
+                    "round";
+
+
+                elemento.style.vectorEffect =
+                    "non-scaling-stroke";
+
+            }
+
+
+            // ==========================================
+            // POLÍGONO / ÁREA
+            // ==========================================
+
+            else {
+
+                elemento =
+                    document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "polygon"
+                    );
+
+
+                elemento.classList.add(
+                    "estrutura",
+                    "estrutura-area",
+                    "estrutura-atlas"
+                );
+
+
+                elemento.style.fill =
+                    cor;
+
+
+                /*
+                    Transparência do preenchimento.
+                */
+
+                elemento.style.fillOpacity =
+                    OPACIDADE_POLIGONO;
+
+
+                elemento.style.stroke =
+                    cor;
+
+
+                /*
+                    O contorno continua bem visível,
+                    mas também ligeiramente transparente.
+                */
+
+                elemento.style.strokeOpacity =
+                    OPACIDADE_CONTORNO_POLIGONO;
+
+
+                elemento.style.strokeWidth =
+                    "3";
+
+            }
+
+
+            // ==========================================
+            // COORDENADAS
+            // ==========================================
+
+            elemento.setAttribute(
+                "points",
+                estrutura.pontos
+            );
+
+
+            // ==========================================
+            // DADOS
+            // ==========================================
+
+            elemento.dataset.id =
+                estrutura.id;
+
+
+            elemento.dataset.nome =
+                estrutura.nome;
+
+
+            elemento.dataset.tipo =
+                estrutura.tipo ||
+                "area";
+
+
+            elemento.dataset.info =
+                estrutura.info ||
+                "";
+
+
+            elemento.dataset.corOriginal =
+                cor;
+
+
+            svgAtlas.appendChild(
+                elemento
+            );
+
+        }
+    );
+
+
+    console.log(
+        "Estruturas criadas:",
+        totalEstruturas
+    );
+
+}
+
+
+// ======================================================
+// 16. SELEÇÃO POR MOUSE / TOUCH
+// ======================================================
+
+svgAtlas.addEventListener(
+    "pointerup",
+
+    function(evento) {
+
+        const alvoOriginal =
+            evento.target.closest
+                ? evento.target.closest(
+                    ".estrutura-atlas"
+                )
+                : null;
+
+
+        // ==============================================
+        // MOUSE
+        // ==============================================
+
+        if (
+            evento.pointerType ===
+            "mouse"
+        ) {
+
+            if (
+                alvoOriginal
+            ) {
+
+                selecionarEstruturaAtlas(
+                    alvoOriginal
+                );
+
+            }
+
+
+            return;
+
+        }
+
+
+        // ==============================================
+        // TOUCH / CANETA
+        // ==============================================
+
+        evento.preventDefault();
+
+
+        const linhaMaisProxima =
+            encontrarLinhaMaisProximaAtlas(
+                evento
+            );
+
+
+        /*
+            Se existir uma linha dentro do raio
+            de toque, selecionamos a mais próxima.
+        */
+
+        if (
+            linhaMaisProxima
+        ) {
+
+            selecionarEstruturaAtlas(
+                linhaMaisProxima
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+            Caso nenhuma linha esteja próxima,
+            usamos o polígono que recebeu o toque.
+        */
+
+        if (
+            alvoOriginal &&
+            alvoOriginal.dataset.tipo !==
+            "linha"
+        ) {
+
+            selecionarEstruturaAtlas(
+                alvoOriginal
+            );
+
+        }
+
+    }
+);
+
+
+// ======================================================
+// 17. SELECIONAR ESTRUTURA
+// ======================================================
+
+function selecionarEstruturaAtlas(
+    elementoSelecionado
+) {
+
+    const estruturas =
+        document.querySelectorAll(
+            ".estrutura-atlas"
+        );
+
+
+    // ==================================================
+    // RESTAURAR TODAS
+    // ==================================================
+
+    estruturas.forEach(
+        function(elemento) {
+
+            elemento.classList.remove(
+                "selecionada-atlas"
+            );
+
+
+            elemento.style.stroke =
+                elemento.dataset.corOriginal;
+
+
+            if (
+                elemento.dataset.tipo ===
+                "linha"
+            ) {
+
+                elemento.style.strokeWidth =
+                    LARGURA_LINHA_NORMAL;
+
+
+                elemento.style.strokeOpacity =
+                    OPACIDADE_LINHA_NORMAL;
+
+            }
+
+
+            else {
+
+                elemento.style.strokeWidth =
+                    "3";
+
+
+                elemento.style.strokeOpacity =
+                    OPACIDADE_CONTORNO_POLIGONO;
+
+
+                elemento.style.fillOpacity =
+                    OPACIDADE_POLIGONO;
+
+            }
+
+        }
+    );
+
+
+    // ==================================================
+    // DESTACAR SELECIONADA
+    // ==================================================
+
+    elementoSelecionado.classList.add(
+        "selecionada-atlas"
+    );
+
+
+    elementoSelecionado.style.stroke =
+        "#ffffff";
+
+
+    if (
+        elementoSelecionado.dataset.tipo ===
+        "linha"
+    ) {
+
+        elementoSelecionado.style.strokeWidth =
+            LARGURA_LINHA_SELECIONADA;
+
+
+        elementoSelecionado.style.strokeOpacity =
+            OPACIDADE_LINHA_SELECIONADA;
+
+    }
+
+
+    else {
+
+        elementoSelecionado.style.strokeWidth =
+            "6";
+
+
+        elementoSelecionado.style.strokeOpacity =
+            "1";
+
+
+        /*
+            Mantemos o interior transparente
+            mesmo quando selecionado.
+        */
+
+        elementoSelecionado.style.fillOpacity =
+            "0.40";
+
+    }
+
+
+    nomeEstruturaAtlas.textContent =
+        elementoSelecionado.dataset.nome;
+
+}
+
+
+// ======================================================
+// 18. ESCOLHER OUTRO MAPA
+// ======================================================
+
+botaoTrocarMapa.addEventListener(
+    "click",
+
+    function() {
+
+        window.location.href =
+            "atlas.html";
+
+    }
+);
+
+
+// ======================================================
+// 19. VOLTAR AO MENU PRINCIPAL
+// ======================================================
+
+botaoVoltarPrincipal.addEventListener(
+    "click",
+
+    function() {
+
+        window.location.href =
+            "../index.html";
+
+    }
+);
+
+
+// ======================================================
+// 20. INICIAR ATLAS
+// ======================================================
+
+mapasProntos
+    .then(
+        function() {
+
+            console.log(
+                "✅ Atlas pronto."
+            );
+
+
+            console.log(
+                "Mapas encontrados:",
+                catalogoMapas
+            );
+
+
+            if (
+                !idMapaSelecionado
+            ) {
+
+                mostrarSelecaoAtlas();
+
+            }
+
+
+            else {
+
+                abrirAtlas(
+                    idMapaSelecionado
+                );
+
+            }
+
+        }
+    )
+    .catch(
+        function(erro) {
+
+            console.error(
+                "❌ Erro no Atlas:",
+                erro
+            );
+
+
+            telaSelecaoAtlas.style.display =
+                "none";
+
+
+            telaMapaAtlas.style.display =
+                "block";
+
+
+            tituloMapaAtlas.textContent =
+                "Erro ao carregar mapas.";
+
+        }
+    );
+
+
+</script>
+
+
+<footer class="assinatura-site">
+    Criado por: Hiroshi "Nagasa" Uchikado
+</footer>
+
+
+</body>
+
+</html>

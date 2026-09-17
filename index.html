@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NeuroGame</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<main class="menu-principal">
+
+    <h1>
+        NeuroGame
+    </h1>
+
+    <p>
+        Escolha uma opção
+    </p>
+
+
+    <div class="opcoes-principais">
+
+
+        <button
+            class="opcao-principal"
+            id="abrirAtlas"
+            type="button"
+        >
+
+            <span class="icone-principal">
+                🧠
+            </span>
+
+            <strong>
+                ATLAS
+            </strong>
+
+            <small>
+                Explore e identifique estruturas anatômicas
+            </small>
+
+        </button>
+
+
+        <button
+            class="opcao-principal"
+            id="abrirJogo"
+            type="button"
+        >
+
+            <span class="icone-principal">
+                🎮
+            </span>
+
+            <strong>
+                JOGO
+            </strong>
+
+            <small>
+                Treine seus conhecimentos
+            </small>
+
+        </button>
+
+
+    </div>
+
+</main>
+
+
+<script>
+
+    document
+        .getElementById(
+            "abrirAtlas"
+        )
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "atlas.html";
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "abrirJogo"
+        )
+        .addEventListener(
+            "click",
+            function() {
+
+                window.location.href =
+                    "jogo-menu.html";
+
+            }
+        );
+
+</script>
+<footer class="assinatura-site">
+
+    Criado por: Hiroshi "Nagasa" Uchikado
+
+</footer>
+
+</body>
+
+</html>

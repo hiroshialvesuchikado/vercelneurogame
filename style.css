@@ -1,0 +1,3014 @@
+/* ======================================================
+   NEUROGAME — STYLE.CSS
+   ====================================================== */
+
+
+/* =========================
+   BASE
+   ========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+body {
+    margin: 0;
+    padding: 20px;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f2f2f2;
+    color: #222;
+}
+
+
+/* ======================================================
+   MENU DE MAPAS / ATLAS
+   ====================================================== */
+
+.menu-mapas {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 20px;
+
+    max-width: 1000px;
+
+    margin: 30px auto;
+
+    padding: 0 20px;
+}
+
+
+/* =========================
+   CARDS DE MAPA E ATLAS
+   ========================= */
+
+.card-mapa,
+.card-atlas {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border:
+        2px solid transparent;
+
+    border-radius: 14px;
+
+    background: white;
+
+    cursor: pointer;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 12px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.card-mapa img,
+.card-atlas img {
+
+    width: 100%;
+
+    height: 150px;
+
+    object-fit: contain;
+
+    border-radius: 10px;
+}
+
+
+.card-mapa span,
+.card-atlas span {
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    text-align: center;
+
+    line-height: 1.3;
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+
+    .card-mapa:hover,
+    .card-atlas:hover {
+
+        transform:
+            translateY(-4px);
+
+        border-color:
+            #777;
+
+        box-shadow:
+            0 6px 18px
+            rgba(0, 0, 0, 0.12);
+
+    }
+
+}
+
+
+.card-mapa.selecionado,
+.card-atlas.selecionado {
+
+    border-color: #222;
+
+    box-shadow:
+        0 6px 18px
+        rgba(0, 0, 0, 0.14);
+
+}
+
+
+/* =========================
+   TABLET
+   ========================= */
+
+@media (max-width: 900px) {
+
+    .menu-mapas {
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+    }
+
+}
+
+
+/* =========================
+   CELULAR
+   ========================= */
+
+@media (max-width: 500px) {
+
+    body {
+
+        padding: 12px;
+
+    }
+
+
+    .menu-mapas {
+
+        grid-template-columns:
+            1fr;
+
+        padding: 0;
+
+    }
+
+}
+
+
+/* ======================================================
+   MENU DE MODOS
+   ====================================================== */
+
+.menu-modos {
+
+    display: none;
+
+    margin-top: 30px;
+
+    text-align: center;
+
+}
+
+
+.menu-modos.visivel {
+
+    display: block;
+
+}
+
+
+.botao-modo {
+
+    margin: 10px;
+
+    padding:
+        14px 24px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+}
+
+
+/* ======================================================
+   ÁREA DO JOGO
+   ====================================================== */
+
+.game {
+
+    text-align: center;
+
+}
+
+
+/* =========================
+   IMAGEM ANATÔMICA + SVG
+   ========================= */
+
+.cerebro {
+
+    position: relative;
+
+    width: 713px;
+
+    max-width: 100%;
+
+    margin:
+        20px auto;
+
+}
+
+
+.cerebro img {
+
+    display: block;
+
+    width: 100%;
+
+    height: auto;
+
+}
+
+
+/* =========================
+   CAMADA SVG
+   ========================= */
+
+.hotspots {
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    pointer-events: none;
+
+}
+
+
+/* ======================================================
+   ATIVAR SVG NO MODO CLICAR
+   ====================================================== */
+
+body.modo-clicar #camadaHotspots {
+
+    pointer-events: auto;
+
+    touch-action: manipulation;
+
+}
+
+
+/* ======================================================
+   ESTRUTURAS DO JOGO
+   ====================================================== */
+
+
+/* =========================
+   ÁREAS / POLÍGONOS
+   ========================= */
+
+.estrutura-area {
+
+    fill: transparent;
+
+    stroke: transparent;
+
+    cursor: pointer;
+
+    pointer-events: all;
+
+}
+
+
+/* =========================
+   LINHAS / SULCOS
+   ========================= */
+
+.estrutura-linha {
+
+    fill: none;
+
+    stroke: transparent;
+
+    stroke-width: 24;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+
+    cursor: pointer;
+
+    pointer-events: stroke;
+
+}
+
+
+/* ======================================================
+   HITBOX INVISÍVEL DAS LINHAS
+   ====================================================== */
+
+
+/* =========================
+   COMPUTADOR
+   ========================= */
+
+.estrutura-hitbox {
+
+    fill: none;
+
+
+    /*
+        Quase transparente.
+
+        Evitamos stroke: transparent porque
+        alguns navegadores podem ter comportamento
+        diferente com pointer-events.
+    */
+
+    stroke:
+        rgba(
+            0,
+            0,
+            0,
+            0.001
+        );
+
+
+    /*
+        Área clicável da linha no computador.
+    */
+
+    stroke-width: 32;
+
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+
+
+    /*
+        Apenas o traçado invisível
+        recebe o clique.
+    */
+
+    pointer-events: stroke;
+
+
+    cursor: pointer;
+
+
+    /*
+        Mantém a largura da hitbox
+        constante mesmo quando o SVG
+        é redimensionado.
+    */
+
+    vector-effect:
+        non-scaling-stroke;
+
+}
+
+
+/* =========================
+   HITBOX MOBILE / TABLET
+   ========================= */
+
+@media (max-width: 768px) {
+
+    .estrutura-hitbox {
+
+        /*
+            Área maior para o dedo.
+        */
+
+        stroke-width: 44;
+
+    }
+
+}
+
+
+/* =========================
+   HOVER SOMENTE NO MODO CLICAR
+   ========================= */
+
+@media (hover: hover) and (pointer: fine) {
+
+    .modo-clicar
+    .estrutura-area:hover {
+
+        fill:
+            rgba(
+                255,
+                215,
+                0,
+                0.35
+            );
+
+        stroke: #222;
+
+        stroke-width: 2;
+
+    }
+
+
+    .modo-clicar
+    .estrutura-linha:hover {
+
+        fill: none;
+
+        stroke:
+            rgba(
+                230,
+                170,
+                0,
+                0.95
+            );
+
+        stroke-width: 8;
+
+        stroke-linecap: round;
+        stroke-linejoin: round;
+
+        vector-effect:
+            non-scaling-stroke;
+
+    }
+
+
+    .modo-clicar
+    .estrutura-linha:has(+ .estrutura-hitbox:hover) {
+
+        fill: none;
+
+        stroke:
+            rgba(
+                230,
+                170,
+                0,
+                0.95
+            );
+
+        stroke-width: 8;
+
+        stroke-linecap: round;
+        stroke-linejoin: round;
+
+        vector-effect:
+            non-scaling-stroke;
+
+    }
+
+}
+
+
+/* =========================
+   ACERTO / ERRO — ÁREA
+   ========================= */
+
+.estrutura-area.correto {
+
+    fill:
+        rgba(
+            0,
+            200,
+            0,
+            0.35
+        );
+
+    stroke: green;
+
+    stroke-width: 2;
+
+}
+
+
+.estrutura-area.errado {
+
+    fill:
+        rgba(
+            255,
+            0,
+            0,
+            0.35
+        );
+
+    stroke: red;
+
+    stroke-width: 2;
+
+}
+
+
+/* =========================
+   ACERTO / ERRO — LINHA
+   ========================= */
+
+.estrutura-linha.correto {
+
+    fill: none;
+
+    stroke: green;
+
+    stroke-width: 8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    vector-effect:
+        non-scaling-stroke;
+
+}
+
+
+.estrutura-linha.errado {
+
+    fill: none;
+
+    stroke: red;
+
+    stroke-width: 8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    vector-effect:
+        non-scaling-stroke;
+
+}
+
+
+/* =========================
+   DESTAQUE MODO DIGITAR
+   ========================= */
+
+.estrutura-area.destacada {
+
+    fill:
+        rgba(
+            255,
+            215,
+            0,
+            0.45
+        );
+
+    stroke:
+        rgba(
+            230,
+            170,
+            0,
+            0.95
+        );
+
+    stroke-width: 3;
+
+    stroke-linejoin: round;
+
+    pointer-events: none;
+
+}
+
+
+.estrutura-linha.destacada {
+
+    fill: none;
+
+    stroke:
+        rgba(
+            230,
+            170,
+            0,
+            0.95
+        );
+
+    stroke-width: 8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+
+    pointer-events: none;
+
+    vector-effect:
+        non-scaling-stroke;
+
+}
+
+
+/* =========================
+   CURSOR POR MODO
+   ========================= */
+
+.modo-clicar
+.estrutura-area,
+
+.modo-clicar
+.estrutura-linha,
+
+.modo-clicar
+.estrutura-hitbox {
+
+    cursor: pointer;
+
+    touch-action: manipulation;
+
+}
+
+
+.modo-digitar
+.estrutura-area,
+
+.modo-digitar
+.estrutura-linha {
+
+    cursor: default;
+
+}
+
+
+/* ======================================================
+   BOTÕES DA PARTIDA
+   ====================================================== */
+
+.acoes-partida {
+
+    display: none;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin:
+        25px auto;
+
+    flex-wrap: wrap;
+
+}
+
+
+.acoes-partida.visivel {
+
+    display: flex;
+
+}
+
+
+.botao-acao {
+
+    padding:
+        12px 22px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+
+    .botao-acao:hover {
+
+        opacity: 0.85;
+
+    }
+
+}
+
+
+/* ======================================================
+   MODO DIGITAR
+   ====================================================== */
+
+.area-digitar {
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin:
+        20px auto;
+
+    flex-wrap: wrap;
+
+}
+
+
+.area-digitar.visivel {
+
+    display: flex;
+
+}
+
+
+.area-digitar input {
+
+    width: 300px;
+
+    max-width: 90%;
+
+    padding: 12px;
+
+    font-size: 17px;
+
+    border:
+        1px solid #aaa;
+
+    border-radius: 8px;
+
+}
+
+
+.area-digitar button {
+
+    padding:
+        12px 20px;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    border: none;
+
+    border-radius: 8px;
+
+}
+
+
+/* ======================================================
+   ANALYTICS
+   ====================================================== */
+
+.painel-analytics {
+
+    margin:
+        30px auto;
+
+    padding: 20px;
+
+    max-width: 1000px;
+
+    background: #f5f5f5;
+
+    border:
+        1px solid #ccc;
+
+    border-radius: 12px;
+
+    text-align: left;
+
+}
+
+
+.painel-analytics h3 {
+
+    margin-top: 0;
+
+}
+
+
+.registro-analytics {
+
+    background: white;
+
+    border:
+        1px solid #ddd;
+
+    border-radius: 8px;
+
+    padding: 12px;
+
+    margin-bottom: 12px;
+
+    font-family: monospace;
+
+    font-size: 14px;
+
+    overflow-x: auto;
+
+}
+
+
+.registro-analytics.acerto {
+
+    border-left:
+        5px solid green;
+
+}
+
+
+.registro-analytics.erro {
+
+    border-left:
+        5px solid red;
+
+}
+
+
+/* ======================================================
+   MODO PROVA
+   ====================================================== */
+
+.card-prova {
+
+    max-width: 500px;
+
+    margin:
+        40px auto;
+
+    padding: 24px;
+
+    border:
+        1px solid #ccc;
+
+    border-radius: 14px;
+
+    text-align: center;
+
+    background: #f7f7f7;
+
+}
+
+
+.card-prova input,
+.card-prova select {
+
+    display: block;
+
+    width: 100%;
+
+    margin:
+        10px 0 18px;
+
+    padding: 10px;
+
+    font-size: 16px;
+
+    border-radius: 8px;
+
+    border:
+        1px solid #aaa;
+
+}
+
+
+.card-prova button {
+
+    padding:
+        12px 24px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    border: none;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+}
+
+
+/* ======================================================
+   ATLAS INTERATIVO
+   ====================================================== */
+
+.info-atlas {
+
+    max-width: 600px;
+
+    margin:
+        20px auto;
+
+    padding: 15px;
+
+    border:
+        1px solid #ccc;
+
+    border-radius: 10px;
+
+    background: #f7f7f7;
+
+    font-size: 18px;
+
+}
+
+
+.info-atlas strong {
+
+    margin-left: 8px;
+
+}
+
+
+/* ==================================================
+   ESTRUTURAS DO ATLAS
+   ================================================== */
+
+.estrutura-atlas {
+
+    cursor: pointer;
+
+    transition:
+        filter 0.2s ease,
+        stroke-width 0.2s ease;
+
+}
+
+
+/* POLÍGONOS */
+
+.estrutura-atlas.estrutura-area {
+
+    pointer-events: all;
+
+}
+
+
+/* LINHAS */
+
+.estrutura-atlas.estrutura-linha {
+
+    fill: none;
+
+    pointer-events: stroke;
+
+}
+
+
+/* HOVER */
+
+.estrutura-atlas:hover {
+
+    filter:
+        brightness(1.3);
+
+}
+
+
+/* =========================
+   HOVER DO ATLAS
+   ========================= */
+
+@media (hover: hover) and (pointer: fine) {
+
+    .estrutura-atlas.estrutura-area:hover {
+
+        fill:
+            rgba(
+                255,
+                215,
+                0,
+                0.30
+            );
+
+        stroke: #222;
+
+        stroke-width: 2;
+
+    }
+
+
+    .estrutura-atlas.estrutura-linha:hover {
+
+        stroke:
+            rgba(
+                255,
+                215,
+                0,
+                0.8
+            );
+
+        stroke-width: 24;
+
+    }
+
+}
+
+
+/* =========================
+   ESTRUTURA SELECIONADA
+   ========================= */
+
+.estrutura-atlas.estrutura-area.selecionada-atlas {
+
+    fill:
+        rgba(
+            0,
+            150,
+            255,
+            0.35
+        );
+
+    stroke: #0066aa;
+
+    stroke-width: 2;
+
+}
+
+
+.estrutura-atlas.estrutura-linha.selecionada-atlas {
+
+    fill: none;
+
+    stroke: #0066aa;
+
+    stroke-width: 24;
+
+}
+
+
+.acoes-atlas {
+
+    margin:
+        25px auto;
+
+}
+
+
+/* ======================================================
+   MENU PRINCIPAL
+   ====================================================== */
+
+.menu-principal {
+
+    text-align: center;
+
+    max-width: 900px;
+
+    margin:
+        60px auto;
+
+    padding: 20px;
+
+}
+
+
+.menu-principal h1 {
+
+    font-size: 42px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.menu-principal > p {
+
+    font-size: 18px;
+
+    margin-bottom: 40px;
+
+}
+
+
+/* =========================
+   OPÇÕES PRINCIPAIS
+   ========================= */
+
+.opcoes-principais {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 30px;
+
+}
+
+
+.opcao-principal {
+
+    min-height: 260px;
+
+    padding: 30px;
+
+    border:
+        2px solid transparent;
+
+    border-radius: 20px;
+
+    background: white;
+
+    cursor: pointer;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 15px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+
+    .opcao-principal:hover {
+
+        transform:
+            translateY(-6px);
+
+        border-color: #555;
+
+        box-shadow:
+            0 10px 25px
+            rgba(0, 0, 0, 0.12);
+
+    }
+
+}
+
+
+.icone-principal {
+
+    font-size: 60px;
+
+}
+
+
+.opcao-principal strong {
+
+    font-size: 28px;
+
+}
+
+
+.opcao-principal small {
+
+    font-size: 15px;
+
+    color: #666;
+
+    max-width: 240px;
+
+}
+
+
+/* =========================
+   MOBILE — MENU PRINCIPAL
+   ========================= */
+
+@media (max-width: 600px) {
+
+    .menu-principal {
+
+        margin:
+            30px auto;
+
+        padding: 10px;
+
+    }
+
+
+    .menu-principal h1 {
+
+        font-size: 34px;
+
+    }
+
+
+    .opcoes-principais {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .opcao-principal {
+
+        min-height: 210px;
+
+        padding: 24px;
+
+    }
+
+}
+
+
+/* ==================================================
+   MENU DE CATEGORIAS DO JOGO
+   ================================================== */
+
+.menu-categorias {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+
+    width: 100%;
+
+    max-width: 500px;
+
+    margin:
+        20px auto
+        30px auto;
+
+}
+
+
+/* BOTÕES DAS CATEGORIAS */
+
+.botao-categoria {
+
+    width: 100%;
+
+    padding:
+        16px 20px;
+
+    border:
+        2px solid #dddddd;
+
+    border-radius: 12px;
+
+    background: white;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+
+}
+
+
+/* PASSAR O MOUSE */
+
+.botao-categoria:hover {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        #555555;
+
+}
+
+
+/* CATEGORIA SELECIONADA */
+
+.botao-categoria.selecionado {
+
+    border-color:
+        #000000;
+
+    background:
+        #eeeeee;
+
+    transform:
+        scale(1.02);
+
+}
+
+
+/* CELULAR */
+
+@media (max-width: 600px) {
+
+    .menu-categorias {
+
+        width: 100%;
+
+        gap: 10px;
+
+    }
+
+
+    .botao-categoria {
+
+        font-size: 16px;
+
+        padding: 14px;
+
+    }
+
+}
+
+
+/* ======================================================
+   NEUROGAME — VISUALIZAÇÃO MOBILE
+
+   No modo clicar, as marcações ficam visíveis
+   em telas menores.
+   ====================================================== */
+
+@media (max-width: 768px) {
+
+
+    /* ==================================================
+       POLÍGONOS / ÁREAS
+       ================================================== */
+
+    body.modo-clicar
+    #camadaHotspots
+    .estrutura-area {
+
+        fill:
+            rgba(
+                0,
+                120,
+                255,
+                0.18
+            );
+
+        stroke:
+            rgba(
+                0,
+                90,
+                220,
+                0.85
+            );
+
+        stroke-width: 3;
+
+        stroke-linejoin:
+            round;
+
+        cursor: pointer;
+
+    }
+
+
+    /* ==================================================
+       LINHAS / SULCOS VISÍVEIS
+       ================================================== */
+
+    body.modo-clicar
+    #camadaHotspots
+    .estrutura-linha {
+
+        fill: none;
+
+        stroke:
+            rgba(
+                0,
+                90,
+                220,
+                0.85
+            );
+
+        /*
+            Mesma linguagem visual do contorno dos polígonos.
+            A hitbox continua maior e invisível.
+        */
+
+        stroke-width: 8;
+
+        stroke-linecap:
+            round;
+
+        stroke-linejoin:
+            round;
+
+        cursor: pointer;
+
+    }
+
+
+    /* ==================================================
+       HITBOX MOBILE
+       ================================================== */
+
+    body.modo-clicar
+    #camadaHotspots
+    .estrutura-hitbox {
+
+        stroke-width: 44;
+
+    }
+
+}
+
+/* ======================================================
+   ASSINATURA DO SITE
+   ====================================================== */
+
+.assinatura-site {
+    width: 100%;
+    text-align: center;
+
+    margin-top: 40px;
+    padding: 14px 10px;
+
+    font-size: 13px;
+    color: #666;
+
+    border-top: 1px solid #d8d8d8;
+}
+/* ======================================================
+   FEEDBACK FINAL DA PARTIDA
+   ====================================================== */
+
+.feedback-final-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.62
+        );
+
+    overflow-y: auto;
+}
+
+
+.feedback-final-card {
+    width: 100%;
+    max-width: 720px;
+
+    max-height:
+        calc(
+            100vh - 40px
+        );
+
+    overflow-y: auto;
+
+    padding: 28px;
+
+    border-radius: 18px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 20px 60px
+        rgba(
+            0,
+            0,
+            0,
+            0.25
+        );
+
+    text-align: center;
+}
+
+
+.feedback-final-card h2 {
+    margin:
+        0 0 12px;
+
+    font-size: 30px;
+}
+
+
+.feedback-final-classificacao {
+    margin:
+        0 0 8px;
+
+    font-size: 22px;
+}
+
+
+.feedback-final-mensagem {
+    margin:
+        0 auto 24px;
+
+    max-width: 560px;
+
+    color: #555;
+
+    line-height: 1.5;
+}
+
+
+.feedback-final-resumo {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin:
+        20px 0 28px;
+}
+
+
+.feedback-final-resumo > div {
+    padding:
+        16px 10px;
+
+    border:
+        1px solid #dddddd;
+
+    border-radius: 12px;
+
+    background: #f7f7f7;
+}
+
+
+.feedback-final-resumo strong {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 21px;
+}
+
+
+.feedback-final-resumo span {
+    font-size: 13px;
+
+    color: #666;
+}
+
+
+.feedback-final-revisao {
+    margin-top: 10px;
+
+    text-align: left;
+}
+
+
+.feedback-final-revisao h3 {
+    margin-bottom: 12px;
+
+    text-align: center;
+}
+
+
+.feedback-final-lista {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+.feedback-final-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding:
+        12px 14px;
+
+    border:
+        1px solid #e1e1e1;
+
+    border-radius: 10px;
+
+    background: #fafafa;
+}
+
+
+.feedback-final-item span {
+    font-weight: 600;
+}
+
+
+.feedback-final-item strong {
+    white-space: nowrap;
+
+    font-size: 14px;
+}
+
+
+.feedback-final-perfeito {
+    padding: 18px;
+
+    border-radius: 12px;
+
+    background: #f5f5f5;
+
+    text-align: center;
+}
+
+
+.feedback-final-botoes {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    margin-top: 26px;
+
+    flex-wrap: wrap;
+}
+
+
+.feedback-final-botoes button {
+    padding:
+        12px 18px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.feedback-final-botoes button:hover {
+    opacity: 0.85;
+}
+
+
+@media (max-width: 700px) {
+
+    .feedback-final-overlay {
+        padding: 12px;
+    }
+
+
+    .feedback-final-card {
+        padding:
+            20px 16px;
+
+        max-height:
+            calc(
+                100vh - 24px
+            );
+    }
+
+
+    .feedback-final-card h2 {
+        font-size: 25px;
+    }
+
+
+    .feedback-final-resumo {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .feedback-final-item {
+        align-items: flex-start;
+    }
+
+
+    .feedback-final-botoes {
+        flex-direction: column;
+    }
+
+
+    .feedback-final-botoes button {
+        width: 100%;
+    }
+
+}
+
+
+/* ======================================================
+   SELEÇÃO DE TÓPICOS — NEUROGAME
+   ====================================================== */
+
+#menuTopicos {
+    width: 100%;
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 32px 28px;
+
+    box-sizing: border-box;
+
+    flex-direction: column;
+    align-items: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e4e4e4;
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+
+    text-align: center;
+}
+
+
+#menuTopicos h2 {
+    margin: 0 0 8px;
+
+    font-size: 28px;
+    font-weight: 700;
+}
+
+
+#menuTopicos > p {
+    margin: 0 0 25px;
+
+    font-size: 15px;
+    color: #666;
+
+    line-height: 1.5;
+}
+
+
+/* ======================================================
+   LISTA DE TÓPICOS
+   ====================================================== */
+
+.lista-topicos {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(180px, 1fr)
+        );
+
+    gap: 14px;
+
+    margin-bottom: 25px;
+}
+
+
+/* ======================================================
+   BOTÃO DE TÓPICO
+   ====================================================== */
+
+.botao-topico {
+    min-height: 64px;
+
+    padding: 16px 20px;
+
+    border: 2px solid #e2e2e2;
+    border-radius: 14px;
+
+    background: #fafafa;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.botao-topico:hover {
+    transform: translateY(-2px);
+
+    background: #ffffff;
+
+    border-color: #a9a9a9;
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.09);
+}
+
+
+/* ======================================================
+   BOTÃO VOLTAR DO MENU DE TÓPICOS
+   ====================================================== */
+
+#menuTopicos .botao-voltar {
+    margin-top: 5px;
+
+    padding: 11px 20px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #eeeeee;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+#menuTopicos .botao-voltar:hover {
+    background: #dddddd;
+
+    transform: translateY(-1px);
+}
+
+
+/* ======================================================
+   CONFIGURAÇÃO DA PROVA
+   ====================================================== */
+
+#menuConfiguracaoProva {
+    width: 100%;
+    max-width: 700px;
+
+    margin: 30px auto;
+
+    padding: 32px 28px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #e4e4e4;
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.08);
+
+    text-align: center;
+}
+
+
+/* ======================================================
+   CAMPOS DA PROVA
+   ====================================================== */
+
+#menuConfiguracaoProva input[type="number"],
+#menuConfiguracaoProva select {
+    padding: 9px 12px;
+
+    border: 1px solid #cccccc;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    font-size: 15px;
+}
+
+
+#menuConfiguracaoProva input[type="number"] {
+    width: 90px;
+}
+
+
+/* ======================================================
+   ÁREA DE TÓPICOS DA PROVA
+   ====================================================== */
+
+.area-topicos-prova {
+    margin: 28px 0;
+
+    padding: 22px;
+
+    border-radius: 14px;
+
+    background: #f7f7f7;
+
+    border: 1px solid #e7e7e7;
+}
+
+
+.area-topicos-prova h3 {
+    margin: 0 0 8px;
+
+    font-size: 21px;
+}
+
+
+.area-topicos-prova > p {
+    margin: 0 0 20px;
+
+    font-size: 14px;
+    color: #666;
+}
+
+
+/* ======================================================
+   CHECKBOXES DA PROVA
+   ====================================================== */
+
+.lista-topicos-prova {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(190px, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+.opcao-topico-prova {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-height: 50px;
+
+    padding: 12px 15px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.opcao-topico-prova:hover {
+    border-color: #aaaaaa;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.07);
+
+    transform: translateY(-1px);
+}
+
+
+.opcao-topico-prova input {
+    width: 18px;
+    height: 18px;
+
+    cursor: pointer;
+}
+
+
+.opcao-topico-prova span {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+/* ======================================================
+   BOTÕES DA CONFIGURAÇÃO DA PROVA
+   ====================================================== */
+
+#iniciarProva {
+    padding: 12px 24px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+#voltarModoProva {
+    padding: 12px 20px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #eeeeee;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    margin-left: 8px;
+}
+
+
+/* ======================================================
+   RESPONSIVO — CELULAR
+   ====================================================== */
+
+@media (max-width: 700px) {
+
+    #menuTopicos,
+    #menuConfiguracaoProva {
+        width: calc(100% - 24px);
+
+        margin: 20px auto;
+
+        padding: 24px 16px;
+
+        border-radius: 14px;
+    }
+
+
+    #menuTopicos h2 {
+        font-size: 24px;
+    }
+
+
+    .lista-topicos {
+        grid-template-columns: 1fr;
+    }
+
+
+    .lista-topicos-prova {
+        grid-template-columns: 1fr;
+    }
+
+
+    .botao-topico {
+        width: 100%;
+    }
+
+
+    .opcao-topico-prova {
+        width: 100%;
+    }
+
+
+    #menuConfiguracaoProva input[type="number"],
+    #menuConfiguracaoProva select {
+        margin-top: 6px;
+    }
+
+
+    #iniciarProva,
+    #voltarModoProva {
+        width: 100%;
+
+        margin:
+            8px 0 0;
+    }
+
+}
+
+/* ======================================================
+   AJUSTES FINAIS — MENU DE TÓPICOS E MODO PROVA
+   Compatível com o novo jogo-menu.html
+   ====================================================== */
+
+#tituloMenuPrincipal {
+    margin: 22px 0 10px;
+    text-align: center;
+}
+
+#menuTopicos {
+    width: min(700px, calc(100% - 24px));
+    margin: 28px auto 32px;
+    padding: 30px 26px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+    background: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+#menuTopicos h2 {
+    width: 100%;
+    margin: 0 0 8px;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+#menuTopicos > p {
+    width: 100%;
+    margin: 0 0 24px;
+    color: #666;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.lista-topicos {
+    width: 100%;
+    margin: 0 0 20px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+}
+
+.botao-topico {
+    width: 100%;
+    min-height: 62px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 18px;
+    border: 2px solid #dedede;
+    border-radius: 12px;
+    background: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.25;
+    cursor: pointer;
+}
+
+#menuTopicos .botao-voltar {
+    align-self: center;
+    min-width: 130px;
+    margin: 2px 0 0;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #eeeeee;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#menuConfiguracaoProva {
+    width: min(700px, calc(100% - 24px));
+    margin: 28px auto 32px;
+    padding: 30px 26px;
+    background: #ffffff;
+    border: 1px solid #e1e1e1;
+    border-radius: 18px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+#menuConfiguracaoProva h2 {
+    margin: 0 0 24px;
+    font-size: 28px;
+    line-height: 1.2;
+}
+
+.campos-configuracao-prova {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto 24px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.campo-prova {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    text-align: left;
+}
+
+.campo-prova label {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+}
+
+#menuConfiguracaoProva .campo-prova input[type="number"],
+#menuConfiguracaoProva .campo-prova select {
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    padding: 9px 12px;
+    border: 1px solid #cccccc;
+    border-radius: 9px;
+    background: #ffffff;
+    font-size: 15px;
+}
+
+.area-topicos-prova {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto 24px;
+    padding: 20px;
+    background: #f7f7f7;
+    border: 1px solid #e5e5e5;
+    border-radius: 14px;
+}
+
+.area-topicos-prova h3 {
+    margin: 0 0 7px;
+    font-size: 21px;
+    line-height: 1.25;
+}
+
+.area-topicos-prova > p {
+    margin: 0 0 18px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.lista-topicos-prova {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.opcao-topico-prova {
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 11px 13px;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.opcao-topico-prova input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex: 0 0 auto;
+    cursor: pointer;
+}
+
+.opcao-topico-prova span {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.acoes-configuracao-prova {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#iniciarProva,
+#voltarModoProva {
+    min-height: 44px;
+    margin: 0;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#iniciarProva {
+    background: #222;
+    color: #ffffff;
+}
+
+#voltarModoProva {
+    background: #eeeeee;
+    color: #222;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    #iniciarProva:hover,
+    #voltarModoProva:hover,
+    #menuTopicos .botao-voltar:hover {
+        opacity: 0.86;
+    }
+
+    .botao-topico:hover,
+    .opcao-topico-prova:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+    }
+}
+
+.acoes-atlas {
+    margin: 22px auto 10px;
+    text-align: center;
+}
+
+#voltarPrincipalJogo {
+    margin: 0 auto;
+}
+
+@media (max-width: 700px) {
+    #tituloMenuPrincipal {
+        margin-top: 16px;
+        font-size: 24px;
+    }
+
+    #menuTopicos,
+    #menuConfiguracaoProva {
+        width: 100%;
+        margin: 18px auto 24px;
+        padding: 22px 16px;
+        border-radius: 14px;
+    }
+
+    #menuTopicos h2,
+    #menuConfiguracaoProva h2 {
+        font-size: 24px;
+    }
+
+    .lista-topicos,
+    .lista-topicos-prova,
+    .campos-configuracao-prova {
+        grid-template-columns: 1fr;
+    }
+
+    .campos-configuracao-prova,
+    .area-topicos-prova,
+    .acoes-configuracao-prova {
+        max-width: 100%;
+    }
+
+    .botao-topico,
+    .opcao-topico-prova {
+        width: 100%;
+    }
+
+    .acoes-configuracao-prova {
+        flex-direction: column;
+    }
+
+    #iniciarProva,
+    #voltarModoProva {
+        width: 100%;
+    }
+}
+/* ======================================================
+   NEUROGAME — REFRESH VISUAL FINAL DOS BOTÕES
+   ====================================================== */
+
+/* Área geral do jogo */
+.game {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 16px 56px;
+    text-align: center;
+}
+
+.game h1 {
+    margin: 0 0 14px;
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1.05;
+}
+
+.game h2 {
+    margin: 0 0 18px;
+    line-height: 1.2;
+}
+
+/* Base unificada dos botões principais */
+.botao-acao,
+.botao-modo,
+.botao-categoria,
+#iniciarProva,
+#voltarModoProva,
+#menuTopicos .botao-voltar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 13px 20px;
+    border: 1px solid #d7dce2;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #20242a;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .botao-acao:hover,
+    .botao-modo:hover,
+    .botao-categoria:hover,
+    #iniciarProva:hover,
+    #voltarModoProva:hover,
+    #menuTopicos .botao-voltar:hover {
+        transform: translateY(-2px);
+        border-color: #aeb7c2;
+        background: #fafbfc;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.10);
+        opacity: 1;
+    }
+}
+
+.botao-acao:active,
+.botao-modo:active,
+.botao-categoria:active,
+#iniciarProva:active,
+#voltarModoProva:active,
+#menuTopicos .botao-voltar:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.botao-acao:focus-visible,
+.botao-modo:focus-visible,
+.botao-categoria:focus-visible,
+#iniciarProva:focus-visible,
+#voltarModoProva:focus-visible,
+#menuTopicos .botao-voltar:focus-visible {
+    outline: 3px solid rgba(45, 108, 223, 0.25);
+    outline-offset: 3px;
+}
+
+.botao-categoria.selecionado,
+.botao-modo.selecionado,
+.card-mapa.selecionado,
+.card-atlas.selecionado {
+    border-color: #2d6cdf;
+    background: #eef4ff;
+    box-shadow: 0 7px 18px rgba(45, 108, 223, 0.14);
+}
+
+/* Menu inicial */
+.menu-categorias {
+    width: min(520px, 100%);
+    max-width: 520px;
+    margin: 24px auto 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.menu-categorias .botao-categoria {
+    width: 100%;
+    min-height: 58px;
+    margin: 0;
+    font-size: 17px;
+}
+
+/* Menu de modos */
+.menu-modos {
+    width: min(720px, 100%);
+    margin: 28px auto 0;
+    text-align: center;
+}
+
+.menu-modos.visivel {
+    display: block;
+}
+
+.menu-modos h2 {
+    margin-bottom: 18px;
+}
+
+.menu-modos .botao-modo,
+.menu-modos > .botao-acao {
+    min-width: 150px;
+    margin: 6px;
+}
+
+/* Ações durante a partida */
+.acoes-partida {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 22px auto 26px;
+    flex-wrap: wrap;
+}
+
+.acoes-partida.visivel {
+    display: flex;
+}
+
+.acoes-partida .botao-acao {
+    min-width: 170px;
+    margin: 0;
+}
+
+/* Botão de retorno ao menu principal */
+.acoes-atlas {
+    display: flex;
+    justify-content: center;
+    margin: 30px auto 8px;
+}
+
+#voltarPrincipalJogo {
+    min-width: 250px;
+    margin: 0;
+}
+
+/* Menu de tópicos */
+#menuTopicos {
+    width: min(700px, 100%);
+    margin: 28px auto 32px;
+    padding: 28px 24px;
+    flex-direction: column;
+    align-items: stretch;
+    background: #ffffff;
+    border: 1px solid #e0e3e7;
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+    text-align: center;
+}
+
+#menuTopicos h2 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+#menuTopicos > p {
+    margin: 0 0 22px;
+    color: #667085;
+    line-height: 1.45;
+}
+
+.lista-topicos {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+    margin: 0 0 18px;
+    padding: 0;
+}
+
+.botao-topico {
+    width: 100%;
+    min-height: 58px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 18px;
+    border: 1px solid #d7dce2;
+    border-radius: 14px;
+    background: #ffffff;
+    font-size: 17px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+#menuTopicos .botao-voltar {
+    align-self: center;
+    min-width: 140px;
+    margin: 0;
+}
+
+/* Configuração da prova */
+#menuConfiguracaoProva {
+    width: min(700px, 100%);
+    margin: 28px auto 32px;
+    padding: 28px 24px;
+    background: #ffffff;
+    border: 1px solid #e0e3e7;
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+    text-align: center;
+}
+
+#menuConfiguracaoProva h2 {
+    margin: 0 0 22px;
+    font-size: 28px;
+}
+
+.campos-configuracao-prova {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto 22px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.campo-prova {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.campo-prova label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #344054;
+}
+
+#menuConfiguracaoProva .campo-prova input[type="number"],
+#menuConfiguracaoProva .campo-prova select {
+    width: 100%;
+    height: 46px;
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid #cfd5dc;
+    border-radius: 11px;
+    background: #ffffff;
+    font: inherit;
+}
+
+#menuConfiguracaoProva .campo-prova input[type="number"]:focus,
+#menuConfiguracaoProva .campo-prova select:focus {
+    outline: none;
+    border-color: #7aa7ff;
+    box-shadow: 0 0 0 4px rgba(122, 167, 255, 0.16);
+}
+
+/* Conteúdos da prova */
+.area-topicos-prova {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto 22px;
+    padding: 18px;
+    background: #f7f8fa;
+    border: 1px solid #e1e5ea;
+    border-radius: 14px;
+}
+
+.area-topicos-prova h3 {
+    margin: 0 0 7px;
+    font-size: 21px;
+}
+
+.area-topicos-prova > p {
+    margin: 0 0 16px;
+    color: #667085;
+    line-height: 1.45;
+}
+
+.lista-topicos-prova {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+}
+
+.opcao-topico-prova {
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 11px 13px;
+    background: #ffffff;
+    border: 1px solid #d7dce2;
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .opcao-topico-prova:hover {
+        transform: translateY(-1px);
+        border-color: #b7bec8;
+        box-shadow: 0 5px 14px rgba(0, 0, 0, 0.07);
+    }
+}
+
+.opcao-topico-prova input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex: 0 0 auto;
+    accent-color: #2d6cdf;
+    cursor: pointer;
+}
+
+.opcao-topico-prova span {
+    font-size: 15px;
+    font-weight: 650;
+}
+
+/* Botões da configuração da prova */
+.acoes-configuracao-prova {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#iniciarProva {
+    min-width: 170px;
+    background: #20242a;
+    color: #ffffff;
+    border-color: #20242a;
+}
+
+#voltarModoProva {
+    min-width: 140px;
+    margin: 0;
+    background: #ffffff;
+    color: #20242a;
+}
+
+/* Botões finais do feedback */
+.feedback-final-botoes button {
+    min-height: 46px;
+    padding: 11px 18px;
+    border: 1px solid #d7dce2;
+    border-radius: 12px;
+    background: #ffffff;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease,
+        border-color 0.18s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .feedback-final-botoes button:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+        border-color: #afb7c1;
+        box-shadow: 0 7px 16px rgba(0, 0, 0, 0.09);
+    }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+    body {
+        padding: 12px;
+    }
+
+    .game {
+        padding: 10px 0 42px;
+    }
+
+    .game h1 {
+        font-size: 38px;
+    }
+
+    .game h2,
+    #tituloMenuPrincipal {
+        font-size: 22px;
+    }
+
+    .menu-categorias {
+        width: 100%;
+        max-width: 360px;
+    }
+
+    .menu-categorias .botao-categoria {
+        width: 100%;
+    }
+
+    .menu-modos .botao-modo,
+    .menu-modos > .botao-acao,
+    .acoes-partida .botao-acao,
+    #voltarPrincipalJogo {
+        width: 100%;
+        max-width: 340px;
+        margin: 6px auto;
+    }
+
+    #menuTopicos,
+    #menuConfiguracaoProva {
+        width: 100%;
+        margin: 18px auto 24px;
+        padding: 22px 16px;
+        border-radius: 16px;
+    }
+
+    #menuTopicos h2,
+    #menuConfiguracaoProva h2 {
+        font-size: 24px;
+    }
+
+    .lista-topicos,
+    .lista-topicos-prova,
+    .campos-configuracao-prova {
+        grid-template-columns: 1fr;
+    }
+
+    .acoes-configuracao-prova {
+        flex-direction: column;
+    }
+
+    #iniciarProva,
+    #voltarModoProva {
+        width: 100%;
+    }
+}
+
+
+/* ======================================================
+   ACESSIBILIDADE
+   ====================================================== */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+
+.erro-amigavel-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(
+            0,
+            0,
+            0,
+            0.62
+        );
+
+}
+
+
+.erro-amigavel-card {
+
+    width: 100%;
+
+    max-width: 520px;
+
+    padding: 28px;
+
+    border-radius: 18px;
+
+    background: white;
+
+    text-align: center;
+
+    box-shadow:
+        0 20px 60px
+        rgba(
+            0,
+            0,
+            0,
+            0.25
+        );
+
+}
+
+
+.erro-amigavel-card h2 {
+
+    margin:
+        0 0 12px;
+
+}
+
+
+.erro-amigavel-card p {
+
+    margin:
+        0 0 24px;
+
+    color: #555;
+
+    line-height: 1.5;
+
+}
+
+
+.erro-amigavel-botoes {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+}
+
+
+.erro-amigavel-botoes button {
+
+    min-height: 46px;
+
+    padding:
+        12px 18px;
+
+    border:
+        1px solid #d7dce2;
+
+    border-radius: 12px;
+
+    background: white;
+
+    font: inherit;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+}
+
+
+.erro-amigavel-botoes button:hover {
+
+    background: #f5f5f5;
+
+}

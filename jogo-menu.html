@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        NeuroGame
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<main class="game">
+
+
+    <!-- ==================================================
+         TÍTULO
+         ================================================== -->
+
+    <h1>
+        NeuroGame
+    </h1>
+
+
+    <h2 id="tituloMenuPrincipal">
+        Como você quer estudar?
+    </h2>
+
+
+    <!-- ==================================================
+         TIPO DE ESTUDO
+         ================================================== -->
+
+    <div
+        id="menuTipoEstudo"
+        class="menu-categorias"
+    >
+
+
+        <button
+            id="escolherPorEstrutura"
+            class="botao-categoria"
+            type="button"
+        >
+            🧠 Por estruturas
+        </button>
+
+
+        <button
+            id="escolherPorMapa"
+            class="botao-categoria"
+            type="button"
+        >
+            🗺️ Por mapa
+        </button>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         ESTUDO POR ESTRUTURAS
+         ================================================== -->
+
+    <div
+        id="menuCategorias"
+        class="menu-modos"
+    >
+
+
+        <h2>
+            Escolha a categoria
+        </h2>
+
+
+        <button
+            class="botao-categoria"
+            data-categoria="giro"
+            type="button"
+        >
+            🧠 Giros
+        </button>
+
+
+        <button
+            class="botao-categoria"
+            data-categoria="sulco"
+            type="button"
+        >
+            ➰ Sulcos
+        </button>
+
+
+        <button
+            class="botao-categoria"
+            data-categoria="lobo"
+            type="button"
+        >
+            🧩 Lobos e Lóbulos
+        </button>
+
+                <button
+            class="botao-categoria"
+            data-categoria="nucleosdabase"
+            type="button"
+        >
+            🧩 Núcleos da Base e Regiões Capsulares
+        </button>
+
+
+        <button
+            id="voltarTipoEstrutura"
+            class="botao-acao"
+            type="button"
+        >
+            ← Voltar
+        </button>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         ESTUDO POR MAPA
+         ================================================== -->
+
+    <div
+        id="menuMapas"
+        class="menu-modos"
+    >
+
+
+        <h2>
+            Escolha o mapa
+        </h2>
+
+
+        <div
+            id="listaMapasJogo"
+            class="menu-mapas"
+        >
+        </div>
+
+
+        <button
+            id="voltarTipoMapa"
+            class="botao-acao"
+            type="button"
+        >
+            ← Voltar
+        </button>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         MODOS DE JOGO
+         ================================================== -->
+
+    <div
+        id="menuModos"
+        class="menu-modos"
+    >
+
+
+        <h2>
+            Escolha o modo de jogo
+        </h2>
+
+
+        <button
+            class="botao-modo"
+            data-modo="clicar"
+            type="button"
+        >
+            🎯 Clicar
+        </button>
+
+
+        <button
+            class="botao-modo"
+            data-modo="digitar"
+            type="button"
+        >
+            ✍️ Digitar
+        </button>
+
+
+        <button
+            id="voltarEscolha"
+            class="botao-acao"
+            type="button"
+        >
+            ← Voltar
+        </button>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         BOTÃO MODO PROVA
+         ================================================== -->
+
+    <div
+        id="menuProvaInicial"
+        class="menu-categorias"
+    >
+
+        <button
+            id="escolherModoProva"
+            class="botao-categoria"
+            type="button"
+        >
+            📝 Modo prova
+        </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         CONFIGURAÇÃO DA PROVA
+         ================================================== -->
+
+    <div
+        id="menuConfiguracaoProva"
+        class="menu-modos"
+    >
+
+
+        <h2>
+            Configurar prova
+        </h2>
+
+
+        <div class="campos-configuracao-prova">
+
+
+            <div class="campo-prova">
+
+                <label for="quantidadeProva">
+                    Quantidade de questões
+                </label>
+
+
+                <input
+                    id="quantidadeProva"
+                    type="number"
+                    min="1"
+                    value="10"
+                >
+
+            </div>
+
+
+            <div class="campo-prova">
+
+                <label for="modoRespostaProva">
+                    Modo de resposta
+                </label>
+
+
+                <select id="modoRespostaProva">
+
+                    <option value="clicar">
+                        Clicar
+                    </option>
+
+                    <option value="digitar">
+                        Digitar
+                    </option>
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <!--
+            A área de tópicos da prova será
+            criada automaticamente pelo menu.js
+        -->
+
+
+        <div class="acoes-configuracao-prova">
+
+            <button
+                id="iniciarProva"
+                type="button"
+            >
+                Iniciar prova
+            </button>
+
+
+            <button
+                id="voltarModoProva"
+                class="botao-acao"
+                type="button"
+            >
+                ← Voltar
+            </button>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         VOLTAR AO MENU PRINCIPAL
+         ================================================== -->
+
+    <div class="acoes-atlas">
+
+
+        <button
+            id="voltarPrincipalJogo"
+            class="botao-acao"
+            type="button"
+        >
+            ← Voltar ao menu principal
+        </button>
+
+
+    </div>
+
+
+</main>
+
+
+<!-- ==================================================
+     CARREGADOR CENTRAL DOS MAPAS
+     ================================================== -->
+
+<script src="Mapas/carregarMapas.js"></script>
+
+
+<!-- ==================================================
+     INICIAR MENU SOMENTE DEPOIS DOS MAPAS
+     ================================================== -->
+
+<script>
+
+    console.log(
+        "⏳ Aguardando mapas..."
+    );
+
+
+    mapasProntos
+
+        .then(
+            function() {
+
+
+                console.log(
+                    "✅ Mapas prontos para o menu:",
+                    catalogoMapas
+                );
+
+
+                // ======================================
+                // CRIAR SCRIPT DO MENU
+                // ======================================
+
+                const scriptMenu =
+                    document.createElement(
+                        "script"
+                    );
+
+
+                scriptMenu.src =
+                    "js/menu.js";
+
+
+                scriptMenu.onload =
+                    function() {
+
+                        console.log(
+                            "✅ menu.js carregado com sucesso."
+                        );
+
+                    };
+
+
+                scriptMenu.onerror =
+                    function() {
+
+                        console.error(
+                            "❌ Erro ao carregar js/menu.js"
+                        );
+
+
+                        const titulo =
+                            document.getElementById(
+                                "tituloMenuPrincipal"
+                            );
+
+
+                        if (
+                            titulo
+                        ) {
+
+                            titulo.textContent =
+                                "Erro ao carregar o menu.";
+
+                        }
+
+                    };
+
+
+                document.body.appendChild(
+                    scriptMenu
+                );
+
+            }
+        )
+
+
+        .catch(
+            function(
+                erro
+            ) {
+
+
+                console.error(
+                    "❌ Erro ao carregar os mapas:",
+                    erro
+                );
+
+
+                const titulo =
+                    document.getElementById(
+                        "tituloMenuPrincipal"
+                    );
+
+
+                if (
+                    titulo
+                ) {
+
+                    titulo.textContent =
+                        "Erro ao carregar os mapas.";
+
+                }
+
+            }
+        );
+
+</script>
+
+
+<!-- ==================================================
+     VOLTAR AO MENU PRINCIPAL
+     ================================================== -->
+
+<script>
+
+    const botaoVoltarPrincipal =
+        document.getElementById(
+            "voltarPrincipalJogo"
+        );
+
+
+    if (
+        botaoVoltarPrincipal
+    ) {
+
+        botaoVoltarPrincipal.addEventListener(
+            "click",
+
+            function() {
+
+                window.location.href =
+                    "index.html";
+
+            }
+        );
+
+    }
+
+</script>
+
+
+<footer class="assinatura-site">
+
+    Criado por: Hiroshi "Nagasa" Uchikado
+
+</footer>
+
+
+</body>
+
+</html>
