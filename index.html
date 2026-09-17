@@ -10,7 +10,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>NeuroGame</title>
+    <title>
+        NeuroGame
+    </title>
 
     <link
         rel="stylesheet"
@@ -23,104 +25,192 @@
 <body>
 
 
-<main class="menu-principal">
+    <!-- ==================================================
+         TELA DE CARREGAMENTO
+         ================================================== -->
 
-    <h1>
-        NeuroGame
-    </h1>
+    <div
+        id="telaCarregamento"
+        class="tela-carregamento"
+    >
 
-    <p>
-        Escolha uma opção
-    </p>
+        <div class="loading-container">
 
+            <div class="loading-spinner">
+            </div>
 
-    <div class="opcoes-principais">
-
-
-        <button
-            class="opcao-principal"
-            id="abrirAtlas"
-            type="button"
-        >
-
-            <span class="icone-principal">
+            <div class="loading-cerebro">
                 🧠
-            </span>
+            </div>
 
-            <strong>
-                ATLAS
-            </strong>
+        </div>
 
-            <small>
-                Explore e identifique estruturas anatômicas
-            </small>
-
-        </button>
-
-
-        <button
-            class="opcao-principal"
-            id="abrirJogo"
-            type="button"
-        >
-
-            <span class="icone-principal">
-                🎮
-            </span>
-
-            <strong>
-                JOGO
-            </strong>
-
-            <small>
-                Treine seus conhecimentos
-            </small>
-
-        </button>
-
+        <p>
+            Carregando NeuroGame...
+        </p>
 
     </div>
 
-</main>
+
+    <!-- ==================================================
+         MENU PRINCIPAL
+         ================================================== -->
+
+    <main class="menu-principal">
+
+        <h1>
+            NeuroGame
+        </h1>
+
+        <p>
+            Escolha uma opção
+        </p>
 
 
-<script>
+        <div class="opcoes-principais">
 
-    document
-        .getElementById(
-            "abrirAtlas"
-        )
-        .addEventListener(
-            "click",
+
+            <button
+                class="opcao-principal"
+                id="abrirAtlas"
+                type="button"
+            >
+
+                <span class="icone-principal">
+                    🧠
+                </span>
+
+                <strong>
+                    ATLAS
+                </strong>
+
+                <small>
+                    Explore e identifique estruturas anatômicas
+                </small>
+
+            </button>
+
+
+            <button
+                class="opcao-principal"
+                id="abrirJogo"
+                type="button"
+            >
+
+                <span class="icone-principal">
+                    🎮
+                </span>
+
+                <strong>
+                    JOGO
+                </strong>
+
+                <small>
+                    Treine seus conhecimentos
+                </small>
+
+            </button>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- ==================================================
+         ASSINATURA
+         ================================================== -->
+
+    <footer class="assinatura-site">
+
+        Criado por: Hiroshi "Nagasa" Uchikado
+
+    </footer>
+
+
+    <!-- ==================================================
+         NAVEGAÇÃO
+         ================================================== -->
+
+    <script>
+
+        document
+            .getElementById(
+                "abrirAtlas"
+            )
+            .addEventListener(
+                "click",
+                function() {
+
+                    window.location.href =
+                        "atlas.html";
+
+                }
+            );
+
+
+        document
+            .getElementById(
+                "abrirJogo"
+            )
+            .addEventListener(
+                "click",
+                function() {
+
+                    window.location.href =
+                        "jogo-menu.html";
+
+                }
+            );
+
+    </script>
+
+
+    <!-- ==================================================
+         SCRIPT DO LOADING
+         ================================================== -->
+
+    <script>
+
+        window.addEventListener(
+            "load",
+
             function() {
 
-                window.location.href =
-                    "atlas.html";
+                const tela =
+                    document.getElementById(
+                        "telaCarregamento"
+                    );
+
+
+                if (
+                    !tela
+                ) {
+
+                    return;
+
+                }
+
+
+                tela.classList.add(
+                    "oculta"
+                );
+
+
+                setTimeout(
+                    function() {
+
+                        tela.remove();
+
+                    },
+                    400
+                );
 
             }
         );
 
+    </script>
 
-    document
-        .getElementById(
-            "abrirJogo"
-        )
-        .addEventListener(
-            "click",
-            function() {
-
-                window.location.href =
-                    "jogo-menu.html";
-
-            }
-        );
-
-</script>
-<footer class="assinatura-site">
-
-    Criado por: Hiroshi "Nagasa" Uchikado
-
-</footer>
 
 </body>
 

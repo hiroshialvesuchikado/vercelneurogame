@@ -148,7 +148,8 @@ function obterCategoria(
 
     }
 
-      if (
+
+    if (
         id.startsWith(
             "nucleosdabase_"
         )
@@ -169,7 +170,8 @@ function obterCategoria(
 
     }
 
-        if (
+
+    if (
         id.startsWith(
             "trans_"
         )
@@ -343,23 +345,23 @@ else if (
     "mapa"
 ) {
 
-const mapaEncontrado =
-    catalogoMapas.find(
-        function(
-            mapa
-        ) {
+    const mapaEncontrado =
+        catalogoMapas.find(
+            function(
+                mapa
+            ) {
 
-            return (
-                mapa.id ===
-                mapaSelecionado &&
-                obterTopicoMapa(
-                    mapa
-                ) ===
-                topicoSelecionado
-            );
+                return (
+                    mapa.id ===
+                    mapaSelecionado &&
+                    obterTopicoMapa(
+                        mapa
+                    ) ===
+                    topicoSelecionado
+                );
 
-        }
-    );
+            }
+        );
 
 
     if (
@@ -919,6 +921,10 @@ function carregarQuestao(
         urlMapa;
 
 
+    // ==================================================
+    // IMAGEM JÁ CARREGADA / CACHE
+    // ==================================================
+
     if (
         mesmaImagem &&
         imagem.complete &&
@@ -932,6 +938,9 @@ function carregarQuestao(
 
 
         prepararQuestao();
+
+
+        esconderLoadingJogo();
 
 
         return;
@@ -953,6 +962,10 @@ function carregarQuestao(
         null;
 
 
+    // ==================================================
+    // IMAGEM CARREGADA
+    // ==================================================
+
     imagem.onload =
         function() {
 
@@ -964,8 +977,15 @@ function carregarQuestao(
 
             prepararQuestao();
 
+
+            esconderLoadingJogo();
+
         };
 
+
+    // ==================================================
+    // ERRO NA IMAGEM
+    // ==================================================
 
     imagem.onerror =
         function() {
@@ -978,6 +998,22 @@ function carregarQuestao(
                 "❌ Erro ao carregar:",
                 mapa.imagem
             );
+
+
+            esconderLoadingJogo();
+
+
+            if (
+                typeof mostrarErroAmigavel ===
+                "function"
+            ) {
+
+                mostrarErroAmigavel(
+                    "Não foi possível carregar a imagem",
+                    "A imagem anatômica deste mapa não pôde ser carregada. Tente novamente."
+                );
+
+            }
 
         };
 
@@ -1039,6 +1075,15 @@ if (
         "Erro: tipo de estudo inválido.";
 
 
+    esconderLoadingJogo();
+
+
+    mostrarErroAmigavel(
+        "Configuração inválida",
+        "Não foi possível identificar o tipo de estudo. Volte ao menu e escolha uma opção novamente."
+    );
+
+
     throw new Error(
         "Tipo de estudo inválido."
     );
@@ -1056,6 +1101,15 @@ if (
 
     pergunta.textContent =
         "Erro: tópico não selecionado.";
+
+
+    esconderLoadingJogo();
+
+
+    mostrarErroAmigavel(
+        "Tópico não selecionado",
+        "Escolha um tópico antes de iniciar o jogo."
+    );
 
 
     throw new Error(
@@ -1079,6 +1133,15 @@ if (
         "Erro: categoria não selecionada.";
 
 
+    esconderLoadingJogo();
+
+
+    mostrarErroAmigavel(
+        "Categoria não selecionada",
+        "Escolha uma categoria de estruturas antes de iniciar o jogo."
+    );
+
+
     throw new Error(
         "Categoria não selecionada."
     );
@@ -1098,6 +1161,15 @@ if (
 
     pergunta.textContent =
         "Erro: mapa não selecionado.";
+
+
+    esconderLoadingJogo();
+
+
+    mostrarErroAmigavel(
+        "Mapa não selecionado",
+        "Escolha um mapa anatômico antes de iniciar o jogo."
+    );
 
 
     throw new Error(
@@ -1124,12 +1196,30 @@ if (
         pergunta.textContent =
             "Nenhuma estrutura dessa categoria foi encontrada neste tópico.";
 
+
+        esconderLoadingJogo();
+
+
+        mostrarErroAmigavel(
+            "Nenhuma estrutura encontrada",
+            "Não existem estruturas cadastradas nesta categoria para o tópico selecionado."
+        );
+
     }
 
     else {
 
         pergunta.textContent =
             "Nenhuma estrutura foi encontrada nesse mapa.";
+
+
+        esconderLoadingJogo();
+
+
+        mostrarErroAmigavel(
+            "Mapa sem estruturas",
+            "Este mapa ainda não possui estruturas disponíveis para jogar."
+        );
 
     }
 
@@ -1241,7 +1331,21 @@ else {
         modoSelecionado
     );
 
+
+    esconderLoadingJogo();
+
+
+    mostrarErroAmigavel(
+        "Modo de jogo inválido",
+        "Não foi possível identificar o modo de jogo. Volte ao menu e tente novamente."
+    );
+
 }
+
+
+// ======================================================
+// 20. ERRO AMIGÁVEL
+// ======================================================
 
 function mostrarErroAmigavel(
     titulo,
@@ -1398,6 +1502,44 @@ function mostrarErroAmigavel(
 
     document.body.appendChild(
         overlay
+    );
+
+}
+
+
+// ======================================================
+// 21. ESCONDER TELA DE LOADING
+// ======================================================
+
+function esconderLoadingJogo() {
+
+    const tela =
+        document.getElementById(
+            "telaCarregamentoJogo"
+        );
+
+
+    if (
+        !tela
+    ) {
+
+        return;
+
+    }
+
+
+    tela.classList.add(
+        "oculta"
+    );
+
+
+    setTimeout(
+        function() {
+
+            tela.remove();
+
+        },
+        400
     );
 
 }

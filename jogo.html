@@ -24,6 +24,35 @@
 <body>
 
 
+<!-- ==================================================
+     TELA DE CARREGAMENTO
+     ================================================== -->
+
+<div
+    id="telaCarregamentoJogo"
+    class="tela-carregamento-jogo"
+>
+
+    <div class="loading-container">
+
+        <div class="loading-spinner">
+        </div>
+
+        <div class="loading-cerebro">
+            🧠
+        </div>
+
+    </div>
+
+
+    <p>
+        Preparando jogo...
+    </p>
+
+</div>
+
+
+
 <main class="game">
 
 
@@ -214,10 +243,7 @@
 
 
     <!-- ==================================================
-         ANALYTICS DE DESENVOLVIMENTO
-         
-         Mantemos os elementos no HTML porque analytics.js
-         pode utilizá-los, mas eles ficam ocultos dos alunos.
+         ANALYTICS
          ================================================== -->
 
     <div
@@ -273,14 +299,14 @@
 
 
 <!-- ==================================================
-     CARREGADOR ÚNICO DOS MAPAS
+     CARREGADOR DOS MAPAS
      ================================================== -->
 
 <script src="Mapas/carregarMapas.js"></script>
 
 
 <!-- ==================================================
-     INICIAR GAME.JS SOMENTE DEPOIS DOS MAPAS
+     INICIAR GAME.JS DEPOIS DOS MAPAS
      ================================================== -->
 
 <script>
@@ -337,6 +363,9 @@
 
                         }
 
+
+                        esconderLoadingJogo();
+
                     };
 
 
@@ -370,8 +399,53 @@
 
                 }
 
+
+                esconderLoadingJogo();
+
             }
         );
+
+</script>
+
+
+<!-- ==================================================
+     FUNÇÃO PARA ESCONDER O LOADING
+     ================================================== -->
+
+<script>
+
+    function esconderLoadingJogo() {
+
+        const tela =
+            document.getElementById(
+                "telaCarregamentoJogo"
+            );
+
+
+        if (
+            !tela
+        ) {
+
+            return;
+
+        }
+
+
+        tela.classList.add(
+            "oculta"
+        );
+
+
+        setTimeout(
+            function() {
+
+                tela.remove();
+
+            },
+            400
+        );
+
+    }
 
 </script>
 
