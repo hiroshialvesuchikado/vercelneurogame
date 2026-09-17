@@ -247,6 +247,33 @@ if (
 }
 
 
+// ======================================================
+// CADÁVER — Bolacha 02
+// ======================================================
+if (
+    typeof mapaTelencefaloBolacha02 !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "telencefalo-bolacha02",
+
+            titulo:
+                "Telencéfalo — Vista transversal 02",
+
+            imagem:
+                "imagens/TelencefaloBolacha02.webp",
+
+            estruturas:
+                mapaTelencefaloBolacha02,
+
+        }
+    );
+}
+
     // ======================================================
 // CADÁVER — TELENCEFALO VISTA SUPERIOR
 // ======================================================

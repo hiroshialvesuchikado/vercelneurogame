@@ -180,6 +180,37 @@ window.definicoesMapas = [
 
         },
 
+
+                // ==================================================
+    // CADÁVER — TELENCÉFALO BOLACHA 02
+    // ==================================================
+
+            {
+
+            id:
+                "telencefalo-bolacha02",
+
+                        topico:
+            "telencefalo",
+
+            titulo:
+                "Telencéfalo — Vista transversal 02",
+
+            imagem:
+                "imagens/TelencefaloBolacha02.webp",
+            
+            arquivo:
+                "Mapas/mapaTelencefaloBolacha02.js",
+
+                        obterEstruturas:
+            function() {
+
+                return  mapaTelencefaloBolacha02;
+
+            }
+
+        },
+
     // ==================================================
     // CADÁVER — TELENCÉFALO SUPERIOR
     // ==================================================

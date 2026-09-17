@@ -56,7 +56,7 @@ const mapaTelencefaloBolacha01 = [
 },
 
 {
-    id: "trans_cabecanucleocaudado",
+    id: "nucleosdabase_cabecanucleocaudado",
     nome: "Cabeça do Núcleo Caudado",
     tipo: "area",
     pontos: "1750,1417 1705,1453 1682,1508 1677,1553 1696,1576 1718,1576 1736,1558 1759,1539 1768,1521 1782,1512 1795,1494 1813,1467 1813,1453 1813,1440 1804,1426 1786,1417 1777,1417"
