@@ -314,6 +314,454 @@
 <footer class="assinatura-site">
     Criado por: Hiroshi "Nagasa" Uchikado
 </footer>
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NeuroGame</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     TELA DE CARREGAMENTO
+     ================================================== -->
+
+<div
+    id="telaCarregamento"
+    class="tela-carregamento"
+>
+
+    <div class="loading-container">
+
+        <div class="loading-spinner">
+        </div>
+
+        <div class="loading-cerebro">
+            🧠
+        </div>
+
+    </div>
+
+    <p>
+        Carregando NeuroGame...
+    </p>
+
+</div>
+
+<main class="game">
+
+
+    <!-- ==================================================
+         TÍTULO
+         ================================================== -->
+
+    <h1>
+        NeuroGame
+    </h1>
+
+
+    <!-- ==================================================
+         AÇÕES DA PARTIDA
+         ================================================== -->
+
+    <div
+        id="acoesPartida"
+        class="acoes-partida"
+    >
+
+        <button
+            id="reiniciarPartida"
+            type="button"
+            class="botao-acao"
+        >
+            🔄 Reiniciar partida
+        </button>
+
+
+        <button
+            id="voltarMenu"
+            type="button"
+            class="botao-acao"
+        >
+            ← Voltar ao menu
+        </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         PERGUNTA
+         ================================================== -->
+
+    <h2
+        id="pergunta"
+        aria-live="polite"
+    >
+        Preparando jogo...
+    </h2>
+
+
+    <!-- ==================================================
+         PAINEL
+         ================================================== -->
+
+    <div
+        class="painel"
+        aria-label="Informações da partida"
+    >
+
+
+        <span>
+
+            Pontos:
+
+            <strong id="pontos">
+                0
+            </strong>
+
+        </span>
+
+
+        <span>
+
+            Questão:
+
+            <strong id="numeroQuestao">
+                1
+            </strong>
+
+            /
+
+            <strong id="totalQuestoes">
+                0
+            </strong>
+
+        </span>
+
+
+        <span>
+
+            Erros:
+
+            <strong id="erros">
+                0
+            </strong>
+
+        </span>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         FEEDBACK
+         ================================================== -->
+
+    <p
+        id="feedback"
+        aria-live="polite"
+    >
+    </p>
+
+
+    <!-- ==================================================
+         ÁREA DE DIGITAÇÃO
+         ================================================== -->
+
+    <div
+        id="areaDigitar"
+        class="area-digitar"
+    >
+
+        <label
+            for="respostaDigitada"
+            class="sr-only"
+        >
+            Digite o nome da estrutura
+        </label>
+
+
+        <input
+            id="respostaDigitada"
+            type="text"
+            placeholder="Digite o nome da estrutura"
+            autocomplete="off"
+            spellcheck="false"
+        >
+
+
+        <button
+            id="confirmarResposta"
+            type="button"
+        >
+            Responder
+        </button>
+
+    </div>
+
+
+    <!-- ==================================================
+         INFORMAÇÃO DA ESTRUTURA
+         ================================================== -->
+
+    <div
+        id="infoEstrutura"
+        class="info-estrutura"
+        aria-live="polite"
+    >
+    </div>
+
+
+    <!-- ==================================================
+         IMAGEM ANATÔMICA + HOTSPOTS
+         ================================================== -->
+
+    <div class="cerebro">
+
+
+        <img
+            id="imagemAnatomica"
+            alt="Imagem anatômica utilizada no NeuroGame"
+            draggable="false"
+        >
+
+
+        <svg
+            id="camadaHotspots"
+            class="hotspots"
+            aria-label="Áreas interativas da imagem anatômica"
+        >
+        </svg>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         ANALYTICS
+         ================================================== -->
+
+    <div
+        id="painelAnalytics"
+        class="painel-analytics"
+        hidden
+    >
+
+        <h3>
+            📊 Analytics — Debug
+        </h3>
+
+
+        <div id="listaAnalytics">
+
+            <p id="mensagemAnalytics">
+                Nenhum registro ainda.
+            </p>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+
+<!-- ==================================================
+     RODAPÉ
+     ================================================== -->
+
+<footer class="assinatura-site">
+
+    Criado por: Hiroshi "Nagasa" Uchikado
+
+</footer>
+
+
+<!-- ==================================================
+     ANALYTICS
+     ================================================== -->
+
+<script src="js/analytics.js"></script>
+
+
+<!-- ==================================================
+     MODOS DE JOGO
+     ================================================== -->
+
+<script src="js/modoClicar.js"></script>
+
+<script src="js/modoDigitar.js"></script>
+
+
+<!-- ==================================================
+     CARREGADOR DOS MAPAS
+     ================================================== -->
+
+<script src="Mapas/carregarMapas.js"></script>
+
+
+<!-- ==================================================
+     INICIAR GAME.JS DEPOIS DOS MAPAS
+     ================================================== -->
+
+<script>
+
+    mapasProntos
+        .then(
+            function() {
+
+                console.log(
+                    "✅ Mapas carregados. Iniciando jogo..."
+                );
+
+
+                const script =
+                    document.createElement(
+                        "script"
+                    );
+
+
+                script.src =
+                    "js/game.js";
+
+
+                script.onload =
+                    function() {
+
+                        console.log(
+                            "✅ game.js carregado."
+                        );
+
+                    };
+
+
+                script.onerror =
+                    function() {
+
+                        console.error(
+                            "❌ Erro ao carregar js/game.js"
+                        );
+
+
+                        const pergunta =
+                            document.getElementById(
+                                "pergunta"
+                            );
+
+
+                        if (
+                            pergunta
+                        ) {
+
+                            pergunta.textContent =
+                                "Erro ao carregar o jogo.";
+
+                        }
+
+
+                        esconderLoadingJogo();
+
+                    };
+
+
+                document.body.appendChild(
+                    script
+                );
+
+            }
+        )
+        .catch(
+            function(erro) {
+
+                console.error(
+                    "❌ Erro ao iniciar jogo:",
+                    erro
+                );
+
+
+                const pergunta =
+                    document.getElementById(
+                        "pergunta"
+                    );
+
+
+                if (
+                    pergunta
+                ) {
+
+                    pergunta.textContent =
+                        "Erro ao carregar os mapas.";
+
+                }
+
+
+                esconderLoadingJogo();
+
+            }
+        );
+
+</script>
+
+
+<!-- ==================================================
+     FUNÇÃO PARA ESCONDER O LOADING
+     ================================================== -->
+
+<script>
+
+    function esconderLoadingJogo() {
+
+        const tela =
+            document.getElementById(
+                "telaCarregamentoJogo"
+            );
+
+
+        if (
+            !tela
+        ) {
+
+            return;
+
+        }
+
+
+        tela.classList.add(
+            "oculta"
+        );
+
+
+        setTimeout(
+            function() {
+
+                tela.remove();
+
+            },
+            400
+        );
+
+    }
+
+</script>
+
 
 </body>
 

@@ -306,6 +306,48 @@
 
 
 <!-- ==================================================
+     FUNÇÃO PARA ESCONDER O LOADING
+     ================================================== -->
+
+<script>
+
+    function esconderLoadingJogo() {
+
+        const tela =
+            document.getElementById(
+                "telaCarregamentoJogo"
+            );
+
+
+        if (
+            !tela
+        ) {
+
+            return;
+
+        }
+
+
+        tela.classList.add(
+            "oculta"
+        );
+
+
+        setTimeout(
+            function() {
+
+                tela.remove();
+
+            },
+            400
+        );
+
+    }
+
+</script>
+
+
+<!-- ==================================================
      INICIAR GAME.JS DEPOIS DOS MAPAS
      ================================================== -->
 
@@ -364,7 +406,14 @@
                         }
 
 
-                        esconderLoadingJogo();
+                        if (
+                            typeof esconderLoadingJogo ===
+                            "function"
+                        ) {
+
+                            esconderLoadingJogo();
+
+                        }
 
                     };
 
@@ -400,52 +449,17 @@
                 }
 
 
-                esconderLoadingJogo();
+                if (
+                    typeof esconderLoadingJogo ===
+                    "function"
+                ) {
+
+                    esconderLoadingJogo();
+
+                }
 
             }
         );
-
-</script>
-
-
-<!-- ==================================================
-     FUNÇÃO PARA ESCONDER O LOADING
-     ================================================== -->
-
-<script>
-
-    function esconderLoadingJogo() {
-
-        const tela =
-            document.getElementById(
-                "telaCarregamentoJogo"
-            );
-
-
-        if (
-            !tela
-        ) {
-
-            return;
-
-        }
-
-
-        tela.classList.add(
-            "oculta"
-        );
-
-
-        setTimeout(
-            function() {
-
-                tela.remove();
-
-            },
-            400
-        );
-
-    }
 
 </script>
 

@@ -16,13 +16,40 @@
 
     <link
         rel="stylesheet"
-        href="../style.css"
+        href="style.css"
     >
 
 </head>
 
 
 <body>
+
+
+<!-- ==================================================
+     TELA DE CARREGAMENTO
+     ================================================== -->
+
+<div
+    id="telaCarregamento"
+    class="tela-carregamento"
+>
+
+    <div class="loading-container">
+
+        <div class="loading-spinner">
+        </div>
+
+        <div class="loading-cerebro">
+            🧠
+        </div>
+
+    </div>
+
+    <p>
+        Carregando Atlas...
+    </p>
+
+</div>
 
 
 <main class="game">
@@ -145,7 +172,7 @@
      CARREGADOR DOS MAPAS
      ================================================== -->
 
-<script src="../Mapas/carregarMapas.js"></script>
+<script src="Mapas/carregarMapas.js"></script>
 
 
 <script>
@@ -413,6 +440,9 @@ function abrirAtlas(
             "Mapa não encontrado";
 
 
+        esconderLoading();
+
+
         return;
 
     }
@@ -456,6 +486,9 @@ function carregarImagemAtlas(
                 mapa
             );
 
+
+            esconderLoading();
+
         };
 
 
@@ -470,6 +503,9 @@ function carregarImagemAtlas(
                 "Imagem não encontrada:",
                 mapa.imagem
             );
+
+
+            esconderLoading();
 
         };
 
@@ -973,8 +1009,7 @@ function criarEstruturasAtlas(
 
 
                 /*
-                    Agora a linha fica levemente
-                    transparente.
+                    Linha levemente transparente.
                 */
 
                 elemento.style.strokeOpacity =
@@ -1023,10 +1058,6 @@ function criarEstruturasAtlas(
                     cor;
 
 
-                /*
-                    Transparência do preenchimento.
-                */
-
                 elemento.style.fillOpacity =
                     OPACIDADE_POLIGONO;
 
@@ -1034,11 +1065,6 @@ function criarEstruturasAtlas(
                 elemento.style.stroke =
                     cor;
 
-
-                /*
-                    O contorno continua bem visível,
-                    mas também ligeiramente transparente.
-                */
 
                 elemento.style.strokeOpacity =
                     OPACIDADE_CONTORNO_POLIGONO;
@@ -1299,11 +1325,6 @@ function selecionarEstruturaAtlas(
             "1";
 
 
-        /*
-            Mantemos o interior transparente
-            mesmo quando selecionado.
-        */
-
         elementoSelecionado.style.fillOpacity =
             "0.40";
 
@@ -1333,7 +1354,45 @@ botaoTrocarMapa.addEventListener(
 
 
 // ======================================================
-// 19. VOLTAR AO MENU PRINCIPAL
+// 19. ESCONDER TELA DE CARREGAMENTO
+// ======================================================
+
+function esconderLoading() {
+
+    const tela =
+        document.getElementById(
+            "telaCarregamento"
+        );
+
+
+    if (
+        !tela
+    ) {
+
+        return;
+
+    }
+
+
+    tela.classList.add(
+        "oculta"
+    );
+
+
+    setTimeout(
+        function() {
+
+            tela.remove();
+
+        },
+        400
+    );
+
+}
+
+
+// ======================================================
+// 20. VOLTAR AO MENU PRINCIPAL
 // ======================================================
 
 botaoVoltarPrincipal.addEventListener(
@@ -1342,14 +1401,14 @@ botaoVoltarPrincipal.addEventListener(
     function() {
 
         window.location.href =
-            "../index.html";
+            "index.html";
 
     }
 );
 
 
 // ======================================================
-// 20. INICIAR ATLAS
+// 21. INICIAR ATLAS
 // ======================================================
 
 mapasProntos
@@ -1372,6 +1431,9 @@ mapasProntos
             ) {
 
                 mostrarSelecaoAtlas();
+
+
+                esconderLoading();
 
             }
 
@@ -1406,6 +1468,9 @@ mapasProntos
             tituloMapaAtlas.textContent =
                 "Erro ao carregar mapas.";
 
+
+            esconderLoading();
+
         }
     );
 
@@ -1414,7 +1479,9 @@ mapasProntos
 
 
 <footer class="assinatura-site">
+
     Criado por: Hiroshi "Nagasa" Uchikado
+
 </footer>
 
 
