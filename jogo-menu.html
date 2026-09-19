@@ -25,6 +25,33 @@
 <body>
 
 
+<!-- ==================================================
+     TELA DE CARREGAMENTO
+     ================================================== -->
+
+<div
+    id="telaCarregamento"
+    class="tela-carregamento"
+>
+
+    <div class="loading-container">
+
+        <div class="loading-spinner">
+        </div>
+
+        <div class="loading-cerebro">
+            🧠
+        </div>
+
+    </div>
+
+    <p>
+        Carregando NeuroGame...
+    </p>
+
+</div>
+
+
 <main class="game">
 
 
@@ -114,7 +141,8 @@
             🧩 Lobos e Lóbulos
         </button>
 
-                <button
+
+        <button
             class="botao-categoria"
             data-categoria="nucleosdabase"
             type="button"
@@ -294,12 +322,6 @@
         </div>
 
 
-        <!--
-            A área de tópicos da prova será
-            criada automaticamente pelo menu.js
-        -->
-
-
         <div class="acoes-configuracao-prova">
 
             <button
@@ -347,6 +369,59 @@
 
 
 <!-- ==================================================
+     RODAPÉ
+     ================================================== -->
+
+<footer class="assinatura-site">
+
+    Criado por: Hiroshi "Nagasa" Uchikado
+
+</footer>
+
+
+<!-- ==================================================
+     FUNÇÃO DO LOADING
+     ================================================== -->
+
+<script>
+
+    function esconderLoadingMenu() {
+
+        const tela =
+            document.getElementById(
+                "telaCarregamento"
+            );
+
+
+        if (
+            !tela
+        ) {
+
+            return;
+
+        }
+
+
+        tela.classList.add(
+            "oculta"
+        );
+
+
+        setTimeout(
+            function() {
+
+                tela.remove();
+
+            },
+            400
+        );
+
+    }
+
+</script>
+
+
+<!-- ==================================================
      CARREGADOR CENTRAL DOS MAPAS
      ================================================== -->
 
@@ -376,10 +451,6 @@
                 );
 
 
-                // ======================================
-                // CRIAR SCRIPT DO MENU
-                // ======================================
-
                 const scriptMenu =
                     document.createElement(
                         "script"
@@ -396,6 +467,9 @@
                         console.log(
                             "✅ menu.js carregado com sucesso."
                         );
+
+
+                        esconderLoadingMenu();
 
                     };
 
@@ -422,6 +496,9 @@
                                 "Erro ao carregar o menu.";
 
                         }
+
+
+                        esconderLoadingMenu();
 
                     };
 
@@ -461,6 +538,9 @@
 
                 }
 
+
+                esconderLoadingMenu();
+
             }
         );
 
@@ -497,33 +577,6 @@
     }
 
 </script>
-<div
-    id="telaCarregamento"
-    class="tela-carregamento"
->
-
-    <div class="loading-container">
-
-        <div class="loading-spinner">
-        </div>
-
-        <div class="loading-cerebro">
-            🧠
-        </div>
-
-    </div>
-
-    <p>
-        Carregando NeuroGame...
-    </p>
-
-</div>
-
-<footer class="assinatura-site">
-
-    Criado por: Hiroshi "Nagasa" Uchikado
-
-</footer>
 
 
 </body>
