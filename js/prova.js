@@ -261,14 +261,6 @@ function obterTopicoMapaProva(
     }
 
 
-    /*
-        Compatibilidade:
-
-        Caso carregarMapas.js ainda não copie
-        "topico" para catalogoMapas, procuramos
-        diretamente no manifesto.
-    */
-
     if (
         typeof window.definicoesMapas !==
         "undefined"
@@ -344,13 +336,6 @@ function registrarErroEstruturaProva() {
                 .mapa
         );
 
-
-    /*
-        Incluímos mapa + estrutura na chave.
-
-        Isso evita conflito caso dois mapas
-        diferentes usem o mesmo ID.
-    */
 
     const chave =
         `${mapaId}::${id}`;
@@ -537,8 +522,6 @@ function embaralhar(
 
 // ======================================================
 // 9. CRIAR BANCO DE QUESTÕES
-//
-// AQUI ESTÁ O FILTRO POR TÓPICO.
 // ======================================================
 
 function criarBancoQuestoes() {
@@ -556,10 +539,6 @@ function criarBancoQuestoes() {
                 );
 
 
-            // ==========================================
-            // FILTRAR PELOS TÓPICOS DA PROVA
-            // ==========================================
-
             if (
                 topicosSelecionados.length > 0 &&
                 !topicosSelecionados.includes(
@@ -571,10 +550,6 @@ function criarBancoQuestoes() {
 
             }
 
-
-            // ==========================================
-            // COLOCAR ESTRUTURAS NO BANCO
-            // ==========================================
 
             mapa.estruturas.forEach(
                 function(estrutura) {
@@ -619,9 +594,6 @@ bancoQuestoes =
 
 // ======================================================
 // 11. DISTRIBUIR MAPAS
-//
-// Evita, quando possível, duas questões seguidas
-// usando exatamente a mesma imagem.
 // ======================================================
 
 function distribuirMapas(
@@ -682,11 +654,6 @@ function distribuirMapas(
                     }
                 );
 
-
-        /*
-            Se só restarem questões do mesmo mapa,
-            permitimos repetição.
-        */
 
         if (
             opcoes.length === 0
@@ -760,7 +727,7 @@ bancoQuestoes =
 
 
 // ======================================================
-// 13. DEFINIR QUANTIDADE DE QUESTÕES
+// 13. DEFINIR QUANTIDADE
 // ======================================================
 
 const quantidadeReal =
@@ -805,10 +772,6 @@ function criarHotspots(
             let elemento;
 
 
-            // ==========================================
-            // LINHA
-            // ==========================================
-
             if (
                 estrutura.tipo ===
                 "linha"
@@ -834,10 +797,6 @@ function criarHotspots(
 
             }
 
-
-            // ==========================================
-            // ÁREA
-            // ==========================================
 
             else {
 
@@ -888,10 +847,6 @@ function criarHotspots(
                 elemento
             );
 
-
-            // ==========================================
-            // HITBOX PARA LINHAS
-            // ==========================================
 
             if (
                 estrutura.tipo ===
@@ -1040,10 +995,6 @@ function novaQuestao() {
         "";
 
 
-    // ==================================================
-    // PREPARAR IMAGEM
-    // ==================================================
-
     function prepararImagem() {
 
         criarHotspots(
@@ -1120,6 +1071,16 @@ function novaQuestao() {
                 "Modo de prova inválido.";
 
 
+            if (
+                typeof esconderLoadingProva ===
+                "function"
+            ) {
+
+                esconderLoadingProva();
+
+            }
+
+
             return;
 
         }
@@ -1132,12 +1093,18 @@ function novaQuestao() {
         bloqueado =
             false;
 
+
+        if (
+            typeof esconderLoadingProva ===
+            "function"
+        ) {
+
+            esconderLoadingProva();
+
+        }
+
     }
 
-
-    // ==================================================
-    // CARREGAR IMAGEM
-    // ==================================================
 
     const novaURL =
         new URL(
@@ -1152,11 +1119,6 @@ function novaQuestao() {
         imagem.currentSrc ||
         imagem.src;
 
-
-    /*
-        Se já estivermos usando a mesma imagem,
-        não precisamos esperar outro onload.
-    */
 
     if (
         imagem.complete &&
@@ -1192,6 +1154,16 @@ function novaQuestao() {
 
             pergunta.textContent =
                 "Erro ao carregar imagem.";
+
+
+            if (
+                typeof esconderLoadingProva ===
+                "function"
+            ) {
+
+                esconderLoadingProva();
+
+            }
 
         };
 
@@ -1278,10 +1250,6 @@ function verificarClique(
             .id;
 
 
-    // ==================================================
-    // ACERTO
-    // ==================================================
-
     if (
         acertou
     ) {
@@ -1309,10 +1277,6 @@ function verificarClique(
 
     }
 
-
-    // ==================================================
-    // ERRO
-    // ==================================================
 
     else {
 
@@ -1356,10 +1320,6 @@ function verificarClique(
     }
 
 
-    // ==================================================
-    // ANALYTICS
-    // ==================================================
-
     try {
 
         registrarAnalytics(
@@ -1385,10 +1345,6 @@ function verificarClique(
 
     }
 
-
-    // ==================================================
-    // PRÓXIMA QUESTÃO
-    // ==================================================
 
     setTimeout(
         function() {
@@ -1429,10 +1385,6 @@ svg.addEventListener(
             evento.target;
 
 
-        // ==============================================
-        // ESTRUTURA NORMAL
-        // ==============================================
-
         if (
             alvo.classList &&
             alvo.classList.contains(
@@ -1452,10 +1404,6 @@ svg.addEventListener(
 
         }
 
-
-        // ==============================================
-        // HITBOX
-        // ==============================================
 
         if (
             alvo.classList &&
@@ -1635,10 +1583,6 @@ function verificarDigitacao() {
         respostaCorreta;
 
 
-    // ==================================================
-    // ACERTO
-    // ==================================================
-
     if (
         acertou
     ) {
@@ -1673,10 +1617,6 @@ function verificarDigitacao() {
 
     }
 
-
-    // ==================================================
-    // ERRO
-    // ==================================================
 
     else {
 
@@ -1721,10 +1661,6 @@ function verificarDigitacao() {
     botaoResponder.disabled =
         true;
 
-
-    // ==================================================
-    // ANALYTICS
-    // ==================================================
 
     try {
 
@@ -1833,7 +1769,7 @@ function registrarAnalytics(
 
 
 // ======================================================
-// 22. TELA FINAL DE FEEDBACK
+// 22. TELA FINAL
 // ======================================================
 
 function mostrarTelaFeedbackProva() {
@@ -1931,10 +1867,6 @@ function mostrarTelaFeedbackProva() {
         "feedback-final-card";
 
 
-    // ==================================================
-    // TÍTULO
-    // ==================================================
-
     const titulo =
         document.createElement(
             "h2"
@@ -1949,10 +1881,6 @@ function mostrarTelaFeedbackProva() {
         titulo
     );
 
-
-    // ==================================================
-    // CLASSIFICAÇÃO
-    // ==================================================
 
     const tituloClassificacao =
         document.createElement(
@@ -1992,10 +1920,6 @@ function mostrarTelaFeedbackProva() {
     );
 
 
-    // ==================================================
-    // RESUMO
-    // ==================================================
-
     const resumo =
         document.createElement(
             "div"
@@ -2034,10 +1958,6 @@ function mostrarTelaFeedbackProva() {
     );
 
 
-    // ==================================================
-    // ESTRUTURAS PARA REVISAR
-    // ==================================================
-
     const revisao =
         document.createElement(
             "div"
@@ -2065,10 +1985,6 @@ function mostrarTelaFeedbackProva() {
     );
 
 
-    // ==================================================
-    // SEM ERROS
-    // ==================================================
-
     if (
         estruturasErradas.length ===
         0
@@ -2094,10 +2010,6 @@ function mostrarTelaFeedbackProva() {
 
     }
 
-
-    // ==================================================
-    // COM ERROS
-    // ==================================================
 
     else {
 
@@ -2176,10 +2088,6 @@ function mostrarTelaFeedbackProva() {
     );
 
 
-    // ==================================================
-    // BOTÕES
-    // ==================================================
-
     const botoes =
         document.createElement(
             "div"
@@ -2189,10 +2097,6 @@ function mostrarTelaFeedbackProva() {
     botoes.className =
         "feedback-final-botoes";
 
-
-    // --------------------------------------------------
-    // REFAZER PROVA
-    // --------------------------------------------------
 
     const refazer =
         document.createElement(
@@ -2218,10 +2122,6 @@ function mostrarTelaFeedbackProva() {
     );
 
 
-    // --------------------------------------------------
-    // ATLAS
-    // --------------------------------------------------
-
     const atlas =
         document.createElement(
             "button"
@@ -2246,10 +2146,6 @@ function mostrarTelaFeedbackProva() {
         }
     );
 
-
-    // --------------------------------------------------
-    // MENU
-    // --------------------------------------------------
 
     const voltar =
         document.createElement(
@@ -2355,7 +2251,7 @@ if (
 
 
 // ======================================================
-// 25. FINALIZAR PROVA
+// 25. FINALIZAR
 // ======================================================
 
 function finalizarProva() {
@@ -2539,17 +2435,22 @@ if (
     pergunta.textContent =
         "Erro: nenhum mapa disponível.";
 
+
+    if (
+        typeof esconderLoadingProva ===
+        "function"
+    ) {
+
+        esconderLoadingProva();
+
+    }
+
 }
 
 
 else if (
     topicosSelecionados.length === 0
 ) {
-
-    /*
-        Mantemos compatibilidade caso alguém abra
-        prova.html diretamente sem o parâmetro topicos.
-    */
 
     console.warn(
         "⚠️ Nenhum tópico informado. A prova utilizará todos os mapas."
@@ -2564,7 +2465,18 @@ else if (
         pergunta.textContent =
             "Erro: nenhuma questão disponível.";
 
+
+        if (
+            typeof esconderLoadingProva ===
+            "function"
+        ) {
+
+            esconderLoadingProva();
+
+        }
+
     }
+
 
     else {
 
@@ -2588,6 +2500,16 @@ else if (
         "Nenhuma questão encontrada para:",
         topicosSelecionados
     );
+
+
+    if (
+        typeof esconderLoadingProva ===
+        "function"
+    ) {
+
+        esconderLoadingProva();
+
+    }
 
 }
 
