@@ -274,6 +274,34 @@ if (
     );
 }
 
+
+// ======================================================
+// CADÁVER — Bolacha 02
+// ======================================================
+if (
+    typeof mapaTelencefaloBolacha02 !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "diencefalo-01",
+
+            titulo:
+                "Diencéfalo e Tálamo — Vista Lateral 01",
+
+            imagem:
+                "imagens/CadaverTelencefaloLateral.webp",
+
+            estruturas:
+                mapaCadaverDiencefalo01,
+
+        }
+    );
+}
+
     // ======================================================
 // CADÁVER — TELENCEFALO VISTA SUPERIOR
 // ======================================================

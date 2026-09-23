@@ -211,6 +211,41 @@ window.definicoesMapas = [
 
         },
 
+
+
+
+                // ==================================================
+    // CADÁVER — DIENCÉFALO 01
+    // ==================================================
+
+            {
+                
+
+            id:
+            "diencefalo-01",
+
+            topico:
+            "diencefalo",
+
+            titulo:
+            "Diencéfalo — 01",
+
+            imagem:
+                "imagens/Diencefalo01.webp",
+            
+            arquivo:
+                "Mapas/mapaCadaverDiencefalo01.js",
+
+                        obterEstruturas:
+            function() {
+
+                return  mapaCadaverDiencefalo01;
+
+            }
+
+        },
+
+
     // ==================================================
     // CADÁVER — TELENCÉFALO SUPERIOR
     // ==================================================

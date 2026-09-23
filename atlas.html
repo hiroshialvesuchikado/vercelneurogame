@@ -65,20 +65,28 @@
 
 
     <!-- ==================================================
-         SELEÇÃO DE MAPAS
+         SELEÇÃO DE TÓPICOS
          ================================================== -->
 
-    <section id="telaSelecaoAtlas">
+    <section
+        id="telaTopicosAtlas"
+    >
 
         <h2>
-            Escolha um mapa
+            Escolha o conteúdo
         </h2>
 
+        <p>
+            Selecione o tópico que você deseja revisar.
+        </p>
+
+
         <div
-            id="menuMapasAtlas"
+            id="menuTopicosAtlas"
             class="menu-mapas"
         >
         </div>
+
 
         <div class="acoes-atlas">
 
@@ -88,6 +96,42 @@
                 type="button"
             >
                 ← Voltar ao menu principal
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         SELEÇÃO DE MAPAS
+         ================================================== -->
+
+    <section
+        id="telaSelecaoAtlas"
+        style="display: none;"
+    >
+
+        <h2 id="tituloTopicoAtlas">
+            Escolha um mapa
+        </h2>
+
+
+        <div
+            id="menuMapasAtlas"
+            class="menu-mapas"
+        >
+        </div>
+
+
+        <div class="acoes-atlas">
+
+            <button
+                id="voltarTopicosAtlas"
+                class="botao-acao"
+                type="button"
+            >
+                ← Voltar aos conteúdos
             </button>
 
         </div>
@@ -108,9 +152,11 @@
             Carregando mapa...
         </h2>
 
+
         <p>
             Clique ou toque em uma estrutura para identificá-la.
         </p>
+
 
         <div
             id="infoAtlas"
@@ -179,8 +225,44 @@
 
 
 // ======================================================
-// 1. ELEMENTOS
+// 1. NOMES DOS TÓPICOS
 // ======================================================
+
+const TOPICOS_ATLAS = {
+
+    medula:
+        "Medula Espinhal",
+
+    tronco:
+        "Tronco Encefálico",
+
+    cerebelo:
+        "Cerebelo",
+
+    diencefalo:
+        "Diencéfalo",
+
+    telencefalo:
+        "Telencéfalo",
+
+    vascularizacao:
+        "Vascularização do SN",
+
+    nucleosdabase:
+        "Núcleos da Base e Regiões Capsulares"
+
+};
+
+
+// ======================================================
+// 2. ELEMENTOS
+// ======================================================
+
+const telaTopicosAtlas =
+    document.getElementById(
+        "telaTopicosAtlas"
+    );
+
 
 const telaSelecaoAtlas =
     document.getElementById(
@@ -194,9 +276,21 @@ const telaMapaAtlas =
     );
 
 
+const menuTopicosAtlas =
+    document.getElementById(
+        "menuTopicosAtlas"
+    );
+
+
 const menuMapasAtlas =
     document.getElementById(
         "menuMapasAtlas"
+    );
+
+
+const tituloTopicoAtlas =
+    document.getElementById(
+        "tituloTopicoAtlas"
     );
 
 
@@ -230,6 +324,12 @@ const botaoVoltarPrincipal =
     );
 
 
+const botaoVoltarTopicosAtlas =
+    document.getElementById(
+        "voltarTopicosAtlas"
+    );
+
+
 const botaoTrocarMapa =
     document.getElementById(
         "trocarMapaAtlas"
@@ -237,7 +337,15 @@ const botaoTrocarMapa =
 
 
 // ======================================================
-// 2. CONFIGURAÇÕES VISUAIS
+// 3. ESTADO
+// ======================================================
+
+let topicoAtlasSelecionado =
+    null;
+
+
+// ======================================================
+// 4. CONFIGURAÇÕES VISUAIS
 // ======================================================
 
 const LARGURA_LINHA_NORMAL =
@@ -265,7 +373,7 @@ const OPACIDADE_CONTORNO_POLIGONO =
 
 
 // ======================================================
-// 3. CONFIGURAÇÃO DO TOQUE MOBILE
+// 5. CONFIGURAÇÃO DO TOQUE MOBILE
 // ======================================================
 
 const RAIO_TOQUE_LINHA_MOBILE =
@@ -273,7 +381,7 @@ const RAIO_TOQUE_LINHA_MOBILE =
 
 
 // ======================================================
-// 4. URL
+// 6. URL
 // ======================================================
 
 const parametrosAtlas =
@@ -289,16 +397,460 @@ const idMapaSelecionado =
 
 
 // ======================================================
-// 5. CRIAR CARDS DOS MAPAS
+// 7. DESCOBRIR TÓPICO DO MAPA
 // ======================================================
 
-function criarCardsAtlas() {
+function obterTopicoMapaAtlas(
+    mapa
+) {
+
+    if (
+        mapa &&
+        mapa.topico
+    ) {
+
+        return mapa.topico;
+
+    }
+
+
+    if (
+        typeof window.definicoesMapas !==
+        "undefined"
+    ) {
+
+        const definicao =
+            window.definicoesMapas.find(
+                function(item) {
+
+                    return (
+                        item.id ===
+                        mapa.id
+                    );
+
+                }
+            );
+
+
+        if (
+            definicao &&
+            definicao.topico
+        ) {
+
+            return definicao.topico;
+
+        }
+
+    }
+
+
+    return null;
+
+}
+
+
+// ======================================================
+// 8. DESCOBRIR TÓPICO DA ESTRUTURA
+// ======================================================
+
+function obterTopicoEstruturaAtlas(
+    estrutura
+) {
+
+    if (
+        !estrutura ||
+        !estrutura.id
+    ) {
+
+        return null;
+
+    }
+
+
+    const id =
+        estrutura.id
+            .toLowerCase();
+
+
+    // ==================================================
+    // TELENCÉFALO
+    // ==================================================
+
+    if (
+        id.startsWith("giro_") ||
+        id.startsWith("sulco_") ||
+        id.startsWith("lobo_") ||
+        id.startsWith("lobulo_") ||
+        id.startsWith("nucleosdabase_") ||
+        id.startsWith("trans_")
+    ) {
+
+        return "telencefalo";
+
+    }
+
+
+    // ==================================================
+    // DIENCÉFALO
+    // ==================================================
+
+    if (
+        id.startsWith("talamo_") ||
+        id.startsWith("hipotalamo_") ||
+        id.startsWith("epitalamo_") ||
+        id.startsWith("subtalamo_")
+    ) {
+
+        return "diencefalo";
+
+    }
+
+
+    return null;
+
+}
+
+
+// ======================================================
+// 9. VERIFICAR SE MAPA PERTENCE AO TÓPICO
+// ======================================================
+
+function mapaPertenceAoTopicoAtlas(
+    mapa,
+    topico
+) {
+
+    if (
+        !mapa ||
+        !topico
+    ) {
+
+        return false;
+
+    }
+
+
+    if (
+        Array.isArray(
+            mapa.estruturas
+        )
+    ) {
+
+        const possui =
+            mapa.estruturas.some(
+                function(
+                    estrutura
+                ) {
+
+                    return (
+                        obterTopicoEstruturaAtlas(
+                            estrutura
+                        ) ===
+                        topico
+                    );
+
+                }
+            );
+
+
+        if (
+            possui
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    return (
+        obterTopicoMapaAtlas(
+            mapa
+        ) ===
+        topico
+    );
+
+}
+
+
+// ======================================================
+// 10. DESCOBRIR TÓPICOS DISPONÍVEIS
+// ======================================================
+
+function obterTopicosDisponiveisAtlas() {
+
+    const topicos =
+        new Set();
+
+
+    catalogoMapas.forEach(
+        function(mapa) {
+
+            const topicoMapa =
+                obterTopicoMapaAtlas(
+                    mapa
+                );
+
+
+            if (
+                topicoMapa
+            ) {
+
+                topicos.add(
+                    topicoMapa
+                );
+
+            }
+
+
+            if (
+                Array.isArray(
+                    mapa.estruturas
+                )
+            ) {
+
+                mapa.estruturas.forEach(
+                    function(
+                        estrutura
+                    ) {
+
+                        const topicoEstrutura =
+                            obterTopicoEstruturaAtlas(
+                                estrutura
+                            );
+
+
+                        if (
+                            topicoEstrutura
+                        ) {
+
+                            topicos.add(
+                                topicoEstrutura
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+
+        }
+    );
+
+
+    return Array.from(
+        topicos
+    );
+
+}
+
+
+// ======================================================
+// 11. CRIAR CARDS DOS TÓPICOS
+// ======================================================
+
+function criarCardsTopicosAtlas() {
+
+    menuTopicosAtlas.innerHTML =
+        "";
+
+
+    const topicos =
+        obterTopicosDisponiveisAtlas();
+
+
+    topicos.forEach(
+        function(
+            topico
+        ) {
+
+            const card =
+                document.createElement(
+                    "button"
+                );
+
+
+            card.type =
+                "button";
+
+
+            card.classList.add(
+                "card-atlas"
+            );
+
+
+            const titulo =
+                document.createElement(
+                    "span"
+                );
+
+
+            titulo.textContent =
+                TOPICOS_ATLAS[
+                    topico
+                ] ||
+                topico;
+
+
+            card.appendChild(
+                titulo
+            );
+
+
+            card.addEventListener(
+                "click",
+
+                function() {
+
+                    topicoAtlasSelecionado =
+                        topico;
+
+
+                    mostrarMapasDoTopico(
+                        topico
+                    );
+
+                }
+            );
+
+
+            menuTopicosAtlas.appendChild(
+                card
+            );
+
+        }
+    );
+
+
+    console.log(
+        "Tópicos do Atlas:",
+        topicos
+    );
+
+}
+
+
+// ======================================================
+// 12. MOSTRAR TÓPICOS
+// ======================================================
+
+function mostrarTopicosAtlas() {
+
+    topicoAtlasSelecionado =
+        null;
+
+
+    telaTopicosAtlas.style.display =
+        "block";
+
+
+    telaSelecaoAtlas.style.display =
+        "none";
+
+
+    telaMapaAtlas.style.display =
+        "none";
+
+
+    criarCardsTopicosAtlas();
+
+}
+
+
+// ======================================================
+// 13. MOSTRAR MAPAS DO TÓPICO
+// ======================================================
+
+function mostrarMapasDoTopico(
+    topico
+) {
+
+    topicoAtlasSelecionado =
+        topico;
+
+
+    telaTopicosAtlas.style.display =
+        "none";
+
+
+    telaSelecaoAtlas.style.display =
+        "block";
+
+
+    telaMapaAtlas.style.display =
+        "none";
+
+
+    tituloTopicoAtlas.textContent =
+        TOPICOS_ATLAS[
+            topico
+        ]
+            ? `Escolha um mapa — ${TOPICOS_ATLAS[topico]}`
+            : "Escolha um mapa";
+
+
+    criarCardsAtlas(
+        topico
+    );
+
+}
+
+
+// ======================================================
+// 14. CRIAR CARDS DOS MAPAS
+// ======================================================
+
+function criarCardsAtlas(
+    topico
+) {
 
     menuMapasAtlas.innerHTML =
         "";
 
 
-    catalogoMapas.forEach(
+    const mapasFiltrados =
+        catalogoMapas.filter(
+            function(
+                mapa
+            ) {
+
+                return mapaPertenceAoTopicoAtlas(
+                    mapa,
+                    topico
+                );
+
+            }
+        );
+
+
+    if (
+        mapasFiltrados.length ===
+        0
+    ) {
+
+        const mensagem =
+            document.createElement(
+                "p"
+            );
+
+
+        mensagem.textContent =
+            "Nenhum mapa disponível para este conteúdo.";
+
+
+        menuMapasAtlas.appendChild(
+            mensagem
+        );
+
+
+        return;
+
+    }
+
+
+    mapasFiltrados.forEach(
         function(mapa) {
 
             const card =
@@ -362,6 +914,8 @@ function criarCardsAtlas() {
                     window.location.href =
                         `atlas.html?mapa=${encodeURIComponent(
                             mapa.id
+                        )}&topico=${encodeURIComponent(
+                            topico
                         )}`;
 
                 }
@@ -377,34 +931,16 @@ function criarCardsAtlas() {
 
 
     console.log(
-        "Cards criados:",
-        catalogoMapas.length
+        "Mapas do tópico:",
+        topico,
+        mapasFiltrados.length
     );
 
 }
 
 
 // ======================================================
-// 6. MOSTRAR SELEÇÃO DE MAPAS
-// ======================================================
-
-function mostrarSelecaoAtlas() {
-
-    telaSelecaoAtlas.style.display =
-        "block";
-
-
-    telaMapaAtlas.style.display =
-        "none";
-
-
-    criarCardsAtlas();
-
-}
-
-
-// ======================================================
-// 7. ABRIR MAPA
+// 15. ABRIR MAPA
 // ======================================================
 
 function abrirAtlas(
@@ -428,6 +964,10 @@ function abrirAtlas(
         !mapa
     ) {
 
+        telaTopicosAtlas.style.display =
+            "none";
+
+
         telaSelecaoAtlas.style.display =
             "none";
 
@@ -446,6 +986,10 @@ function abrirAtlas(
         return;
 
     }
+
+
+    telaTopicosAtlas.style.display =
+        "none";
 
 
     telaSelecaoAtlas.style.display =
@@ -472,7 +1016,7 @@ function abrirAtlas(
 
 
 // ======================================================
-// 8. CARREGAR IMAGEM
+// 16. CARREGAR IMAGEM
 // ======================================================
 
 function carregarImagemAtlas(
@@ -517,7 +1061,7 @@ function carregarImagemAtlas(
 
 
 // ======================================================
-// 9. GERAR COR
+// 17. GERAR COR
 // ======================================================
 
 function gerarCorAtlas(
@@ -540,7 +1084,7 @@ function gerarCorAtlas(
 
 
 // ======================================================
-// 10. CONVERTER PONTO DA TELA PARA SVG
+// 18. CONVERTER PONTO DA TELA PARA SVG
 // ======================================================
 
 function obterPontoSVGAtlas(
@@ -580,7 +1124,7 @@ function obterPontoSVGAtlas(
 
 
 // ======================================================
-// 11. DISTÂNCIA ENTRE PONTO E SEGMENTO
+// 19. DISTÂNCIA ENTRE PONTO E SEGMENTO
 // ======================================================
 
 function distanciaPontoSegmento(
@@ -659,7 +1203,7 @@ function distanciaPontoSegmento(
 
 
 // ======================================================
-// 12. OBTER PONTOS DE UMA LINHA
+// 20. OBTER PONTOS DE UMA LINHA
 // ======================================================
 
 function obterPontosLinhaAtlas(
@@ -732,7 +1276,7 @@ function obterPontosLinhaAtlas(
 
 
 // ======================================================
-// 13. DISTÂNCIA ATÉ UMA LINHA
+// 21. DISTÂNCIA ATÉ UMA LINHA
 // ======================================================
 
 function distanciaAteLinhaAtlas(
@@ -756,8 +1300,7 @@ function distanciaAteLinhaAtlas(
 
 
     if (
-        listaPontos.length <
-        2
+        listaPontos.length < 2
     ) {
 
         return Infinity;
@@ -771,8 +1314,7 @@ function distanciaAteLinhaAtlas(
 
     for (
         let i = 0;
-        i <
-        listaPontos.length - 1;
+        i < listaPontos.length - 1;
         i++
     ) {
 
@@ -820,7 +1362,7 @@ function distanciaAteLinhaAtlas(
 
 
 // ======================================================
-// 14. ENCONTRAR LINHA MAIS PRÓXIMA
+// 22. ENCONTRAR LINHA MAIS PRÓXIMA
 // ======================================================
 
 function encontrarLinhaMaisProximaAtlas(
@@ -940,7 +1482,7 @@ function encontrarLinhaMaisProximaAtlas(
 
 
 // ======================================================
-// 15. CRIAR ESTRUTURAS
+// 23. CRIAR ESTRUTURAS
 // ======================================================
 
 function criarEstruturasAtlas(
@@ -1007,10 +1549,6 @@ function criarEstruturasAtlas(
                 elemento.style.stroke =
                     cor;
 
-
-                /*
-                    Linha levemente transparente.
-                */
 
                 elemento.style.strokeOpacity =
                     OPACIDADE_LINHA_NORMAL;
@@ -1129,7 +1667,7 @@ function criarEstruturasAtlas(
 
 
 // ======================================================
-// 16. SELEÇÃO POR MOUSE / TOUCH
+// 24. SELEÇÃO POR MOUSE / TOUCH
 // ======================================================
 
 svgAtlas.addEventListener(
@@ -1183,11 +1721,6 @@ svgAtlas.addEventListener(
             );
 
 
-        /*
-            Se existir uma linha dentro do raio
-            de toque, selecionamos a mais próxima.
-        */
-
         if (
             linhaMaisProxima
         ) {
@@ -1201,11 +1734,6 @@ svgAtlas.addEventListener(
 
         }
 
-
-        /*
-            Caso nenhuma linha esteja próxima,
-            usamos o polígono que recebeu o toque.
-        */
 
         if (
             alvoOriginal &&
@@ -1224,7 +1752,7 @@ svgAtlas.addEventListener(
 
 
 // ======================================================
-// 17. SELECIONAR ESTRUTURA
+// 25. SELECIONAR ESTRUTURA
 // ======================================================
 
 function selecionarEstruturaAtlas(
@@ -1338,7 +1866,22 @@ function selecionarEstruturaAtlas(
 
 
 // ======================================================
-// 18. ESCOLHER OUTRO MAPA
+// 26. VOLTAR AOS TÓPICOS
+// ======================================================
+
+botaoVoltarTopicosAtlas.addEventListener(
+    "click",
+
+    function() {
+
+        mostrarTopicosAtlas();
+
+    }
+);
+
+
+// ======================================================
+// 27. ESCOLHER OUTRO MAPA
 // ======================================================
 
 botaoTrocarMapa.addEventListener(
@@ -1346,15 +1889,36 @@ botaoTrocarMapa.addEventListener(
 
     function() {
 
-        window.location.href =
-            "atlas.html";
+        const topicoURL =
+            parametrosAtlas.get(
+                "topico"
+            );
+
+
+        if (
+            topicoURL
+        ) {
+
+            window.location.href =
+                `atlas.html?topico=${encodeURIComponent(
+                    topicoURL
+                )}`;
+
+        }
+
+        else {
+
+            window.location.href =
+                "atlas.html";
+
+        }
 
     }
 );
 
 
 // ======================================================
-// 19. ESCONDER TELA DE CARREGAMENTO
+// 28. ESCONDER TELA DE CARREGAMENTO
 // ======================================================
 
 function esconderLoading() {
@@ -1392,7 +1956,7 @@ function esconderLoading() {
 
 
 // ======================================================
-// 20. VOLTAR AO MENU PRINCIPAL
+// 29. VOLTAR AO MENU PRINCIPAL
 // ======================================================
 
 botaoVoltarPrincipal.addEventListener(
@@ -1408,7 +1972,7 @@ botaoVoltarPrincipal.addEventListener(
 
 
 // ======================================================
-// 21. INICIAR ATLAS
+// 30. INICIAR ATLAS
 // ======================================================
 
 mapasProntos
@@ -1426,25 +1990,59 @@ mapasProntos
             );
 
 
+            const topicoURL =
+                parametrosAtlas.get(
+                    "topico"
+                );
+
+
+            // ==========================================
+            // MAPA ESPECÍFICO
+            // ==========================================
+
             if (
-                !idMapaSelecionado
+                idMapaSelecionado
             ) {
-
-                mostrarSelecaoAtlas();
-
-
-                esconderLoading();
-
-            }
-
-
-            else {
 
                 abrirAtlas(
                     idMapaSelecionado
                 );
 
+
+                return;
+
             }
+
+
+            // ==========================================
+            // TÓPICO ESPECÍFICO
+            // ==========================================
+
+            if (
+                topicoURL
+            ) {
+
+                mostrarMapasDoTopico(
+                    topicoURL
+                );
+
+
+                esconderLoading();
+
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // TELA INICIAL DO ATLAS
+            // ==========================================
+
+            mostrarTopicosAtlas();
+
+
+            esconderLoading();
 
         }
     )
@@ -1455,6 +2053,10 @@ mapasProntos
                 "❌ Erro no Atlas:",
                 erro
             );
+
+
+            telaTopicosAtlas.style.display =
+                "none";
 
 
             telaSelecaoAtlas.style.display =

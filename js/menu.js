@@ -5,6 +5,7 @@
 // - Seleção por tópico
 // - Estudo por estruturas
 // - Estudo por mapa
+// - Mapas mistos
 // - Prova com múltiplos tópicos
 // ======================================================
 
@@ -34,13 +35,71 @@ const TOPICOS_NEUROGAME = {
         "Vascularização do SN",
 
     nucleosdabase:
-        "Núcleos da Base e Regiões Capsulares",
+        "Núcleos da Base e Regiões Capsulares"
 
 };
 
 
 // ======================================================
-// 2. ELEMENTOS — MENU PRINCIPAL
+// 2. CATEGORIAS POR TÓPICO
+// ======================================================
+
+const CATEGORIAS_POR_TOPICO = {
+
+    telencefalo: [
+
+        {
+            id: "giro",
+            nome: "🧠 Giros"
+        },
+
+        {
+            id: "sulco",
+            nome: "➰ Sulcos"
+        },
+
+        {
+            id: "lobo",
+            nome: "🧩 Lobos e Lóbulos"
+        },
+
+        {
+            id: "nucleosdabase",
+            nome: "🧠 Núcleos da Base e Regiões Capsulares"
+        }
+
+    ],
+
+
+    diencefalo: [
+
+        {
+            id: "talamo",
+            nome: "🧠 Tálamo"
+        },
+
+        {
+            id: "hipotalamo",
+            nome: "🧠 Hipotálamo"
+        },
+
+        {
+            id: "epitalamo",
+            nome: "🧠 Epitálamo"
+        },
+
+        {
+            id: "subtalamo",
+            nome: "🧠 Subtálamo"
+        }
+
+    ]
+
+};
+
+
+// ======================================================
+// 3. ELEMENTOS — MENU PRINCIPAL
 // ======================================================
 
 const botaoPorEstrutura =
@@ -62,18 +121,12 @@ const menuTipoEstudo =
 
 
 // ======================================================
-// 3. ELEMENTOS — CATEGORIAS
+// 4. ELEMENTOS — CATEGORIAS
 // ======================================================
 
 const menuCategorias =
     document.getElementById(
         "menuCategorias"
-    );
-
-
-const botoesCategoria =
-    document.querySelectorAll(
-        ".botao-categoria[data-categoria]"
     );
 
 
@@ -84,7 +137,7 @@ const botaoVoltarTipoEstrutura =
 
 
 // ======================================================
-// 4. ELEMENTOS — MAPAS
+// 5. ELEMENTOS — MAPAS
 // ======================================================
 
 const menuMapas =
@@ -106,7 +159,7 @@ const botaoVoltarTipoMapa =
 
 
 // ======================================================
-// 5. ELEMENTOS — MODOS
+// 6. ELEMENTOS — MODOS
 // ======================================================
 
 const menuModos =
@@ -128,7 +181,7 @@ const botaoVoltarEscolha =
 
 
 // ======================================================
-// 6. ELEMENTOS — PROVA
+// 7. ELEMENTOS — PROVA
 // ======================================================
 
 const botaoEscolherModoProva =
@@ -174,7 +227,7 @@ const modoRespostaProva =
 
 
 // ======================================================
-// 7. ESTADO
+// 8. ESTADO
 // ======================================================
 
 let tipoEstudoSelecionado =
@@ -198,14 +251,12 @@ let areaTopicosProva =
 
 
 // ======================================================
-// 8. DESCOBRIR TÓPICO DO MAPA
+// 9. DESCOBRIR TÓPICO CADASTRADO NO MAPA
 // ======================================================
 
 function obterTopicoMapa(
     mapa
 ) {
-
-    // Se carregarMapas.js já copiou o tópico
 
     if (
         mapa &&
@@ -216,8 +267,6 @@ function obterTopicoMapa(
 
     }
 
-
-    // Caso contrário, procura no manifesto
 
     if (
         typeof window.definicoesMapas !==
@@ -255,7 +304,143 @@ function obterTopicoMapa(
 
 
 // ======================================================
-// 9. DESCOBRIR TÓPICOS DISPONÍVEIS
+// 10. DESCOBRIR TÓPICO DA ESTRUTURA
+// ======================================================
+
+function obterTopicoEstrutura(
+    estrutura
+) {
+
+    if (
+        !estrutura ||
+        !estrutura.id
+    ) {
+
+        return null;
+
+    }
+
+
+    const id =
+        estrutura.id
+            .toLowerCase();
+
+
+    // ==================================================
+    // TELENCÉFALO
+    // ==================================================
+
+    if (
+        id.startsWith("giro_") ||
+        id.startsWith("sulco_") ||
+        id.startsWith("lobo_") ||
+        id.startsWith("lobulo_") ||
+        id.startsWith("nucleosdabase_") ||
+        id.startsWith("trans_")
+    ) {
+
+        return "telencefalo";
+
+    }
+
+
+    // ==================================================
+    // DIENCÉFALO
+    // ==================================================
+
+    if (
+        id.startsWith("talamo_") ||
+        id.startsWith("hipotalamo_") ||
+        id.startsWith("epitalamo_") ||
+        id.startsWith("subtalamo_")
+    ) {
+
+        return "diencefalo";
+
+    }
+
+
+    return null;
+
+}
+
+
+// ======================================================
+// 11. VERIFICAR SE UM MAPA PERTENCE AO TÓPICO
+// ======================================================
+
+function mapaPertenceAoTopico(
+    mapa,
+    topico
+) {
+
+    if (
+        !mapa ||
+        !topico
+    ) {
+
+        return false;
+
+    }
+
+
+    // ==================================================
+    // VERIFICAR ESTRUTURAS
+    //
+    // Isso permite que o mesmo mapa pertença
+    // a mais de um tópico.
+    // ==================================================
+
+    if (
+        Array.isArray(
+            mapa.estruturas
+        )
+    ) {
+
+        const encontrou =
+            mapa.estruturas.some(
+                function(
+                    estrutura
+                ) {
+
+                    return (
+                        obterTopicoEstrutura(
+                            estrutura
+                        ) ===
+                        topico
+                    );
+
+                }
+            );
+
+
+        if (
+            encontrou
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    // ==================================================
+    // FALLBACK PARA MAPAS ANTIGOS
+    // ==================================================
+
+    return (
+        obterTopicoMapa(
+            mapa
+        ) ===
+        topico
+    );
+
+}
+
+
+// ======================================================
+// 12. DESCOBRIR TÓPICOS DISPONÍVEIS
 // ======================================================
 
 function obterTopicosDisponiveis() {
@@ -277,18 +462,59 @@ function obterTopicosDisponiveis() {
     catalogoMapas.forEach(
         function(mapa) {
 
-            const topico =
+            // ==========================================
+            // TÓPICO DO MAPA
+            // ==========================================
+
+            const topicoMapa =
                 obterTopicoMapa(
                     mapa
                 );
 
 
             if (
-                topico
+                topicoMapa
             ) {
 
                 conjunto.add(
-                    topico
+                    topicoMapa
+                );
+
+            }
+
+
+            // ==========================================
+            // TÓPICOS ENCONTRADOS NAS ESTRUTURAS
+            // ==========================================
+
+            if (
+                Array.isArray(
+                    mapa.estruturas
+                )
+            ) {
+
+                mapa.estruturas.forEach(
+                    function(
+                        estrutura
+                    ) {
+
+                        const topicoEstrutura =
+                            obterTopicoEstrutura(
+                                estrutura
+                            );
+
+
+                        if (
+                            topicoEstrutura
+                        ) {
+
+                            conjunto.add(
+                                topicoEstrutura
+                            );
+
+                        }
+
+                    }
                 );
 
             }
@@ -305,7 +531,7 @@ function obterTopicosDisponiveis() {
 
 
 // ======================================================
-// 10. CRIAR MENU DE TÓPICOS
+// 13. CRIAR MENU DE TÓPICOS
 // ======================================================
 
 const menuTopicos =
@@ -327,8 +553,6 @@ menuTopicos.style.display =
     "none";
 
 
-// Título
-
 const tituloMenuTopicos =
     document.createElement(
         "h2"
@@ -344,8 +568,6 @@ menuTopicos.appendChild(
 );
 
 
-// Descrição
-
 const subtituloMenuTopicos =
     document.createElement(
         "p"
@@ -360,8 +582,6 @@ menuTopicos.appendChild(
     subtituloMenuTopicos
 );
 
-
-// Lista
 
 const listaTopicos =
     document.createElement(
@@ -382,8 +602,6 @@ menuTopicos.appendChild(
     listaTopicos
 );
 
-
-// Botão voltar
 
 const botaoVoltarTopicos =
     document.createElement(
@@ -409,8 +627,6 @@ menuTopicos.appendChild(
 );
 
 
-// Inserir no HTML
-
 if (
     menuTipoEstudo &&
     menuTipoEstudo.parentNode
@@ -426,7 +642,7 @@ if (
 
 
 // ======================================================
-// 11. CRIAR BOTÕES DOS TÓPICOS
+// 14. CRIAR BOTÕES DOS TÓPICOS
 // ======================================================
 
 function criarBotoesTopicos() {
@@ -529,6 +745,9 @@ function criarBotoesTopicos() {
                         "categoria"
                     ) {
 
+                        criarCategoriasDoTopico();
+
+
                         if (
                             menuCategorias
                         ) {
@@ -585,7 +804,7 @@ function criarBotoesTopicos() {
 
 
 // ======================================================
-// 12. MOSTRAR MENU DE TÓPICOS
+// 15. MOSTRAR MENU DE TÓPICOS
 // ======================================================
 
 function mostrarMenuTopicos() {
@@ -603,7 +822,7 @@ function mostrarMenuTopicos() {
 
 
 // ======================================================
-// 13. ESCONDER MENU DE TÓPICOS
+// 16. ESCONDER MENU DE TÓPICOS
 // ======================================================
 
 function esconderMenuTopicos() {
@@ -615,7 +834,7 @@ function esconderMenuTopicos() {
 
 
 // ======================================================
-// 14. ESCONDER MENUS SECUNDÁRIOS
+// 17. ESCONDER MENUS SECUNDÁRIOS
 // ======================================================
 
 function esconderMenusSecundarios() {
@@ -678,7 +897,7 @@ function esconderMenusSecundarios() {
 
 
 // ======================================================
-// 15. MOSTRAR MENU INICIAL
+// 18. MOSTRAR MENU INICIAL
 // ======================================================
 
 function mostrarMenuInicial() {
@@ -722,21 +941,31 @@ function mostrarMenuInicial() {
         null;
 
 
-    botoesCategoria.forEach(
-        function(botao) {
+    if (
+        menuCategorias
+    ) {
 
-            botao.classList.remove(
-                "selecionado"
+        menuCategorias
+            .querySelectorAll(
+                ".botao-categoria[data-categoria]"
+            )
+            .forEach(
+                function(botao) {
+
+                    botao.classList.remove(
+                        "selecionado"
+                    );
+
+                }
             );
 
-        }
-    );
+    }
 
 }
 
 
 // ======================================================
-// 16. POR ESTRUTURAS
+// 19. POR ESTRUTURAS
 // ======================================================
 
 if (
@@ -793,7 +1022,7 @@ if (
 
 
 // ======================================================
-// 17. POR MAPA
+// 20. POR MAPA
 // ======================================================
 
 if (
@@ -850,7 +1079,7 @@ if (
 
 
 // ======================================================
-// 18. VOLTAR DOS TÓPICOS
+// 21. VOLTAR DOS TÓPICOS
 // ======================================================
 
 botaoVoltarTopicos.addEventListener(
@@ -865,46 +1094,176 @@ botaoVoltarTopicos.addEventListener(
 
 
 // ======================================================
-// 19. ESCOLHER CATEGORIA
+// 22. CRIAR CATEGORIAS DO TÓPICO
 // ======================================================
 
-botoesCategoria.forEach(
-    function(botao) {
+function criarCategoriasDoTopico() {
 
-        botao.addEventListener(
-            "click",
+    if (
+        !menuCategorias ||
+        !topicoSelecionado
+    ) {
 
-            function() {
+        return;
 
-                categoriaSelecionada =
-                    botao.dataset.categoria;
-
-
-                mapaSelecionado =
-                    null;
+    }
 
 
-                botoesCategoria.forEach(
-                    function(outroBotao) {
+    const avisoAntigo =
+        menuCategorias.querySelector(
+            ".aviso-sem-categorias"
+        );
 
-                        outroBotao
-                            .classList
-                            .remove(
-                                "selecionado"
-                            );
 
-                    }
+    if (
+        avisoAntigo
+    ) {
+
+        avisoAntigo.remove();
+
+    }
+
+
+    const botoesAntigos =
+        menuCategorias.querySelectorAll(
+            ".botao-categoria[data-categoria]"
+        );
+
+
+    botoesAntigos.forEach(
+        function(botao) {
+
+            botao.remove();
+
+        }
+    );
+
+
+    const categorias =
+        CATEGORIAS_POR_TOPICO[
+            topicoSelecionado
+        ] || [];
+
+
+    console.log(
+        "📚 Categorias do tópico:",
+        topicoSelecionado,
+        categorias
+    );
+
+
+    if (
+        categorias.length ===
+        0
+    ) {
+
+        const aviso =
+            document.createElement(
+                "p"
+            );
+
+
+        aviso.className =
+            "aviso-sem-categorias";
+
+
+        aviso.textContent =
+            "Ainda não existem categorias cadastradas para este conteúdo.";
+
+
+        if (
+            botaoVoltarTipoEstrutura
+        ) {
+
+            menuCategorias.insertBefore(
+                aviso,
+                botaoVoltarTipoEstrutura
+            );
+
+        }
+
+        else {
+
+            menuCategorias.appendChild(
+                aviso
+            );
+
+        }
+
+
+        return;
+
+    }
+
+
+    categorias.forEach(
+        function(categoria) {
+
+            const botao =
+                document.createElement(
+                    "button"
                 );
 
 
-                botao.classList.add(
-                    "selecionado"
-                );
+            botao.type =
+                "button";
 
 
-                if (
-                    menuCategorias
-                ) {
+            botao.classList.add(
+                "botao-categoria"
+            );
+
+
+            botao.dataset.categoria =
+                categoria.id;
+
+
+            botao.textContent =
+                categoria.nome;
+
+
+            botao.addEventListener(
+                "click",
+
+                function() {
+
+                    categoriaSelecionada =
+                        categoria.id;
+
+
+                    mapaSelecionado =
+                        null;
+
+
+                    console.log(
+                        "🧠 Categoria selecionada:",
+                        categoriaSelecionada
+                    );
+
+
+                    const todosBotoes =
+                        menuCategorias.querySelectorAll(
+                            ".botao-categoria[data-categoria]"
+                        );
+
+
+                    todosBotoes.forEach(
+                        function(outroBotao) {
+
+                            outroBotao
+                                .classList
+                                .remove(
+                                    "selecionado"
+                                );
+
+                        }
+                    );
+
+
+                    botao.classList.add(
+                        "selecionado"
+                    );
+
 
                     menuCategorias
                         .classList
@@ -912,30 +1271,50 @@ botoesCategoria.forEach(
                             "visivel"
                         );
 
+
+                    if (
+                        menuModos
+                    ) {
+
+                        menuModos
+                            .classList
+                            .add(
+                                "visivel"
+                            );
+
+                    }
+
                 }
+            );
 
 
-                if (
-                    menuModos
-                ) {
+            if (
+                botaoVoltarTipoEstrutura
+            ) {
 
-                    menuModos
-                        .classList
-                        .add(
-                            "visivel"
-                        );
-
-                }
+                menuCategorias.insertBefore(
+                    botao,
+                    botaoVoltarTipoEstrutura
+                );
 
             }
-        );
 
-    }
-);
+            else {
+
+                menuCategorias.appendChild(
+                    botao
+                );
+
+            }
+
+        }
+    );
+
+}
 
 
 // ======================================================
-// 20. CRIAR LISTA DE MAPAS
+// 23. CRIAR LISTA DE MAPAS
 // ======================================================
 
 function criarListaMapasJogo() {
@@ -968,19 +1347,25 @@ function criarListaMapasJogo() {
     }
 
 
+    // ==================================================
+    // MAPAS PODEM PERTENCER A MAIS DE UM TÓPICO
+    // ==================================================
+
     const mapasFiltrados =
         catalogoMapas.filter(
             function(mapa) {
 
-                const topicoMapa =
-                    obterTopicoMapa(
-                        mapa
-                    );
+                if (
+                    !topicoSelecionado
+                ) {
+
+                    return true;
+
+                }
 
 
-                return (
-                    !topicoSelecionado ||
-                    topicoMapa ===
+                return mapaPertenceAoTopico(
+                    mapa,
                     topicoSelecionado
                 );
 
@@ -1035,10 +1420,6 @@ function criarListaMapasJogo() {
                 mapa.id;
 
 
-            // ==========================================
-            // IMAGEM
-            // ==========================================
-
             const imagemMapa =
                 document.createElement(
                     "img"
@@ -1052,10 +1433,6 @@ function criarListaMapasJogo() {
             imagemMapa.alt =
                 mapa.titulo;
 
-
-            // ==========================================
-            // TÍTULO
-            // ==========================================
 
             const titulo =
                 document.createElement(
@@ -1076,10 +1453,6 @@ function criarListaMapasJogo() {
                 titulo
             );
 
-
-            // ==========================================
-            // CLIQUE
-            // ==========================================
 
             botao.addEventListener(
                 "click",
@@ -1155,7 +1528,8 @@ function criarListaMapasJogo() {
 
 
     console.log(
-        "🗺️ Mapas disponíveis:",
+        "🗺️ Mapas disponíveis para:",
+        topicoSelecionado,
         mapasFiltrados.length
     );
 
@@ -1163,7 +1537,7 @@ function criarListaMapasJogo() {
 
 
 // ======================================================
-// 21. ESCOLHER MODO — CLICAR / DIGITAR
+// 24. ESCOLHER MODO
 // ======================================================
 
 botoesModo.forEach(
@@ -1294,7 +1668,7 @@ botoesModo.forEach(
 
 
 // ======================================================
-// 22. VOLTAR — CATEGORIA
+// 25. VOLTAR — CATEGORIA
 // ======================================================
 
 if (
@@ -1323,6 +1697,10 @@ if (
                 null;
 
 
+            categoriaSelecionada =
+                null;
+
+
             mostrarMenuTopicos();
 
         }
@@ -1332,7 +1710,7 @@ if (
 
 
 // ======================================================
-// 23. VOLTAR — MAPA
+// 26. VOLTAR — MAPA
 // ======================================================
 
 if (
@@ -1374,7 +1752,7 @@ if (
 
 
 // ======================================================
-// 24. VOLTAR DA ESCOLHA CLICAR / DIGITAR
+// 27. VOLTAR DA ESCOLHA CLICAR / DIGITAR
 // ======================================================
 
 if (
@@ -1406,6 +1784,9 @@ if (
 
                 categoriaSelecionada =
                     null;
+
+
+                criarCategoriasDoTopico();
 
 
                 if (
@@ -1456,7 +1837,7 @@ if (
 
 
 // ======================================================
-// 25. CRIAR SELEÇÃO DE TÓPICOS DA PROVA
+// 28. CRIAR SELEÇÃO DE TÓPICOS DA PROVA
 // ======================================================
 
 function criarSelecaoTopicosProva() {
@@ -1469,10 +1850,6 @@ function criarSelecaoTopicosProva() {
 
     }
 
-
-    // ==========================================
-    // SE JÁ EXISTIR, ATUALIZA
-    // ==========================================
 
     const existente =
         document.getElementById(
@@ -1504,10 +1881,6 @@ function criarSelecaoTopicosProva() {
     );
 
 
-    // ==========================================
-    // TÍTULO
-    // ==========================================
-
     const titulo =
         document.createElement(
             "h3"
@@ -1522,10 +1895,6 @@ function criarSelecaoTopicosProva() {
         titulo
     );
 
-
-    // ==========================================
-    // DESCRIÇÃO
-    // ==========================================
 
     const descricao =
         document.createElement(
@@ -1542,10 +1911,6 @@ function criarSelecaoTopicosProva() {
     );
 
 
-    // ==========================================
-    // LISTA
-    // ==========================================
-
     const lista =
         document.createElement(
             "div"
@@ -1560,10 +1925,6 @@ function criarSelecaoTopicosProva() {
     const topicos =
         obterTopicosDisponiveis();
 
-
-    // ==========================================
-    // NENHUM TÓPICO
-    // ==========================================
 
     if (
         topicos.length ===
@@ -1586,10 +1947,6 @@ function criarSelecaoTopicosProva() {
 
     }
 
-
-    // ==========================================
-    // CRIAR CHECKBOXES
-    // ==========================================
 
     topicos.forEach(
         function(topico) {
@@ -1660,10 +2017,6 @@ function criarSelecaoTopicosProva() {
     );
 
 
-    // ==========================================
-    // INSERIR ANTES DO BOTÃO INICIAR
-    // ==========================================
-
     if (
         botaoIniciarProva &&
         botaoIniciarProva.parentNode ===
@@ -1691,7 +2044,7 @@ function criarSelecaoTopicosProva() {
 
 
 // ======================================================
-// 26. ABRIR MODO PROVA
+// 29. ABRIR MODO PROVA
 // ======================================================
 
 if (
@@ -1731,10 +2084,6 @@ if (
             esconderMenusSecundarios();
 
 
-            // ==========================================
-            // CRIAR TÓPICOS DA PROVA
-            // ==========================================
-
             criarSelecaoTopicosProva();
 
 
@@ -1757,7 +2106,7 @@ if (
 
 
 // ======================================================
-// 27. VOLTAR DO MODO PROVA
+// 30. VOLTAR DO MODO PROVA
 // ======================================================
 
 if (
@@ -1778,7 +2127,7 @@ if (
 
 
 // ======================================================
-// 28. INICIAR PROVA
+// 31. INICIAR PROVA
 // ======================================================
 
 if (
@@ -1790,19 +2139,11 @@ if (
 
         function() {
 
-            // ==========================================
-            // QUANTIDADE
-            // ==========================================
-
             const quantidade =
                 parseInt(
                     quantidadeProva.value
                 );
 
-
-            // ==========================================
-            // MODO
-            // ==========================================
 
             const modo =
                 modoRespostaProva.value;
@@ -1823,10 +2164,6 @@ if (
             }
 
 
-            // ==========================================
-            // PEGAR TÓPICOS SELECIONADOS
-            // ==========================================
-
             const checkboxes =
                 document.querySelectorAll(
                     ".checkbox-topico-prova:checked"
@@ -1845,10 +2182,6 @@ if (
                 );
 
 
-            // ==========================================
-            // EXIGIR PELO MENOS UM TÓPICO
-            // ==========================================
-
             if (
                 topicosSelecionados.length ===
                 0
@@ -1864,9 +2197,24 @@ if (
             }
 
 
-            // ==========================================
-            // TRANSFORMAR EM TEXTO
-            // ==========================================
+            // ==================================================
+            // MÍNIMO DE 1 QUESTÃO PARA CADA TÓPICO
+            // ==================================================
+
+            if (
+                quantidade <
+                topicosSelecionados.length
+            ) {
+
+                alert(
+                    "A quantidade de questões precisa ser igual ou maior que o número de conteúdos selecionados."
+                );
+
+
+                return;
+
+            }
+
 
             const topicosURL =
                 topicosSelecionados.join(
@@ -1897,10 +2245,6 @@ if (
             );
 
 
-            // ==========================================
-            // ABRIR PROVA
-            // ==========================================
-
             window.location.href =
                 `prova.html?quantidade=${quantidade}&modo=${encodeURIComponent(
                     modo
@@ -1915,7 +2259,7 @@ if (
 
 
 // ======================================================
-// 29. INICIAR MENU
+// 32. INICIAR MENU
 // ======================================================
 
 criarBotoesTopicos();

@@ -6,6 +6,8 @@
 // - Modo digitar
 // - Seleção de quantidade de questões
 // - Seleção de um ou vários tópicos
+// - Mapas mistos
+// - Mínimo de 1 questão por tópico selecionado
 // - Feedback final
 // - Registro de estruturas erradas
 // ======================================================
@@ -244,7 +246,7 @@ function normalizar(
 
 
 // ======================================================
-// 5. DESCOBRIR TÓPICO DE UM MAPA
+// 5. DESCOBRIR TÓPICO CADASTRADO NO MAPA
 // ======================================================
 
 function obterTopicoMapaProva(
@@ -297,6 +299,145 @@ function obterTopicoMapaProva(
 
 
 // ======================================================
+// 5.1 DESCOBRIR TÓPICO DA ESTRUTURA
+// ======================================================
+
+function obterTopicoEstruturaProva(
+    estrutura
+) {
+
+    if (
+        !estrutura ||
+        !estrutura.id
+    ) {
+
+        return null;
+
+    }
+
+
+    const id =
+        estrutura.id
+            .toLowerCase();
+
+
+    // ==================================================
+    // TELENCÉFALO
+    // ==================================================
+
+    if (
+        id.startsWith(
+            "giro_"
+        ) ||
+
+        id.startsWith(
+            "sulco_"
+        ) ||
+
+        id.startsWith(
+            "lobo_"
+        ) ||
+
+        id.startsWith(
+            "lobulo_"
+        ) ||
+
+        id.startsWith(
+            "nucleosdabase_"
+        ) ||
+
+        id.startsWith(
+            "trans_"
+        )
+    ) {
+
+        return "telencefalo";
+
+    }
+
+
+    // ==================================================
+    // DIENCÉFALO
+    // ==================================================
+
+    if (
+        id.startsWith(
+            "talamo_"
+        ) ||
+
+        id.startsWith(
+            "hipotalamo_"
+        ) ||
+
+        id.startsWith(
+            "epitalamo_"
+        ) ||
+
+        id.startsWith(
+            "subtalamo_"
+        )
+    ) {
+
+        return "diencefalo";
+
+    }
+
+
+    return null;
+
+}
+
+
+// ======================================================
+// 5.2 DESCOBRIR TÓPICO DA QUESTÃO
+// ======================================================
+
+function obterTopicoQuestaoProva(
+    questao
+) {
+
+    if (
+        !questao
+    ) {
+
+        return null;
+
+    }
+
+
+    // ==================================================
+    // PRIMEIRO TENTA DESCOBRIR PELA ESTRUTURA
+    //
+    // Isso permite mapas mistos.
+    // ==================================================
+
+    const topicoEstrutura =
+        obterTopicoEstruturaProva(
+            questao.estrutura
+        );
+
+
+    if (
+        topicoEstrutura
+    ) {
+
+        return topicoEstrutura;
+
+    }
+
+
+    // ==================================================
+    // FALLBACK PARA MAPAS ANTIGOS
+    // ==================================================
+
+    return obterTopicoMapaProva(
+        questao.mapa
+    );
+
+}
+
+
+// ======================================================
 // 6. REGISTRAR ESTRUTURA ERRADA
 // ======================================================
 
@@ -331,9 +472,8 @@ function registrarErroEstruturaProva() {
 
 
     const topico =
-        obterTopicoMapaProva(
+        obterTopicoQuestaoProva(
             questaoEmAndamento
-                .mapa
         );
 
 
@@ -533,16 +673,10 @@ function criarBancoQuestoes() {
     catalogoMapas.forEach(
         function(mapa) {
 
-            const topicoMapa =
-                obterTopicoMapaProva(
-                    mapa
-                );
-
-
             if (
-                topicosSelecionados.length > 0 &&
-                !topicosSelecionados.includes(
-                    topicoMapa
+                !mapa ||
+                !Array.isArray(
+                    mapa.estruturas
                 )
             ) {
 
@@ -552,9 +686,11 @@ function criarBancoQuestoes() {
 
 
             mapa.estruturas.forEach(
-                function(estrutura) {
+                function(
+                    estrutura
+                ) {
 
-                    banco.push(
+                    const questao =
                         {
 
                             mapa:
@@ -563,7 +699,36 @@ function criarBancoQuestoes() {
                             estrutura:
                                 estrutura
 
-                        }
+                        };
+
+
+                    const topicoQuestao =
+                        obterTopicoQuestaoProva(
+                            questao
+                        );
+
+
+                    // ==========================================
+                    // SE O USUÁRIO SELECIONOU TÓPICOS,
+                    // A QUESTÃO PRECISA PERTENCER A UM DELES.
+                    // ==========================================
+
+                    if (
+                        topicosSelecionados.length >
+                            0 &&
+
+                        !topicosSelecionados.includes(
+                            topicoQuestao
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    banco.push(
+                        questao
                     );
 
                 }
@@ -594,6 +759,9 @@ bancoQuestoes =
 
 // ======================================================
 // 11. DISTRIBUIR MAPAS
+//
+// TENTA EVITAR QUE QUESTÕES DO MESMO MAPA
+// APAREÇAM SEGUIDAS.
 // ======================================================
 
 function distribuirMapas(
@@ -654,6 +822,11 @@ function distribuirMapas(
                     }
                 );
 
+
+        // ==================================================
+        // SE NÃO HOUVER OUTRO MAPA POSSÍVEL,
+        // PERMITE REPETIR.
+        // ==================================================
 
         if (
             opcoes.length === 0
@@ -717,17 +890,213 @@ function distribuirMapas(
 
 
 // ======================================================
-// 12. ORGANIZAR BANCO
+// 12. MONTAR QUESTÕES DA PROVA
+//
+// REGRA:
+// GARANTIR PELO MENOS 1 QUESTÃO
+// DE CADA TÓPICO SELECIONADO.
 // ======================================================
 
-bancoQuestoes =
-    distribuirMapas(
-        bancoQuestoes
+function montarQuestoesProva(
+    banco,
+    quantidade,
+    topicos
+) {
+
+    const selecionadas =
+        [];
+
+
+    const chavesSelecionadas =
+        new Set();
+
+
+    // ==================================================
+    // SE NÃO HOUVER TÓPICOS ESPECÍFICOS
+    // ==================================================
+
+    if (
+        !Array.isArray(
+            topicos
+        ) ||
+
+        topicos.length ===
+            0
+    ) {
+
+        return distribuirMapas(
+            embaralhar(
+                banco
+            )
+        ).slice(
+            0,
+            quantidade
+        );
+
+    }
+
+
+    // ==================================================
+    // 1. GARANTIR UMA QUESTÃO DE CADA TÓPICO
+    // ==================================================
+
+    topicos.forEach(
+        function(
+            topico
+        ) {
+
+            const questoesDoTopico =
+                banco.filter(
+                    function(
+                        questao
+                    ) {
+
+                        return (
+                            obterTopicoQuestaoProva(
+                                questao
+                            ) ===
+                            topico
+                        );
+
+                    }
+                );
+
+
+            if (
+                questoesDoTopico.length ===
+                0
+            ) {
+
+                console.warn(
+                    "⚠️ Nenhuma questão disponível para o tópico:",
+                    topico
+                );
+
+
+                return;
+
+            }
+
+
+            const questaoEscolhida =
+                questoesDoTopico[
+                    Math.floor(
+                        Math.random() *
+                        questoesDoTopico.length
+                    )
+                ];
+
+
+            selecionadas.push(
+                questaoEscolhida
+            );
+
+
+            const chave =
+                `${questaoEscolhida.mapa.id}::${questaoEscolhida.estrutura.id}`;
+
+
+            chavesSelecionadas.add(
+                chave
+            );
+
+        }
+    );
+
+
+    // ==================================================
+    // 2. PEGAR QUESTÕES AINDA NÃO UTILIZADAS
+    // ==================================================
+
+    let restantes =
+        banco.filter(
+            function(
+                questao
+            ) {
+
+                const chave =
+                    `${questao.mapa.id}::${questao.estrutura.id}`;
+
+
+                return (
+                    !chavesSelecionadas.has(
+                        chave
+                    )
+                );
+
+            }
+        );
+
+
+    restantes =
+        embaralhar(
+            restantes
+        );
+
+
+    // ==================================================
+    // 3. COMPLETAR ATÉ A QUANTIDADE SOLICITADA
+    // ==================================================
+
+    while (
+        selecionadas.length <
+            quantidade &&
+
+        restantes.length >
+            0
+    ) {
+
+        selecionadas.push(
+            restantes.shift()
+        );
+
+    }
+
+
+    // ==================================================
+    // 4. EMBARALHAR E DISTRIBUIR MAPAS
+    // ==================================================
+
+    return distribuirMapas(
+        embaralhar(
+            selecionadas
+        )
+    );
+
+}
+
+
+// ======================================================
+// 13. VERIFICAR TÓPICOS SEM QUESTÕES
+// ======================================================
+
+const topicosSemQuestoes =
+    topicosSelecionados.filter(
+        function(
+            topico
+        ) {
+
+            return !bancoQuestoes.some(
+                function(
+                    questao
+                ) {
+
+                    return (
+                        obterTopicoQuestaoProva(
+                            questao
+                        ) ===
+                        topico
+                    );
+
+                }
+            );
+
+        }
     );
 
 
 // ======================================================
-// 13. DEFINIR QUANTIDADE
+// 14. DEFINIR QUANTIDADE REAL
 // ======================================================
 
 const quantidadeReal =
@@ -737,11 +1106,21 @@ const quantidadeReal =
     );
 
 
+// ======================================================
+// 15. MONTAR PROVA
+// ======================================================
+
 const questoesProva =
-    bancoQuestoes.slice(
-        0,
-        quantidadeReal
-    );
+    topicosSemQuestoes.length ===
+        0
+
+        ? montarQuestoesProva(
+            bancoQuestoes,
+            quantidadeReal,
+            topicosSelecionados
+        )
+
+        : [];
 
 
 totalQuestoes.textContent =
@@ -749,7 +1128,7 @@ totalQuestoes.textContent =
 
 
 // ======================================================
-// 14. CRIAR HOTSPOTS
+// 16. CRIAR HOTSPOTS
 // ======================================================
 
 function criarHotspots(
@@ -771,6 +1150,10 @@ function criarHotspots(
 
             let elemento;
 
+
+            // ==================================================
+            // LINHA
+            // ==================================================
 
             if (
                 estrutura.tipo ===
@@ -797,6 +1180,10 @@ function criarHotspots(
 
             }
 
+
+            // ==================================================
+            // ÁREA / POLÍGONO
+            // ==================================================
 
             else {
 
@@ -847,6 +1234,10 @@ function criarHotspots(
                 elemento
             );
 
+
+            // ==================================================
+            // HITBOX INVISÍVEL PARA LINHAS
+            // ==================================================
 
             if (
                 estrutura.tipo ===
@@ -938,7 +1329,7 @@ function criarHotspots(
 
 
 // ======================================================
-// 15. NOVA QUESTÃO
+// 17. NOVA QUESTÃO
 // ======================================================
 
 function novaQuestao() {
@@ -1175,7 +1566,7 @@ function novaQuestao() {
 
 
 // ======================================================
-// 16. MODO CLICAR
+// 18. MODO CLICAR
 // ======================================================
 
 function prepararModoClicar() {
@@ -1214,7 +1605,7 @@ function prepararModoClicar() {
 
 
 // ======================================================
-// 17. VERIFICAR CLIQUE
+// 19. VERIFICAR CLIQUE
 // ======================================================
 
 function verificarClique(
@@ -1363,7 +1754,7 @@ function verificarClique(
 
 
 // ======================================================
-// 18. CLIQUES NO SVG
+// 20. CLIQUES NO SVG
 // ======================================================
 
 svg.addEventListener(
@@ -1453,7 +1844,7 @@ svg.addEventListener(
 
 
 // ======================================================
-// 19. MODO DIGITAR
+// 21. MODO DIGITAR
 // ======================================================
 
 function prepararModoDigitar() {
@@ -1518,7 +1909,7 @@ function prepararModoDigitar() {
 
 
 // ======================================================
-// 20. VERIFICAR DIGITAÇÃO
+// 22. VERIFICAR DIGITAÇÃO
 // ======================================================
 
 function verificarDigitacao() {
@@ -1701,7 +2092,7 @@ function verificarDigitacao() {
 
 
 // ======================================================
-// 21. ANALYTICS
+// 23. ANALYTICS
 // ======================================================
 
 function registrarAnalytics(
@@ -1729,9 +2120,8 @@ function registrarAnalytics(
                     .id,
 
             topico:
-                obterTopicoMapaProva(
+                obterTopicoQuestaoProva(
                     questaoEmAndamento
-                        .mapa
                 ),
 
             modo:
@@ -1769,7 +2159,7 @@ function registrarAnalytics(
 
 
 // ======================================================
-// 22. TELA FINAL
+// 24. TELA FINAL
 // ======================================================
 
 function mostrarTelaFeedbackProva() {
@@ -2205,7 +2595,7 @@ function mostrarTelaFeedbackProva() {
 
 
 // ======================================================
-// 23. BOTÃO RESPONDER
+// 25. BOTÃO RESPONDER
 // ======================================================
 
 if (
@@ -2221,7 +2611,7 @@ if (
 
 
 // ======================================================
-// 24. ENTER
+// 26. ENTER
 // ======================================================
 
 if (
@@ -2251,7 +2641,7 @@ if (
 
 
 // ======================================================
-// 25. FINALIZAR
+// 27. FINALIZAR
 // ======================================================
 
 function finalizarProva() {
@@ -2324,7 +2714,7 @@ function finalizarProva() {
 
 
 // ======================================================
-// 26. REINICIAR
+// 28. REINICIAR
 // ======================================================
 
 if (
@@ -2344,7 +2734,7 @@ if (
 
 
 // ======================================================
-// 27. VOLTAR
+// 29. VOLTAR
 // ======================================================
 
 if (
@@ -2365,7 +2755,7 @@ if (
 
 
 // ======================================================
-// 28. LOGS
+// 30. LOGS
 // ======================================================
 
 console.log(
@@ -2417,17 +2807,51 @@ console.log(
 
 
 console.log(
+    "Tópicos sem questões:",
+    topicosSemQuestoes
+);
+
+
+console.log(
+    "Distribuição da prova:",
+    questoesProva.map(
+        function(
+            questao
+        ) {
+
+            return {
+
+                topico:
+                    obterTopicoQuestaoProva(
+                        questao
+                    ),
+
+                mapa:
+                    questao.mapa.id,
+
+                estrutura:
+                    questao.estrutura.id
+
+            };
+
+        }
+    )
+);
+
+
+console.log(
     "======================================"
 );
 
 
 // ======================================================
-// 29. INICIAR
+// 31. INICIAR
 // ======================================================
 
 if (
     typeof catalogoMapas ===
         "undefined" ||
+
     catalogoMapas.length ===
         0
 ) {
@@ -2447,6 +2871,41 @@ if (
 
 }
 
+
+// ======================================================
+// ALGUM TÓPICO SELECIONADO NÃO TEM QUESTÕES
+// ======================================================
+
+else if (
+    topicosSemQuestoes.length >
+    0
+) {
+
+    pergunta.textContent =
+        "Erro: um dos tópicos selecionados não possui questões disponíveis.";
+
+
+    console.error(
+        "❌ Tópicos sem questões:",
+        topicosSemQuestoes
+    );
+
+
+    if (
+        typeof esconderLoadingProva ===
+        "function"
+    ) {
+
+        esconderLoadingProva();
+
+    }
+
+}
+
+
+// ======================================================
+// NENHUM TÓPICO INFORMADO
+// ======================================================
 
 else if (
     topicosSelecionados.length === 0
@@ -2487,6 +2946,10 @@ else if (
 }
 
 
+// ======================================================
+// NÃO HÁ QUESTÕES PARA OS TÓPICOS SELECIONADOS
+// ======================================================
+
 else if (
     questoesProva.length ===
     0
@@ -2513,6 +2976,10 @@ else if (
 
 }
 
+
+// ======================================================
+// INICIAR PROVA
+// ======================================================
 
 else {
 
