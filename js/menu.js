@@ -225,6 +225,11 @@ const modoRespostaProva =
         "modoRespostaProva"
     );
 
+    const tempoQuestaoProva =
+    document.getElementById(
+        "tempoQuestaoProva"
+    );
+
 
 // ======================================================
 // 8. ESTADO
@@ -2147,6 +2152,12 @@ if (
 
             const modo =
                 modoRespostaProva.value;
+            const tempo =
+    tempoQuestaoProva
+        ? parseInt(
+            tempoQuestaoProva.value
+        ) || 0
+        : 0;
 
 
             if (
@@ -2245,12 +2256,12 @@ if (
             );
 
 
-            window.location.href =
-                `prova.html?quantidade=${quantidade}&modo=${encodeURIComponent(
-                    modo
-                )}&topicos=${encodeURIComponent(
-                    topicosURL
-                )}`;
+window.location.href =
+    `prova.html?quantidade=${quantidade}&modo=${encodeURIComponent(
+        modo
+    )}&topicos=${encodeURIComponent(
+        topicosURL
+    )}&tempo=${tempo}`;
 
         }
     );

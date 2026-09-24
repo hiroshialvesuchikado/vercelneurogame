@@ -887,8 +887,29 @@ function iniciarModoClicar() {
                 pontos;
 
 
-            feedback.textContent =
-                `✅ Correto! +${pontosQuestao} pontos`;
+            feedback.innerHTML = `
+                <div class="feedback-didatico feedback-correto">
+
+                    <div class="feedback-titulo">
+                        ✅ Correto!
+                    </div>
+
+                    <div class="feedback-bloco">
+                        <span class="feedback-label">
+                            Estrutura:
+                        </span>
+
+                        <span class="feedback-valor">
+                            ${estruturaClicada.dataset.nome}
+                        </span>
+                    </div>
+
+                    <div class="feedback-pontos">
+                        +${pontosQuestao} pontos
+                    </div>
+
+                </div>
+            `;
 
 
             estruturaClicada
@@ -976,6 +997,12 @@ function iniciarModoClicar() {
 
         else {
 
+            // Bloqueia novos cliques durante o feedback do erro
+
+            bloqueado =
+                true;
+
+
             erros++;
 
 
@@ -997,8 +1024,39 @@ function iniciarModoClicar() {
                 );
 
 
-            feedback.textContent =
-                `❌ Tente novamente. Esta questão agora vale ${pontosQuestao} pontos.`;
+            feedback.innerHTML = `
+                <div class="feedback-didatico feedback-erro">
+
+                    <div class="feedback-titulo">
+                        ❌ Resposta incorreta
+                    </div>
+
+                    <div class="feedback-bloco">
+                        <span class="feedback-label">
+                            Você clicou em:
+                        </span>
+
+                        <span class="feedback-valor">
+                            ${estruturaClicada.dataset.nome}
+                        </span>
+                    </div>
+
+                    <div class="feedback-bloco">
+                        <span class="feedback-label">
+                            Procure por:
+                        </span>
+
+                        <span class="feedback-valor">
+                            ${estruturaAtual.dataset.nome}
+                        </span>
+                    </div>
+
+                    <div class="feedback-pontos">
+                        Nova tentativa em 2 segundos...
+                    </div>
+
+                </div>
+            `;
 
 
             estruturaClicada
@@ -1069,6 +1127,10 @@ function iniciarModoClicar() {
             }
 
 
+            // Mantém o erro visível por 2 segundos
+            // e depois libera nova tentativa
+            // na mesma questão.
+
             setTimeout(
 
                 function() {
@@ -1079,9 +1141,17 @@ function iniciarModoClicar() {
                             "errado"
                         );
 
+
+                    feedback.innerHTML =
+                        "";
+
+
+                    bloqueado =
+                        false;
+
                 },
 
-                500
+                2000
 
             );
 

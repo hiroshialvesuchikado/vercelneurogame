@@ -1,124 +1,103 @@
 function iniciarModoDigitar() {
 
-    const VALOR_QUESTAO =
-        100;
+    // ==================================================
+    // CONFIGURAÇÕES
+    // ==================================================
+
+    const VALOR_QUESTAO = 100;
+    const PENALIDADE_ERRO = 10;
+    const TEMPO_ACERTO = 1800;
+    const TEMPO_PULAR = 900;
 
 
-    const PENALIDADE_ERRO =
-        10;
-
+    // ==================================================
+    // ELEMENTOS HTML
+    // ==================================================
 
     const pergunta =
-        document.getElementById(
-            "pergunta"
-        );
-
+        document.getElementById("pergunta");
 
     const feedback =
-        document.getElementById(
-            "feedback"
-        );
-
+        document.getElementById("feedback");
 
     const pontosElemento =
-        document.getElementById(
-            "pontos"
-        );
-
+        document.getElementById("pontos");
 
     const errosElemento =
-        document.getElementById(
-            "erros"
-        );
-
+        document.getElementById("erros");
 
     const numeroQuestao =
-        document.getElementById(
-            "numeroQuestao"
-        );
-
+        document.getElementById("numeroQuestao");
 
     const totalQuestoes =
-        document.getElementById(
-            "totalQuestoes"
-        );
-
+        document.getElementById("totalQuestoes");
 
     const areaDigitar =
-        document.getElementById(
-            "areaDigitar"
-        );
-
+        document.getElementById("areaDigitar");
 
     const campoResposta =
-        document.getElementById(
-            "respostaDigitada"
-        );
-
+        document.getElementById("respostaDigitada");
 
     const botaoResponder =
-        document.getElementById(
-            "confirmarResposta"
-        );
-
-
-    // ==================================================
-    // BOTÃO PULAR QUESTÃO
-    // ==================================================
-
-    const botaoPular =
-        document.createElement(
-            "button"
-        );
-
-
-    botaoPular.id =
-        "pularQuestao";
-
-
-    botaoPular.type =
-        "button";
-
-
-    botaoPular.textContent =
-        "⏭️ Pular questão";
-
-
-    if (
-        areaDigitar &&
-        botaoResponder
-    ) {
-
-        areaDigitar.appendChild(
-            botaoPular
-        );
-
-    }
-
+        document.getElementById("confirmarResposta");
 
     const caixaInfo =
-        document.getElementById(
-            "infoEstrutura"
-        );
-
+        document.getElementById("infoEstrutura");
 
     const acoesPartida =
-        document.getElementById(
-            "acoesPartida"
-        );
-
+        document.getElementById("acoesPartida");
 
     const botaoReiniciar =
-        document.getElementById(
-            "reiniciarPartida"
-        );
-
+        document.getElementById("reiniciarPartida");
 
     const botaoVoltar =
-        document.getElementById(
-            "voltarMenu"
-        );
+        document.getElementById("voltarMenu");
 
+
+    // ==================================================
+    // BOTÃO PULAR
+    // ==================================================
+
+    let botaoPular =
+        document.getElementById("pularQuestao");
+
+
+    if (
+        !botaoPular
+    ) {
+
+        botaoPular =
+            document.createElement("button");
+
+
+        botaoPular.id =
+            "pularQuestao";
+
+
+        botaoPular.type =
+            "button";
+
+
+        botaoPular.textContent =
+            "⏭️ Pular questão";
+
+
+        if (
+            areaDigitar
+        ) {
+
+            areaDigitar.appendChild(
+                botaoPular
+            );
+
+        }
+
+    }
+
+
+    // ==================================================
+    // MOSTRAR ELEMENTOS
+    // ==================================================
 
     if (
         areaDigitar
@@ -126,9 +105,7 @@ function iniciarModoDigitar() {
 
         areaDigitar
             .classList
-            .add(
-                "visivel"
-            );
+            .add("visivel");
 
     }
 
@@ -139,56 +116,42 @@ function iniciarModoDigitar() {
 
         acoesPartida
             .classList
-            .add(
-                "visivel"
-            );
+            .add("visivel");
 
     }
 
 
-    let pontos =
-        0;
+    // ==================================================
+    // ESTADO
+    // ==================================================
 
+    let pontos = 0;
 
-    let erros =
-        0;
+    let erros = 0;
 
+    let questaoAtual = 0;
 
-    let questaoAtual =
-        0;
+    let estruturaAtual = null;
 
+    let mapaAtual = null;
 
-    let estruturaAtual =
-        null;
+    let bloqueado = false;
 
+    let inicioQuestao = 0;
 
-    let mapaAtual =
-        null;
-
-
-    let bloqueado =
-        false;
-
-
-    let inicioQuestao =
-        0;
-
-
-    let tentativasQuestao =
-        0;
-
+    let tentativasQuestao = 0;
 
     let pontosQuestao =
         VALOR_QUESTAO;
 
 
+    const indicesDicaRevelados =
+        new Set();
+
+
     const errosPorEstrutura =
         new Map();
 
-
-    // ==================================================
-    // ESTRUTURAS PULADAS
-    // ==================================================
 
     const estruturasPuladas =
         new Map();
@@ -198,40 +161,182 @@ function iniciarModoDigitar() {
         window.NeuroGame.totalQuestoes;
 
 
-    totalQuestoes.textContent =
-        total;
+    if (
+        totalQuestoes
+    ) {
+
+        totalQuestoes.textContent =
+            total;
+
+    }
 
 
     // ==================================================
     // NORMALIZAR TEXTO
     // ==================================================
 
-   function normalizar(
-    texto
-) {
+    function normalizar(
+        texto
+    ) {
 
-    return String(
-        texto ||
-        ""
-    )
-        .normalize(
-            "NFD"
+        return String(
+            texto || ""
         )
-        .replace(
-            /[\u0300-\u036f]/g,
-            ""
+            .normalize("NFD")
+            .replace(
+                /[\u0300-\u036f]/g,
+                ""
+            )
+            .toLowerCase()
+            .replace(
+                /[-_\s]/g,
+                ""
+            )
+            .trim();
+
+    }
+
+
+    // ==================================================
+    // SISTEMA DE DICAS
+    // ==================================================
+
+    function caractereEhLetra(
+        caractere
+    ) {
+
+        return /[A-Za-zÀ-ÿ]/.test(
+            caractere
+        );
+
+    }
+
+
+    function criarDicaPalavra(
+        palavra
+    ) {
+
+        return Array.from(
+            palavra
         )
-        .toLowerCase()
+            .map(
+                function(
+                    caractere,
+                    indice
+                ) {
 
-        // Ignora hífen, underline e espaços
-        .replace(
-            /[-_\s]/g,
-            ""
+                    if (
+                        caractere === " "
+                    ) {
+
+                        return "   ";
+
+                    }
+
+
+                    if (
+                        caractere === "-"
+                    ) {
+
+                        return "-";
+
+                    }
+
+
+                    if (
+                        !caractereEhLetra(
+                            caractere
+                        )
+                    ) {
+
+                        return caractere;
+
+                    }
+
+
+                    if (
+                        indicesDicaRevelados.has(
+                            indice
+                        )
+                    ) {
+
+                        return caractere;
+
+                    }
+
+
+                    return "_";
+
+                }
+            )
+            .join(" ");
+
+    }
+
+
+    function revelarNovaLetraDica(
+        palavra
+    ) {
+
+        const indicesDisponiveis =
+            [];
+
+
+        Array.from(
+            palavra
         )
+            .forEach(
+                function(
+                    caractere,
+                    indice
+                ) {
 
-        .trim();
+                    if (
+                        caractereEhLetra(
+                            caractere
+                        ) &&
+                        !indicesDicaRevelados.has(
+                            indice
+                        )
+                    ) {
 
-}
+                        indicesDisponiveis.push(
+                            indice
+                        );
+
+                    }
+
+                }
+            );
+
+
+        if (
+            indicesDisponiveis.length >
+            0
+        ) {
+
+            const indiceAleatorio =
+                indicesDisponiveis[
+                    Math.floor(
+                        Math.random() *
+                        indicesDisponiveis.length
+                    )
+                ];
+
+
+            indicesDicaRevelados.add(
+                indiceAleatorio
+            );
+
+        }
+
+
+        return criarDicaPalavra(
+            palavra
+        );
+
+    }
+
 
     // ==================================================
     // LIMPAR DESTAQUES
@@ -263,7 +368,7 @@ function iniciarModoDigitar() {
 
 
     // ==================================================
-    // REGISTRAR ERRO
+    // REGISTRAR ERROS
     // ==================================================
 
     function registrarErroEstrutura() {
@@ -292,12 +397,12 @@ function iniciarModoDigitar() {
         ) {
 
             errosPorEstrutura
-                .get(
-                    id
-                )
+                .get(id)
                 .erros++;
 
-        } else {
+        }
+
+        else {
 
             errosPorEstrutura.set(
                 id,
@@ -326,7 +431,7 @@ function iniciarModoDigitar() {
 
 
     // ==================================================
-    // REGISTRAR ESTRUTURA PULADA
+    // REGISTRAR QUESTÃO PULADA
     // ==================================================
 
     function registrarEstruturaPulada() {
@@ -365,12 +470,12 @@ function iniciarModoDigitar() {
         ) {
 
             estruturasPuladas
-                .get(
-                    chave
-                )
+                .get(chave)
                 .pulos++;
 
-        } else {
+        }
+
+        else {
 
             estruturasPuladas.set(
                 chave,
@@ -405,8 +510,7 @@ function iniciarModoDigitar() {
     ) {
 
         if (
-            aproveitamento >=
-            90
+            aproveitamento >= 90
         ) {
 
             return {
@@ -423,8 +527,7 @@ function iniciarModoDigitar() {
 
 
         if (
-            aproveitamento >=
-            75
+            aproveitamento >= 75
         ) {
 
             return {
@@ -441,8 +544,7 @@ function iniciarModoDigitar() {
 
 
         if (
-            aproveitamento >=
-            60
+            aproveitamento >= 60
         ) {
 
             return {
@@ -459,8 +561,7 @@ function iniciarModoDigitar() {
 
 
         if (
-            aproveitamento >=
-            40
+            aproveitamento >= 40
         ) {
 
             return {
@@ -518,19 +619,19 @@ function iniciarModoDigitar() {
             Array.from(
                 errosPorEstrutura.values()
             )
-            .sort(
-                function(
-                    a,
-                    b
-                ) {
+                .sort(
+                    function(
+                        a,
+                        b
+                    ) {
 
-                    return (
-                        b.erros -
-                        a.erros
-                    );
+                        return (
+                            b.erros -
+                            a.erros
+                        );
 
-                }
-            );
+                    }
+                );
 
 
         const estruturasPuladasLista =
@@ -541,12 +642,9 @@ function iniciarModoDigitar() {
 
         const estruturasSemErro =
             Math.max(
-
                 0,
-
                 total -
                 estruturasErradas.length
-
             );
 
 
@@ -665,7 +763,6 @@ function iniciarModoDigitar() {
         resumo.innerHTML = `
 
             <div>
-
                 <strong>
                     ${pontos} / ${pontuacaoMaxima}
                 </strong>
@@ -673,12 +770,10 @@ function iniciarModoDigitar() {
                 <span>
                     Pontuação
                 </span>
-
             </div>
 
 
             <div>
-
                 <strong>
                     ${aproveitamento}%
                 </strong>
@@ -686,12 +781,10 @@ function iniciarModoDigitar() {
                 <span>
                     Aproveitamento
                 </span>
-
             </div>
 
 
             <div>
-
                 <strong>
                     ${erros}
                 </strong>
@@ -699,12 +792,10 @@ function iniciarModoDigitar() {
                 <span>
                     Erros totais
                 </span>
-
             </div>
 
 
             <div>
-
                 <strong>
                     ${estruturasSemErro}
                 </strong>
@@ -712,7 +803,6 @@ function iniciarModoDigitar() {
                 <span>
                     Estruturas sem erro
                 </span>
-
             </div>
 
         `;
@@ -745,7 +835,9 @@ function iniciarModoDigitar() {
 
         tituloRevisao.textContent =
             estruturasErradas.length > 0
+
                 ? "Estruturas para revisar"
+
                 : "Resultado perfeito";
 
 
@@ -755,8 +847,7 @@ function iniciarModoDigitar() {
 
 
         if (
-            estruturasErradas.length ===
-            0
+            estruturasErradas.length === 0
         ) {
 
             const perfeito =
@@ -777,7 +868,9 @@ function iniciarModoDigitar() {
                 perfeito
             );
 
-        } else {
+        }
+
+        else {
 
             const lista =
                 document.createElement(
@@ -822,7 +915,9 @@ function iniciarModoDigitar() {
 
                     quantidade.textContent =
                         item.erros === 1
+
                             ? "1 erro"
+
                             : `${item.erros} erros`;
 
 
@@ -933,7 +1028,9 @@ function iniciarModoDigitar() {
 
                     quantidade.textContent =
                         item.pulos === 1
+
                             ? "Pulada"
+
                             : `${item.pulos} pulos`;
 
 
@@ -968,7 +1065,7 @@ function iniciarModoDigitar() {
 
 
         // ==================================================
-        // BOTÕES
+        // BOTÕES FINAIS
         // ==================================================
 
         const botoes =
@@ -997,7 +1094,6 @@ function iniciarModoDigitar() {
 
         jogarNovamente.addEventListener(
             "click",
-
             function() {
 
                 window.location.reload();
@@ -1022,7 +1118,6 @@ function iniciarModoDigitar() {
 
         revisarAtlas.addEventListener(
             "click",
-
             function() {
 
                 window.location.href =
@@ -1048,7 +1143,6 @@ function iniciarModoDigitar() {
 
         voltarMenuFinal.addEventListener(
             "click",
-
             function() {
 
                 window.location.href =
@@ -1096,6 +1190,10 @@ function iniciarModoDigitar() {
 
     function novaQuestao() {
 
+        bloqueado =
+            true;
+
+
         const questao =
             window.NeuroGame
                 .obterProximaQuestao();
@@ -1112,10 +1210,6 @@ function iniciarModoDigitar() {
         }
 
 
-        bloqueado =
-            true;
-
-
         tentativasQuestao =
             0;
 
@@ -1124,7 +1218,10 @@ function iniciarModoDigitar() {
             VALOR_QUESTAO;
 
 
-        feedback.textContent =
+        indicesDicaRevelados.clear();
+
+
+        feedback.innerHTML =
             "";
 
 
@@ -1136,6 +1233,22 @@ function iniciarModoDigitar() {
                 "";
 
         }
+
+
+        campoResposta.value =
+            "";
+
+
+        campoResposta.disabled =
+            true;
+
+
+        botaoResponder.disabled =
+            true;
+
+
+        botaoPular.disabled =
+            true;
 
 
         window.NeuroGame
@@ -1267,8 +1380,27 @@ function iniciarModoDigitar() {
             );
 
 
-        feedback.textContent =
-            `⏭️ Questão pulada: ${nomePulada}`;
+        feedback.innerHTML = `
+            <div class="feedback-didatico">
+
+                <div class="feedback-titulo">
+                    ⏭️ Questão pulada
+                </div>
+
+                <div class="feedback-bloco">
+
+                    <span class="feedback-label">
+                        Estrutura:
+                    </span>
+
+                    <span class="feedback-valor">
+                        ${nomePulada}
+                    </span>
+
+                </div>
+
+            </div>
+        `;
 
 
         campoResposta.value =
@@ -1289,7 +1421,7 @@ function iniciarModoDigitar() {
 
         setTimeout(
             novaQuestao,
-            700
+            TEMPO_PULAR
         );
 
     }
@@ -1311,9 +1443,13 @@ function iniciarModoDigitar() {
         }
 
 
+        const respostaOriginal =
+            campoResposta.value.trim();
+
+
         const respostaAluno =
             normalizar(
-                campoResposta.value
+                respostaOriginal
             );
 
 
@@ -1368,8 +1504,31 @@ function iniciarModoDigitar() {
                 pontos;
 
 
-            feedback.textContent =
-                `✅ Correto! +${pontosQuestao} pontos`;
+            feedback.innerHTML = `
+                <div class="feedback-didatico feedback-correto">
+
+                    <div class="feedback-titulo">
+                        ✅ Correto!
+                    </div>
+
+                    <div class="feedback-bloco">
+
+                        <span class="feedback-label">
+                            Estrutura:
+                        </span>
+
+                        <span class="feedback-valor">
+                            ${estruturaAtual.dataset.nome}
+                        </span>
+
+                    </div>
+
+                    <div class="feedback-pontos">
+                        +${pontosQuestao} pontos
+                    </div>
+
+                </div>
+            `;
 
 
             estruturaAtual
@@ -1405,6 +1564,10 @@ function iniciarModoDigitar() {
                 true;
 
 
+            botaoPular.disabled =
+                true;
+
+
             try {
 
                 if (
@@ -1430,7 +1593,7 @@ function iniciarModoDigitar() {
                                 estruturaAtual.dataset.nome,
 
                             resposta:
-                                campoResposta.value,
+                                respostaOriginal,
 
                             acertou:
                                 true,
@@ -1452,22 +1615,35 @@ function iniciarModoDigitar() {
 
                 }
 
-            } catch (
-                erro
+            }
+
+            catch (
+                erroAnalytics
             ) {
 
                 console.error(
                     "⚠️ Erro no analytics:",
-                    erro
+                    erroAnalytics
                 );
 
             }
 
 
+            // ==============================================
+            // PASSAR AUTOMATICAMENTE PARA A PRÓXIMA QUESTÃO
+            // ==============================================
+
             setTimeout(
-                novaQuestao,
-                1500
+                function() {
+
+                    novaQuestao();
+
+                },
+                TEMPO_ACERTO
             );
+
+
+            return;
 
         }
 
@@ -1476,92 +1652,132 @@ function iniciarModoDigitar() {
         // ERRO
         // ==================================================
 
-        else {
-
-            erros++;
+        erros++;
 
 
-            errosElemento.textContent =
-                erros;
+        errosElemento.textContent =
+            erros;
 
 
-            registrarErroEstrutura();
+        registrarErroEstrutura();
 
 
-            pontosQuestao =
-                Math.max(
-                    0,
-                    pontosQuestao -
-                    PENALIDADE_ERRO
-                );
+        pontosQuestao =
+            Math.max(
+                0,
+                pontosQuestao -
+                PENALIDADE_ERRO
+            );
 
 
-            feedback.textContent =
-                `❌ Resposta incorreta. Tente novamente. Esta questão agora vale ${pontosQuestao} pontos.`;
+        const dicaAtual =
+            revelarNovaLetraDica(
+                estruturaAtual.dataset.nome
+            );
 
 
-            try {
+        feedback.innerHTML = `
+            <div class="feedback-didatico feedback-erro">
 
-                if (
-                    typeof registrarResposta ===
-                    "function"
-                ) {
+                <div class="feedback-titulo">
+                    ❌ Resposta incorreta
+                </div>
 
-                    registrarResposta(
-                        {
+                <div class="caixa-dica">
 
-                            mapa:
-                                mapaAtual
-                                    ? mapaAtual.id
-                                    : "desconhecido",
+                    <div class="dica-cabecalho">
+                        💡 Dica da palavra
+                    </div>
 
-                            modo:
-                                "digitar",
+                    <div class="dica-forca">
+                        ${dicaAtual}
+                    </div>
 
-                            estruturaId:
-                                estruturaAtual.dataset.id,
+                    <div class="dica-tentativa">
+                        Tentativa ${tentativasQuestao}
+                    </div>
 
-                            estruturaNome:
-                                estruturaAtual.dataset.nome,
+                </div>
 
-                            resposta:
-                                campoResposta.value,
+                <div class="feedback-pontos">
+                    Esta questão agora vale
+                    <strong>
+                        ${pontosQuestao} pontos
+                    </strong>
+                </div>
 
-                            acertou:
-                                false,
+            </div>
+        `;
 
-                            tentativas:
-                                tentativasQuestao,
 
-                            tempoResposta:
-                                tempoResposta,
+        try {
 
-                            pontosQuestao:
-                                pontosQuestao,
-
-                            pontos:
-                                pontos
-
-                        }
-                    );
-
-                }
-
-            } catch (
-                erro
+            if (
+                typeof registrarResposta ===
+                "function"
             ) {
 
-                console.error(
-                    "⚠️ Erro no analytics:",
-                    erro
+                registrarResposta(
+                    {
+
+                        mapa:
+                            mapaAtual
+                                ? mapaAtual.id
+                                : "desconhecido",
+
+                        modo:
+                            "digitar",
+
+                        estruturaId:
+                            estruturaAtual.dataset.id,
+
+                        estruturaNome:
+                            estruturaAtual.dataset.nome,
+
+                        resposta:
+                            respostaOriginal,
+
+                        acertou:
+                            false,
+
+                        tentativas:
+                            tentativasQuestao,
+
+                        tempoResposta:
+                            tempoResposta,
+
+                        pontosQuestao:
+                            pontosQuestao,
+
+                        pontos:
+                            pontos
+
+                    }
                 );
 
             }
 
+        }
 
-            campoResposta.select();
+        catch (
+            erroAnalytics
+        ) {
+
+            console.error(
+                "⚠️ Erro no analytics:",
+                erroAnalytics
+            );
 
         }
+
+
+        // Continua na MESMA questão.
+        // Seleciona o texto para o aluno digitar novamente.
+
+        campoResposta.select();
+
+
+        campoResposta.focus();
 
     }
 
@@ -1607,6 +1823,7 @@ function iniciarModoDigitar() {
     ) {
 
         campoResposta.addEventListener(
+
             "keydown",
 
             function(
@@ -1626,6 +1843,7 @@ function iniciarModoDigitar() {
                 }
 
             }
+
         );
 
     }
@@ -1640,6 +1858,7 @@ function iniciarModoDigitar() {
     ) {
 
         botaoReiniciar.addEventListener(
+
             "click",
 
             function() {
@@ -1647,6 +1866,7 @@ function iniciarModoDigitar() {
                 window.location.reload();
 
             }
+
         );
 
     }
@@ -1661,6 +1881,7 @@ function iniciarModoDigitar() {
     ) {
 
         botaoVoltar.addEventListener(
+
             "click",
 
             function() {
@@ -1669,13 +1890,14 @@ function iniciarModoDigitar() {
                     "jogo-menu.html";
 
             }
+
         );
 
     }
 
 
     // ==================================================
-    // FINALIZAR JOGO
+    // FINALIZAR
     // ==================================================
 
     function finalizarJogo() {

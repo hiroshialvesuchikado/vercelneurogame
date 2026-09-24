@@ -1,6 +1,6 @@
 const mapaTelencefaloBolacha01 = [
 {
-    id: "nucleosdabase_talamo",
+    id: "talamo_talamo",
     nome: "Tálamo",
     tipo: "area",
     pontos: "1646,1793 1609,1807 1600,1866 1600,1934 1619,2011 1696,2011 1764,1993 1773,1929 1773,1880 1755,1830 1750,1784 1723,1757 1687,1725"

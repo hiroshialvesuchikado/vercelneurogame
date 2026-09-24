@@ -3444,3 +3444,208 @@ body.modo-clicar #camadaHotspots {
     }
 
 }
+
+.feedback-didatico {
+    margin-top: 18px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    text-align: center;
+}
+
+.feedback-didatico .feedback-titulo {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.feedback-didatico .feedback-bloco {
+    margin-top: 8px;
+}
+
+.feedback-didatico .feedback-label {
+    display: block;
+    font-size: 0.85rem;
+    opacity: 0.75;
+    margin-bottom: 4px;
+}
+
+.feedback-didatico .feedback-valor {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.feedback-didatico .dica-forca {
+    display: block;
+    margin-top: 8px;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    word-break: break-word;
+}
+
+.feedback-didatico .feedback-pontos {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.feedback-correto {
+    border-color: rgba(46, 204, 113, 0.45);
+    background: rgba(46, 204, 113, 0.10);
+}
+
+.feedback-correto .feedback-titulo {
+    color: #2ecc71;
+}
+
+.feedback-correto .feedback-valor {
+    color: #ffffff;
+}
+
+
+.feedback-erro {
+    border-color: rgba(231, 76, 60, 0.35);
+    background: rgba(231, 76, 60, 0.08);
+}
+
+.feedback-erro .feedback-titulo {
+    color: #ff6b6b;
+}
+
+
+/* ==============================
+   CAIXA DA DICA
+   ============================== */
+
+.caixa-dica {
+    margin-top: 14px;
+    padding: 16px;
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.12);
+}
+
+
+/* TÍTULO DA DICA */
+
+.dica-cabecalho {
+    margin-bottom: 14px;
+
+    font-size: 0.9rem;
+    font-weight: 700;
+
+    opacity: 0.8;
+
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+
+/* PALAVRA ESTILO FORCA */
+
+.dica-forca {
+    display: block;
+
+    padding: 14px 10px;
+
+    font-size: 1.35rem;
+    font-weight: 700;
+
+    line-height: 1.8;
+
+    letter-spacing: 4px;
+
+    text-align: center;
+
+    word-break: break-word;
+
+    border-radius: 10px;
+
+    background:
+        rgba(0, 0, 0, 0.18);
+}
+
+
+/* NÚMERO DA TENTATIVA */
+
+.dica-tentativa {
+    margin-top: 10px;
+
+    font-size: 0.8rem;
+
+    opacity: 0.65;
+
+    text-align: center;
+}
+
+
+/* ==========================================
+   CORREÇÃO FINAL DA PROVA
+   ========================================== */
+
+.tabela-correcao-container {
+    width: 100%;
+    margin-top: 16px;
+    overflow-x: auto;
+    border-radius: 12px;
+}
+
+
+.tabela-correcao-prova {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+    overflow: hidden;
+}
+
+
+.tabela-correcao-prova th,
+.tabela-correcao-prova td {
+    padding: 12px 14px;
+    text-align: left;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.tabela-correcao-prova th {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+
+.tabela-correcao-prova td {
+    font-size: 0.9rem;
+}
+
+
+.tabela-correcao-prova tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+
+.resultado-correto {
+    font-weight: 700;
+}
+
+
+.resultado-errado {
+    font-weight: 700;
+}
+
+
+.resultado-tempo {
+    font-weight: 700;
+}
