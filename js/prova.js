@@ -522,22 +522,18 @@ function tempoEsgotadoProva() {
     }
 
 
-    questaoRespondida =
-        true;
-
-
-    bloqueado =
-        true;
-
+    questaoRespondida = true;
+    bloqueado = true;
 
     pararCronometroProva();
 
 
+    // Conta internamente como erro
     erros++;
 
 
-    errosElemento.textContent =
-        erros;
+    // Não tenta mais atualizar o elemento "Erros"
+    // porque ele foi removido do HTML
 
 
     registrarErroEstruturaProva();
@@ -550,13 +546,16 @@ function tempoEsgotadoProva() {
     );
 
 
+    // Feedback neutro
     feedback.textContent =
-        "⏰ Tempo esgotado";
+        "Tempo esgotado. Resposta registrada.";
 
+
+    // Se estiver no modo digitar,
+    // remove apenas o destaque
 
     if (
-        modoProva ===
-        "digitar"
+        modoProva === "digitar"
     ) {
 
         if (
@@ -599,8 +598,7 @@ function tempoEsgotadoProva() {
         registrarAnalytics(
             "Tempo esgotado",
             false,
-            tempoQuestaoSegundos *
-            1000
+            tempoQuestaoSegundos * 1000
         );
 
     }
@@ -617,21 +615,21 @@ function tempoEsgotadoProva() {
     }
 
 
+    // Vai automaticamente para a próxima questão
+
     setTimeout(
         function() {
 
             questaoAtual++;
 
-
             novaQuestao();
 
         },
 
-        1200
+        800
     );
 
 }
-
 
 // ======================================================
 // NORMALIZAR TEXTO
