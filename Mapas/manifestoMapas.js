@@ -194,7 +194,7 @@ window.definicoesMapas = [
             "telencefalo",
 
             titulo:
-                "Telencéfalo — Vista transversal 02",
+                "Telencéfalo — Vista Coronal 02",
 
             imagem:
                 "imagens/TelencefaloBolacha02.webp",
@@ -211,10 +211,40 @@ window.definicoesMapas = [
 
         },
 
-
-
-
+        
                 // ==================================================
+    // CADÁVER — TELENCÉFALO BOLACHA 03
+    // ==================================================
+
+            {
+
+            id:
+                "telencefalo-bolacha03",
+
+                        topico:
+            "telencefalo",
+
+            titulo:
+                "Telencéfalo — Vista Coronal 03",
+
+            imagem:
+                "imagens/TelencefaloBolacha03.webp",
+            
+            arquivo:
+                "Mapas/mapaTelencefaloBolacha03.js",
+
+                        obterEstruturas:
+            function() {
+
+                return  mapaTelencefaloBolacha03;
+
+            }
+
+        },
+
+
+
+    // ==================================================
     // CADÁVER — DIENCÉFALO 01
     // ==================================================
 
@@ -228,7 +258,7 @@ window.definicoesMapas = [
             "diencefalo",
 
             titulo:
-            "Diencéfalo — 01",
+            "Diencéfalo e Tálamo — Vista Lateral 01",
 
             imagem:
                 "imagens/Diencefalo01.webp",
@@ -240,6 +270,39 @@ window.definicoesMapas = [
             function() {
 
                 return  mapaCadaverDiencefalo01;
+
+            }
+
+        },
+
+
+
+// ==================================================
+    // CADÁVER — DIENCÉFALO POSTERIOR
+    // ==================================================
+
+            {
+                
+
+            id:
+            "diencefalopsoterior-01",
+
+            topico:
+            "diencefalo",
+
+            titulo:
+            "Diencéfalo— Vista Posterior 01",
+
+            imagem:
+                "imagens/DiencefaloPosterior.webp",
+            
+            arquivo:
+                "Mapas/mapaDiencefaloPosterior.js",
+
+                        obterEstruturas:
+            function() {
+
+                return  mapaDiencefaloPosterior;
 
             }
 

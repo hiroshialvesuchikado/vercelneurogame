@@ -262,7 +262,7 @@ if (
                 "telencefalo-bolacha02",
 
             titulo:
-                "Telencéfalo — Vista transversal 02",
+                "Telencéfalo — Vista Coronal 02",
 
             imagem:
                 "imagens/TelencefaloBolacha02.webp",
@@ -274,9 +274,34 @@ if (
     );
 }
 
-
 // ======================================================
-// CADÁVER — Bolacha 02
+// CADÁVER — Bolacha 03
+// ======================================================
+if (
+    typeof mapaTelencefaloBolacha03 !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "telencefalo-bolacha03",
+
+            titulo:
+                "Telencéfalo — Vista Coronal 03",
+
+            imagem:
+                "imagens/TelencefaloBolacha03.webp",
+
+            estruturas:
+                mapaTelencefaloBolacha03,
+
+        }
+    );
+}
+// ======================================================
+// CADÁVER — Diencefalo 01
 // ======================================================
 if (
     typeof mapaTelencefaloBolacha02 !==
@@ -301,6 +326,34 @@ if (
         }
     );
 }
+
+// ======================================================
+// CADÁVER — Diencefalo Posterior 01
+// ======================================================
+if (
+    typeof mapaDiencefaloPosterior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "diencefalopsoterior-01",
+
+            titulo:
+                "Diencéfalo — Posterior 01",
+
+            imagem:
+                "imagens/DiencefaloPosterior.webp",
+
+            estruturas:
+                mapaDiencefaloPosterior,
+
+        }
+    );
+}
+
 
     // ======================================================
 // CADÁVER — TELENCEFALO VISTA SUPERIOR
