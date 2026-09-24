@@ -645,7 +645,6 @@ function normalizar(
         texto || ""
     )
 
-        // Remove acentos
         .normalize(
             "NFD"
         )
@@ -655,19 +654,22 @@ function normalizar(
             ""
         )
 
-        // Tudo minúsculo
         .toLowerCase()
 
-        // Remove espaços, hífens e _
         .replace(
-            /[\s\-_]+/g,
-            ""
+            /[-_]/g,
+            " "
         )
 
-        // Remove espaços residuais
+        .replace(
+            /\s+/g,
+            " "
+        )
+
         .trim();
 
 }
+
 
 // ======================================================
 // TÓPICO DO MAPA
