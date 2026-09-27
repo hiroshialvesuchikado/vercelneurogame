@@ -392,6 +392,92 @@ else {
 
 }
 
+// ======================================================
+// CADÁVER — Telencefalo Giros Inferiores
+// ======================================================
+if (
+    typeof mapaDiencefaloPosterior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "telencefaloGiroInferior-01",
+
+            titulo:
+                "Telencefalo Giros Inferiores 01",
+
+            imagem:
+                "imagens/TelencefaloGirosInferiores.webp",
+
+            estruturas:
+                mapaTelencefaloGiroInferior01,
+
+        }
+    );
+}
+
+
+// ======================================================
+// CADÁVER — Visão Inferior Telencefalo 
+// ======================================================
+if (
+    typeof mapaCadaverTelencefaloInferior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "telencefaloGiroInferior-01",
+
+            titulo:
+                "Telencefalo Visão Inferior",
+
+            imagem:
+                "imagens/TelencefaloCadaverVisaoInferiores.webp",
+
+            estruturas:
+                mapaCadaverTelencefaloInferior,
+
+        }
+    );
+}
+
+
+
+// ======================================================
+// CADÁVER — Telencefalo Lateral 02
+// ======================================================
+if (
+    typeof mapaCadaverTelencefaloLateral02 !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "telencefaloLateral-02",
+
+            titulo:
+                "Telencefalo Lateral 02",
+
+            imagem:
+                "imagens/CadaverTelencefaloLateral02.webp",
+
+            estruturas:
+                mapaCadaverTelencefaloLateral02,
+
+        }
+    );
+}
+
+
+
 
 
 // ======================================================

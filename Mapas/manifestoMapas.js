@@ -65,33 +65,6 @@ window.definicoesMapas = [
     },
 
 
-    // ==================================================
-    // CADÁVER — TELENCÉFALO LATERAL
-    // ==================================================
-
-    {
-        id:
-            "cadavertelencefalo-lateral",
-
-        topico:
-            "telencefalo",
-
-        titulo:
-            "Telencéfalo — Vista Lateral",
-
-        imagem:
-            "imagens/CadaverTelencefaloLateral.webp",
-
-        arquivo:
-            "Mapas/mapaCadaverSulcosTelencefaloLateral.js",
-
-        obterEstruturas:
-            function() {
-
-                return mapaCadaverTelencefaloLateral;
-
-            }
-    },
 
 
     // ==================================================
@@ -339,6 +312,98 @@ window.definicoesMapas = [
 
         },
 
+    // ==================================================
+    // CADÁVER — TELENCÉFALO GIRO INFERIOR
+    // ==================================================
 
+            {
+
+            id:
+                "telencefaloInferior-01",
+
+                        topico:
+            "telencefalo",
+
+            titulo:
+                "Telencefalo Giros Inferiores 01",
+
+            imagem:
+                "imagens/TelencefaloGirosInferiores.webp",
+            
+            arquivo:
+                "Mapas/mapaTelencefaloGiroInferior.js",
+
+                        obterEstruturas:
+            function() {
+
+                return  mapaTelencefaloGiroInferior01;
+
+            }
+
+        },
+            
+
+    // ==================================================
+    // CADÁVER — TELENCÉFALO VISÃO INFERIOR
+    // ==================================================
+
+            {
+
+            id:
+                "telencefaloGiorInferior-01",
+
+                        topico:
+            "telencefalo",
+
+            titulo:
+                "Telencefalo Visão Inferior",
+
+            imagem:
+                "imagens/TelencefaloCadaverVisaoInferior.webp",
+            
+            arquivo:
+                "Mapas/mapaCadaverTelencefaloVistaInferior.js",
+
+                        obterEstruturas:
+            function() {
+
+                return  mapaCadaverTelencefaloInferior;
+
+            }
+
+        },
+            
+
+    // ==================================================
+    // CADÁVER — TELENCÉFALO lateral 02
+    // ==================================================
+
+            {
+
+            id:
+                "telencefaloLateral-02",
+
+                        topico:
+            "telencefalo",
+
+            titulo:
+                "Telencefalo Lateral 02",
+
+            imagem:
+                "imagens/CadaverTelencefaloLateral02.webp",
+            
+            arquivo:
+                "Mapas/mapaCadaverTelencefaloLateral02.js",
+
+                        obterEstruturas:
+            function() {
+
+                return  mapaCadaverTelencefaloLateral02;
+
+            }
+
+        },
+
+        
 
 ];
