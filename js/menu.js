@@ -71,29 +71,7 @@ const CATEGORIAS_POR_TOPICO = {
     ],
 
 
-    diencefalo: [
-
-        {
-            id: "talamo",
-            nome: "🧠 Tálamo"
-        },
-
-        {
-            id: "hipotalamo",
-            nome: "🧠 Hipotálamo"
-        },
-
-        {
-            id: "epitalamo",
-            nome: "🧠 Epitálamo"
-        },
-
-        {
-            id: "subtalamo",
-            nome: "🧠 Subtálamo"
-        }
-
-    ]
+   
 
 };
 
@@ -643,8 +621,7 @@ if (
             menuTopicos
         );
 
-}
-
+    }
 
 // ======================================================
 // 14. CRIAR BOTÕES DOS TÓPICOS
@@ -750,18 +727,69 @@ function criarBotoesTopicos() {
                         "categoria"
                     ) {
 
-                        criarCategoriasDoTopico();
+                        const categoriasDoTopico =
+                            CATEGORIAS_POR_TOPICO[
+                                topicoSelecionado
+                            ] || [];
 
+
+                        // ==================================
+                        // TEM SUBCATEGORIAS
+                        //
+                        // Exemplo:
+                        // Telencéfalo
+                        // → Giros
+                        // → Sulcos
+                        // → Lobos
+                        // ==================================
 
                         if (
-                            menuCategorias
+                            categoriasDoTopico.length >
+                            0
                         ) {
 
-                            menuCategorias
-                                .classList
-                                .add(
-                                    "visivel"
-                                );
+                            criarCategoriasDoTopico();
+
+
+                            if (
+                                menuCategorias
+                            ) {
+
+                                menuCategorias
+                                    .classList
+                                    .add(
+                                        "visivel"
+                                    );
+
+                            }
+
+                        }
+
+
+                        // ==================================
+                        // NÃO TEM SUBCATEGORIAS
+                        //
+                        // Exemplo:
+                        // Diencéfalo
+                        // → vai direto para os mapas
+                        // ==================================
+
+                        else {
+
+                            criarListaMapasJogo();
+
+
+                            if (
+                                menuMapas
+                            ) {
+
+                                menuMapas
+                                    .classList
+                                    .add(
+                                        "visivel"
+                                    );
+
+                            }
 
                         }
 
@@ -1557,28 +1585,39 @@ botoesModo.forEach(
                     botao.dataset.modo;
 
 
+                if (
+                    !topicoSelecionado
+                ) {
+
+                    alert(
+                        "Escolha um tópico primeiro."
+                    );
+
+                    return;
+
+                }
+
+
+                const categoriasDoTopico =
+                    CATEGORIAS_POR_TOPICO[
+                        topicoSelecionado
+                    ] || [];
+
+
                 // ======================================
-                // POR CATEGORIA
+                // ESTUDO POR ESTRUTURAS
+                // COM CATEGORIAS
+                //
+                // Exemplo:
+                // Telencéfalo → Giros
                 // ======================================
 
                 if (
                     tipoEstudoSelecionado ===
-                    "categoria"
+                    "categoria" &&
+                    categoriasDoTopico.length >
+                    0
                 ) {
-
-                    if (
-                        !topicoSelecionado
-                    ) {
-
-                        alert(
-                            "Escolha um tópico primeiro."
-                        );
-
-
-                        return;
-
-                    }
-
 
                     if (
                         !categoriaSelecionada
@@ -1587,7 +1626,6 @@ botoesModo.forEach(
                         alert(
                             "Escolha uma categoria."
                         );
-
 
                         return;
 
@@ -1610,27 +1648,18 @@ botoesModo.forEach(
 
 
                 // ======================================
-                // POR MAPA
+                // TÓPICO SEM SUBCATEGORIAS
+                //
+                // Exemplo:
+                // Diencéfalo → mapa diretamente
                 // ======================================
 
                 if (
                     tipoEstudoSelecionado ===
-                    "mapa"
+                    "categoria" &&
+                    categoriasDoTopico.length ===
+                    0
                 ) {
-
-                    if (
-                        !topicoSelecionado
-                    ) {
-
-                        alert(
-                            "Escolha um tópico primeiro."
-                        );
-
-
-                        return;
-
-                    }
-
 
                     if (
                         !mapaSelecionado
@@ -1640,6 +1669,42 @@ botoesModo.forEach(
                             "Escolha um mapa."
                         );
 
+                        return;
+
+                    }
+
+
+                    window.location.href =
+                        `jogo.html?tipo=mapa&mapa=${encodeURIComponent(
+                            mapaSelecionado
+                        )}&topico=${encodeURIComponent(
+                            topicoSelecionado
+                        )}&modo=${encodeURIComponent(
+                            modo
+                        )}`;
+
+
+                    return;
+
+                }
+
+
+                // ======================================
+                // POR MAPA
+                // ======================================
+
+                if (
+                    tipoEstudoSelecionado ===
+                    "mapa"
+                ) {
+
+                    if (
+                        !mapaSelecionado
+                    ) {
+
+                        alert(
+                            "Escolha um mapa."
+                        );
 
                         return;
 
@@ -1670,7 +1735,6 @@ botoesModo.forEach(
 
     }
 );
-
 
 // ======================================================
 // 25. VOLTAR — CATEGORIA
@@ -1769,6 +1833,7 @@ if (
 
         function() {
 
+            // Esconder menu de modos
             if (
                 menuModos
             ) {
@@ -1782,34 +1847,96 @@ if (
             }
 
 
+            // ==========================================
+            // ESTUDO POR ESTRUTURAS
+            // ==========================================
+
             if (
                 tipoEstudoSelecionado ===
                 "categoria"
             ) {
 
-                categoriaSelecionada =
-                    null;
+                const categoriasDoTopico =
+                    CATEGORIAS_POR_TOPICO[
+                        topicoSelecionado
+                    ] || [];
 
 
-                criarCategoriasDoTopico();
-
+                // ======================================
+                // TÓPICO COM SUBCATEGORIAS
+                //
+                // Exemplo:
+                // Telencéfalo
+                // ======================================
 
                 if (
-                    menuCategorias
+                    categoriasDoTopico.length >
+                    0
                 ) {
 
-                    menuCategorias
-                        .classList
-                        .add(
-                            "visivel"
-                        );
+                    categoriaSelecionada =
+                        null;
+
+
+                    criarCategoriasDoTopico();
+
+
+                    if (
+                        menuCategorias
+                    ) {
+
+                        menuCategorias
+                            .classList
+                            .add(
+                                "visivel"
+                            );
+
+                    }
 
                 }
+
+
+                // ======================================
+                // TÓPICO SEM SUBCATEGORIAS
+                //
+                // Exemplo:
+                // Diencéfalo
+                // ======================================
+
+                else {
+
+                    mapaSelecionado =
+                        null;
+
+
+                    criarListaMapasJogo();
+
+
+                    if (
+                        menuMapas
+                    ) {
+
+                        menuMapas
+                            .classList
+                            .add(
+                                "visivel"
+                            );
+
+                    }
+
+                }
+
+
+                return;
 
             }
 
 
-            else if (
+            // ==========================================
+            // ESTUDO POR MAPA
+            // ==========================================
+
+            if (
                 tipoEstudoSelecionado ===
                 "mapa"
             ) {
@@ -1839,8 +1966,6 @@ if (
     );
 
 }
-
-
 // ======================================================
 // 28. CRIAR SELEÇÃO DE TÓPICOS DA PROVA
 // ======================================================

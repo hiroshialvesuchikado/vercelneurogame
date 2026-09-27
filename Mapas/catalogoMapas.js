@@ -34,7 +34,7 @@ function registrarMapa(
     ) {
 
         console.warn(
-            "Mapa não registrado:",
+            "⚠️ Mapa não registrado:",
             configuracao.id,
             "Estruturas não encontradas."
         );
@@ -66,7 +66,7 @@ function registrarMapa(
     ) {
 
         console.warn(
-            "Mapa duplicado ignorado:",
+            "⚠️ Mapa duplicado ignorado:",
             configuracao.id
         );
 
@@ -84,6 +84,10 @@ function registrarMapa(
 
             id:
                 configuracao.id,
+
+            topico:
+                configuracao.topico ||
+                null,
 
             titulo:
                 configuracao.titulo,
@@ -123,6 +127,9 @@ if (
             id:
                 "telencefalo-lateral",
 
+            topico:
+                "telencefalo",
+
             titulo:
                 "Telencéfalo — Vista Lateral",
 
@@ -161,6 +168,9 @@ if (
             id:
                 "telencefalo-medial",
 
+            topico:
+                "telencefalo",
+
             titulo:
                 "Telencéfalo — Vista Medial",
 
@@ -183,9 +193,11 @@ else {
 
 }
 
+
 // ======================================================
-// CADÁVER — TELENCÉFALO LOBO INSULAR
+// TELENCÉFALO — LOBO INSULAR
 // ======================================================
+
 if (
     typeof mapaLoboInsular !==
     "undefined"
@@ -196,6 +208,9 @@ if (
 
             id:
                 "telencefalo-lobo-insular",
+
+            topico:
+                "telencefalo",
 
             titulo:
                 "Telencéfalo — Vista Lobo Insular",
@@ -219,9 +234,11 @@ else {
 
 }
 
+
 // ======================================================
-// CADÁVER — Bolacha 01
+// TELENCÉFALO — BOLACHA 01
 // ======================================================
+
 if (
     typeof mapaTelencefaloBolacha01 !==
     "undefined"
@@ -233,23 +250,36 @@ if (
             id:
                 "telencefalo-bolacha01",
 
+            topico:
+                "telencefalo",
+
             titulo:
-                "Telencéfalo — Vista transversal 01",
+                "Telencéfalo — Vista Transversal 01",
 
             imagem:
                 "imagens/TelencefaloBolacha01.webp",
 
             estruturas:
-                mapaTelencefaloBolacha01,
+                mapaTelencefaloBolacha01
 
         }
     );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaTelencefaloBolacha01 não foi carregado."
+    );
+
 }
 
 
 // ======================================================
-// CADÁVER — Bolacha 02
+// TELENCÉFALO — BOLACHA 02
 // ======================================================
+
 if (
     typeof mapaTelencefaloBolacha02 !==
     "undefined"
@@ -261,6 +291,9 @@ if (
             id:
                 "telencefalo-bolacha02",
 
+            topico:
+                "telencefalo",
+
             titulo:
                 "Telencéfalo — Vista Coronal 02",
 
@@ -268,15 +301,26 @@ if (
                 "imagens/TelencefaloBolacha02.webp",
 
             estruturas:
-                mapaTelencefaloBolacha02,
+                mapaTelencefaloBolacha02
 
         }
     );
+
 }
 
+else {
+
+    console.warn(
+        "⚠️ mapaTelencefaloBolacha02 não foi carregado."
+    );
+
+}
+
+
 // ======================================================
-// CADÁVER — Bolacha 03
+// TELENCÉFALO — BOLACHA 03
 // ======================================================
+
 if (
     typeof mapaTelencefaloBolacha03 !==
     "undefined"
@@ -288,6 +332,9 @@ if (
             id:
                 "telencefalo-bolacha03",
 
+            topico:
+                "telencefalo",
+
             titulo:
                 "Telencéfalo — Vista Coronal 03",
 
@@ -295,89 +342,7 @@ if (
                 "imagens/TelencefaloBolacha03.webp",
 
             estruturas:
-                mapaTelencefaloBolacha03,
-
-        }
-    );
-}
-// ======================================================
-// CADÁVER — Diencefalo 01
-// ======================================================
-if (
-    typeof mapaTelencefaloBolacha02 !==
-    "undefined"
-) {
-
-    registrarMapa(
-        {
-
-            id:
-                "diencefalo-01",
-
-            titulo:
-                "Diencéfalo e Tálamo — Vista Lateral 01",
-
-            imagem:
-                "imagens/CadaverTelencefaloLateral.webp",
-
-            estruturas:
-                mapaCadaverDiencefalo01,
-
-        }
-    );
-}
-
-// ======================================================
-// CADÁVER — Diencefalo Posterior 01
-// ======================================================
-if (
-    typeof mapaDiencefaloPosterior !==
-    "undefined"
-) {
-
-    registrarMapa(
-        {
-
-            id:
-                "diencefalopsoterior-01",
-
-            titulo:
-                "Diencéfalo — Posterior 01",
-
-            imagem:
-                "imagens/DiencefaloPosterior.webp",
-
-            estruturas:
-                mapaDiencefaloPosterior,
-
-        }
-    );
-}
-
-
-    // ======================================================
-// CADÁVER — TELENCEFALO VISTA SUPERIOR
-// ======================================================
-if (
-    typeof mapaCadaverTelencefaloSuperior !==
-    "undefined"
-) {
-
-    registrarMapa(
-        {
-
-            id:
-                "Cadavertelencefalo-vistasuperior",
-
-
-            titulo:
-                "Telencéfalo — Vista Superior",
-
-            imagem:
-                "imagens/TelencefaloVistaSuperiorCadaver.webp",
-            
-            estruturas:
-                mapaCadaverTelencefaloSuperior,
+                mapaTelencefaloBolacha03
 
         }
     );
@@ -387,14 +352,57 @@ if (
 else {
 
     console.warn(
-        "⚠️ mapaLoboInsular não foi carregado."
+        "⚠️ mapaTelencefaloBolacha03 não foi carregado."
     );
 
 }
 
+
 // ======================================================
-// CADÁVER — Telencefalo Giros Inferiores
+// DIENCÉFALO — VISTA LATERAL 01
 // ======================================================
+
+if (
+    typeof mapaCadaverDiencefalo01 !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "diencefalo-01",
+
+            topico:
+                "diencefalo",
+
+            titulo:
+                "Diencéfalo e Tálamo — Vista Lateral 01",
+
+            imagem:
+                "imagens/Diencefalo01.webp",
+
+            estruturas:
+                mapaCadaverDiencefalo01
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCadaverDiencefalo01 não foi carregado."
+    );
+
+}
+
+
+// ======================================================
+// DIENCÉFALO — VISTA POSTERIOR
+// ======================================================
+
 if (
     typeof mapaDiencefaloPosterior !==
     "undefined"
@@ -404,25 +412,120 @@ if (
         {
 
             id:
-                "telencefaloGiroInferior-01",
+                "diencefalo-posterior-01",
+
+            topico:
+                "diencefalo",
 
             titulo:
-                "Telencefalo Giros Inferiores 01",
+                "Diencéfalo — Vista Posterior 01",
+
+            imagem:
+                "imagens/DiencefaloPosterior.webp",
+
+            estruturas:
+                mapaDiencefaloPosterior
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaDiencefaloPosterior não foi carregado."
+    );
+
+}
+
+
+// ======================================================
+// TELENCÉFALO — VISTA SUPERIOR
+// ======================================================
+
+if (
+    typeof mapaCadaverTelencefaloSuperior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "cadaver-telencefalo-vista-superior",
+
+            topico:
+                "telencefalo",
+
+            titulo:
+                "Telencéfalo — Vista Superior",
+
+            imagem:
+                "imagens/TelencefaloVistaSuperiorCadaver.webp",
+
+            estruturas:
+                mapaCadaverTelencefaloSuperior
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCadaverTelencefaloSuperior não foi carregado."
+    );
+
+}
+
+
+// ======================================================
+// TELENCÉFALO — GIROS INFERIORES
+// ======================================================
+
+if (
+    typeof mapaTelencefaloGiroInferior01 !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "telencefalo-giros-inferiores-01",
+
+            topico:
+                "telencefalo",
+
+            titulo:
+                "Telencéfalo — Giros Inferiores 01",
 
             imagem:
                 "imagens/TelencefaloGirosInferiores.webp",
 
             estruturas:
-                mapaTelencefaloGiroInferior01,
+                mapaTelencefaloGiroInferior01
 
         }
     );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaTelencefaloGiroInferior01 não foi carregado."
+    );
+
 }
 
 
 // ======================================================
-// CADÁVER — Visão Inferior Telencefalo 
+// TELENCÉFALO — VISÃO INFERIOR
 // ======================================================
+
 if (
     typeof mapaCadaverTelencefaloInferior !==
     "undefined"
@@ -432,28 +535,43 @@ if (
         {
 
             id:
-                "telencefaloGiroInferior-01",
+                "telencefalo-visao-inferior",
+
+            topico:
+                "telencefalo",
 
             titulo:
-                "Telencefalo Visão Inferior",
+                "Telencéfalo — Visão Inferior",
 
             imagem:
                 "imagens/TelencefaloCadaverVisaoInferiores.webp",
 
             estruturas:
-                mapaCadaverTelencefaloInferior,
+                mapaCadaverTelencefaloInferior
 
         }
     );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCadaverTelencefaloInferior não foi carregado."
+    );
+
 }
 
 
+// ======================================================
+// TELENCÉFALO E VIAS OPTICAS 
+//
+// Este mapa utiliza a foto:
+// CadaverTelencefaloeViasOpticasTrasnversal.webp
+// ======================================================
 
-// ======================================================
-// CADÁVER — Telencefalo Lateral 02
-// ======================================================
 if (
-    typeof mapaCadaverTelencefaloLateral02 !==
+    typeof mapaCadaverTelencefaloViasOpticasTrasnversal !==
     "undefined"
 ) {
 
@@ -461,40 +579,89 @@ if (
         {
 
             id:
-                "telencefaloLateral-02",
+                "telencefaloviaspticas",
+
+            topico:
+                "telencefalo",
 
             titulo:
-                "Telencefalo Lateral 02",
+                "Telencefalo e Vias Ópticas",
+
+            imagem:
+                "imagens/CadaverTelencefaloeViasOpticasTransversal.webp",
+
+            estruturas:
+                mapaCadaverTelencefaloViasOpticasTrasnversal
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCadaverTelencefaloLateral02 não foi carregado."
+    );
+
+}
+
+
+// ======================================================
+// TELENCÉFALO — GIROS LATERAIS 02
+//
+// USA A MESMA FOTO DO MAPA ACIMA,
+// MAS POSSUI OUTRO CONJUNTO DE HOTSPOTS.
+// ======================================================
+
+if (
+    typeof CadaverTelencefaloLateralGiros !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "telencefalo-giros-lateral-02",
+
+            topico:
+                "telencefalo",
+
+            titulo:
+                "Telencéfalo — Giros 02",
 
             imagem:
                 "imagens/CadaverTelencefaloLateral02.webp",
 
             estruturas:
-                mapaCadaverTelencefaloLateral02,
+                CadaverTelencefaloLateralGiros
 
         }
     );
+
 }
 
+else {
 
+    console.warn(
+        "⚠️ CadaverTelencefaloLateralGiros não foi carregado."
+    );
 
+}
 
 
 // ======================================================
 // CADÁVER — TELENCÉFALO LATERAL
-// ======================================================
 //
-// Esta parte aceita os DOIS nomes que apareceram
-// durante o desenvolvimento do NeuroGame:
+// Aceita os dois nomes utilizados durante
+// o desenvolvimento do NeuroGame:
 //
 // mapaCadaverSulcosTelencefaloLateral
 //
 // ou
 //
 // mapaCadaverTelencefaloLateral
-//
-// Assim você não quebra o projeto enquanto organiza
-// seus arquivos.
 // ======================================================
 
 let estruturasCadaverLateral =
@@ -530,7 +697,10 @@ if (
         {
 
             id:
-                "cadavertelencefalo-lateral",
+                "cadaver-telencefalo-lateral",
+
+            topico:
+                "telencefalo",
 
             titulo:
                 "Sulcos Telencéfalo — Vista Lateral",
@@ -553,6 +723,9 @@ else {
     );
 
 }
+
+
+
 
 
 // ======================================================
@@ -583,6 +756,9 @@ console.table(
 
                 id:
                     mapa.id,
+
+                topico:
+                    mapa.topico,
 
                 titulo:
                     mapa.titulo,

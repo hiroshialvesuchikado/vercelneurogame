@@ -404,6 +404,66 @@ window.definicoesMapas = [
 
         },
 
+
+        // ==================================================
+    // CADÁVER — TELENCÉFALO lateral 02
+    // ==================================================
+
+            {
+
+            id:
+                "telencefagiroloLateral",
+
+                        topico:
+            "telencefalo",
+
+            titulo:
+                "Telencefalo Giros 02",
+
+            imagem:
+                "imagens/CadaverTelencefaloLateral02.webp",
+            
+            arquivo:
+                "Mapas/mapaCadaverTelencefaloLateralGiros.js",
+
+                        obterEstruturas:
+            function() {
+
+                return  CadaverTelencefaloLateralGiros ;
+
+            }
+
+        },
+
         
+        // ==================================================
+    // CADÁVER — TELENCÉFALO e VIASOPTICAS
+    // ==================================================
+
+            {
+
+            id:
+                "telencefaloviaspticas",
+
+                        topico:
+            "telencefalo",
+
+            titulo:
+                "Telencefalo e Vias Ópticas",
+
+            imagem:
+                "imagens/CadaverTelencefaloeViasOpticasTransversal.webp",
+            
+            arquivo:
+                "Mapas/mapaCadaverTelencefaloViasOpticasTransversal.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaCadaverTelencefaloViasOpticasTrasnversal;
+            }
+
+        },
+
 
 ];
