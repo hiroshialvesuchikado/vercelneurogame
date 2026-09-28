@@ -1,10 +1,19 @@
 // ======================================================
 // PROVA — NEUROGAME
+//
+// SUPORTA:
+// - Modo clicar
+// - Modo digitar
+// - Seleção de quantidade
+// - Seleção de tópicos
+// - Cronômetro
+// - Correção final
+// - Revisão visual das questões
 // ======================================================
 
 
 // ======================================================
-// 1. PARÂMETROS DA URL
+// 1. PARÂMETROS
 // ======================================================
 
 const parametrosProva =
@@ -160,7 +169,7 @@ const botaoVoltar =
 
 
 // ======================================================
-// 3. ESTADO DA PROVA
+// 3. ESTADO
 // ======================================================
 
 let pontos = 0;
@@ -193,19 +202,51 @@ let timeoutQuestao = null;
 let cronometroElemento = null;
 
 
-// Erros para revisão final
+// Revisão
 
 const errosPorEstrutura =
     new Map();
 
 
-// Histórico completo
-
-const respostasProva = [];
+const respostasProva =
+    [];
 
 
 // ======================================================
-// 4. CRONÔMETRO
+// 4. NORMALIZAÇÃO
+// ======================================================
+
+function normalizar(
+    texto
+) {
+
+    return String(
+        texto || ""
+    )
+
+        .normalize(
+            "NFD"
+        )
+
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+
+        .toLowerCase()
+
+        .replace(
+            /[\s\-_]+/g,
+            ""
+        )
+
+        .trim();
+
+}
+
+
+// ======================================================
+// 5. CRONÔMETRO
 // ======================================================
 
 function criarCronometroProva() {
@@ -420,6 +461,7 @@ function iniciarCronometroProva() {
                 );
 
             },
+
             1000
         );
 
@@ -431,164 +473,16 @@ function iniciarCronometroProva() {
                 tempoEsgotadoProva();
 
             },
-            tempoQuestaoSegundos * 1000
+
+            tempoQuestaoSegundos *
+            1000
         );
 
 }
 
 
 // ======================================================
-// TEMPO ESGOTADO
-// ======================================================
-
-function tempoEsgotadoProva() {
-
-    if (
-        bloqueado ||
-        questaoRespondida ||
-        !questaoEmAndamento
-    ) {
-
-        return;
-
-    }
-
-
-    questaoRespondida = true;
-
-    bloqueado = true;
-
-
-    pararCronometroProva();
-
-
-    erros++;
-
-
-    registrarErroEstruturaProva();
-
-
-    registrarResultadoQuestao(
-        "Tempo esgotado",
-        false,
-        "tempo"
-    );
-
-
-    feedback.textContent =
-        "Tempo esgotado. Resposta registrada.";
-
-
-    if (
-        modoProva === "digitar"
-    ) {
-
-        if (
-            estruturaAlvoSVG
-        ) {
-
-            estruturaAlvoSVG
-                .classList
-                .remove(
-                    "destacada"
-                );
-
-        }
-
-
-        if (
-            campoResposta
-        ) {
-
-            campoResposta.disabled =
-                true;
-
-        }
-
-
-        if (
-            botaoResponder
-        ) {
-
-            botaoResponder.disabled =
-                true;
-
-        }
-
-    }
-
-
-    try {
-
-        registrarAnalytics(
-            "Tempo esgotado",
-            false,
-            tempoQuestaoSegundos * 1000
-        );
-
-    }
-
-    catch (
-        erroAnalytics
-    ) {
-
-        console.error(
-            "⚠️ Erro no analytics da prova:",
-            erroAnalytics
-        );
-
-    }
-
-
-    setTimeout(
-        function() {
-
-            questaoAtual++;
-
-            novaQuestao();
-
-        },
-        800
-    );
-
-}
-
-
-// ======================================================
-// 5. NORMALIZAÇÃO DAS RESPOSTAS
-// ======================================================
-
-function normalizar(
-    texto
-) {
-
-    return String(
-        texto || ""
-    )
-
-        .normalize(
-            "NFD"
-        )
-
-        .replace(
-            /[\u0300-\u036f]/g,
-            ""
-        )
-
-        .toLowerCase()
-
-        .replace(
-            /[\s\-_]+/g,
-            ""
-        )
-
-        .trim();
-
-}
-
-
-// ======================================================
-// 6. TÓPICO DO MAPA
+// 6. TÓPICOS
 // ======================================================
 
 function obterTopicoMapaProva(
@@ -661,38 +555,18 @@ function obterTopicoEstruturaProva(
 
 
     const id =
-        estrutura.id
-            .toLowerCase();
+        estrutura.id.toLowerCase();
 
 
-    // ==================================================
     // TELENCÉFALO
-    // ==================================================
 
     if (
-        id.startsWith(
-            "giro_"
-        ) ||
-
-        id.startsWith(
-            "sulco_"
-        ) ||
-
-        id.startsWith(
-            "lobo_"
-        ) ||
-
-        id.startsWith(
-            "lobulo_"
-        ) ||
-
-        id.startsWith(
-            "nucleosdabase_"
-        ) ||
-
-        id.startsWith(
-            "trans_"
-        )
+        id.startsWith("giro_") ||
+        id.startsWith("sulco_") ||
+        id.startsWith("lobo_") ||
+        id.startsWith("lobulo_") ||
+        id.startsWith("nucleosdabase_") ||
+        id.startsWith("trans_")
     ) {
 
         return "telencefalo";
@@ -700,26 +574,13 @@ function obterTopicoEstruturaProva(
     }
 
 
-    // ==================================================
     // DIENCÉFALO
-    // ==================================================
 
     if (
-        id.startsWith(
-            "talamo_"
-        ) ||
-
-        id.startsWith(
-            "hipotalamo_"
-        ) ||
-
-        id.startsWith(
-            "epitalamo_"
-        ) ||
-
-        id.startsWith(
-            "subtalamo_"
-        )
+        id.startsWith("talamo_") ||
+        id.startsWith("hipotalamo_") ||
+        id.startsWith("epitalamo_") ||
+        id.startsWith("subtalamo_")
     ) {
 
         return "diencefalo";
@@ -772,13 +633,14 @@ function obterTopicoQuestaoProva(
 
 
 // ======================================================
-// 7. REGISTRAR RESULTADO DA QUESTÃO
+// 7. REGISTRAR RESULTADO
 // ======================================================
 
 function registrarResultadoQuestao(
     respostaDada,
     acertou,
-    motivo
+    motivo,
+    dadosExtras = {}
 ) {
 
     if (
@@ -796,30 +658,62 @@ function registrarResultadoQuestao(
             numero:
                 questaoAtual + 1,
 
+
             modo:
                 modoProva,
+
 
             mapa:
                 questaoEmAndamento
                     .mapa
                     .id,
 
+
+            imagemMapa:
+                questaoEmAndamento
+                    .mapa
+                    .imagem ||
+                null,
+
+
             topico:
                 obterTopicoQuestaoProva(
                     questaoEmAndamento
                 ),
 
+
+            estruturaEsperadaId:
+                questaoEmAndamento
+                    .estrutura
+                    .id,
+
+
             respostaDada:
                 respostaDada ||
                 "Sem resposta",
+
 
             respostaEsperada:
                 questaoEmAndamento
                     .estrutura
                     .nome,
 
+
+            estruturaClicadaId:
+                dadosExtras
+                    .estruturaClicadaId ||
+                null,
+
+
+            parcialmenteCorreta:
+                dadosExtras
+                    .parcialmenteCorreta ===
+                true,
+
+
             acertou:
                 acertou,
+
 
             motivo:
                 motivo
@@ -831,7 +725,136 @@ function registrarResultadoQuestao(
 
 
 // ======================================================
-// REGISTRAR ESTRUTURA ERRADA
+// 8. TEMPO ESGOTADO
+// ======================================================
+
+function tempoEsgotadoProva() {
+
+    if (
+        bloqueado ||
+        questaoRespondida ||
+        !questaoEmAndamento
+    ) {
+
+        return;
+
+    }
+
+
+    questaoRespondida =
+        true;
+
+
+    bloqueado =
+        true;
+
+
+    pararCronometroProva();
+
+
+    erros++;
+
+
+    registrarErroEstruturaProva();
+
+
+    registrarResultadoQuestao(
+        "Tempo esgotado",
+        false,
+        "tempo"
+    );
+
+
+    if (
+        feedback
+    ) {
+
+        feedback.textContent =
+            "Tempo esgotado. Resposta registrada.";
+
+    }
+
+
+    if (
+        modoProva ===
+        "digitar"
+    ) {
+
+        if (
+            estruturaAlvoSVG
+        ) {
+
+            estruturaAlvoSVG
+                .classList
+                .remove(
+                    "destacada"
+                );
+
+        }
+
+
+        if (
+            campoResposta
+        ) {
+
+            campoResposta.disabled =
+                true;
+
+        }
+
+
+        if (
+            botaoResponder
+        ) {
+
+            botaoResponder.disabled =
+                true;
+
+        }
+
+    }
+
+
+    try {
+
+        registrarAnalytics(
+            "Tempo esgotado",
+            false,
+            tempoQuestaoSegundos *
+            1000
+        );
+
+    }
+
+    catch (
+        erroAnalytics
+    ) {
+
+        console.error(
+            "⚠️ Erro no analytics:",
+            erroAnalytics
+        );
+
+    }
+
+
+    setTimeout(
+        function() {
+
+            questaoAtual++;
+
+            novaQuestao();
+
+        },
+
+        800
+    );
+
+}
+
+
+// ======================================================
+// 9. REGISTRAR ERRO
 // ======================================================
 
 function registrarErroEstruturaProva() {
@@ -919,7 +942,7 @@ function registrarErroEstruturaProva() {
 
 
 // ======================================================
-// 8. CLASSIFICAÇÃO FINAL
+// 10. CLASSIFICAÇÃO
 // ======================================================
 
 function obterClassificacaoProva(
@@ -1008,7 +1031,7 @@ function obterClassificacaoProva(
 
 
 // ======================================================
-// 9. EMBARALHAR
+// 11. EMBARALHAR
 // ======================================================
 
 function embaralhar(
@@ -1057,7 +1080,7 @@ function embaralhar(
 
 
 // ======================================================
-// CRIAR BANCO DE QUESTÕES
+// 12. BANCO DE QUESTÕES
 // ======================================================
 
 function criarBancoQuestoes() {
@@ -1087,16 +1110,15 @@ function criarBancoQuestoes() {
                     estrutura
                 ) {
 
-                    const questao =
-                        {
+                    const questao = {
 
-                            mapa:
-                                mapa,
+                        mapa:
+                            mapa,
 
-                            estrutura:
-                                estrutura
+                        estrutura:
+                            estrutura
 
-                        };
+                    };
 
 
                     const topicoQuestao =
@@ -1135,10 +1157,6 @@ function criarBancoQuestoes() {
 }
 
 
-// ======================================================
-// BANCO
-// ======================================================
-
 let bancoQuestoes =
     embaralhar(
         criarBancoQuestoes()
@@ -1146,7 +1164,7 @@ let bancoQuestoes =
 
 
 // ======================================================
-// DISTRIBUIR MAPAS
+// 13. DISTRIBUIR MAPAS
 // ======================================================
 
 function distribuirMapas(
@@ -1157,7 +1175,8 @@ function distribuirMapas(
         [...banco];
 
 
-    const resultado = [];
+    const resultado =
+        [];
 
 
     let ultimoMapa =
@@ -1165,7 +1184,8 @@ function distribuirMapas(
 
 
     while (
-        restantes.length > 0
+        restantes.length >
+        0
     ) {
 
         let opcoes =
@@ -1196,6 +1216,7 @@ function distribuirMapas(
                     ) {
 
                         return (
+
                             !ultimoMapa ||
 
                             item
@@ -1203,6 +1224,7 @@ function distribuirMapas(
                                 .mapa
                                 .id !==
                             ultimoMapa
+
                         );
 
                     }
@@ -1210,7 +1232,8 @@ function distribuirMapas(
 
 
         if (
-            opcoes.length === 0
+            opcoes.length ===
+            0
         ) {
 
             opcoes =
@@ -1271,7 +1294,7 @@ function distribuirMapas(
 
 
 // ======================================================
-// MONTAR QUESTÕES
+// 14. MONTAR PROVA
 // ======================================================
 
 function montarQuestoesProva(
@@ -1280,7 +1303,8 @@ function montarQuestoesProva(
     topicos
 ) {
 
-    const selecionadas = [];
+    const selecionadas =
+        [];
 
 
     const chavesSelecionadas =
@@ -1292,7 +1316,8 @@ function montarQuestoesProva(
             topicos
         ) ||
 
-        topicos.length === 0
+        topicos.length ===
+        0
     ) {
 
         return distribuirMapas(
@@ -1331,14 +1356,9 @@ function montarQuestoesProva(
 
 
             if (
-                questoesDoTopico.length === 0
+                questoesDoTopico.length ===
+                0
             ) {
-
-                console.warn(
-                    "⚠️ Nenhuma questão para:",
-                    topico
-                );
-
 
                 return;
 
@@ -1397,7 +1417,8 @@ function montarQuestoesProva(
         selecionadas.length <
         quantidade &&
 
-        restantes.length > 0
+        restantes.length >
+        0
     ) {
 
         selecionadas.push(
@@ -1417,7 +1438,7 @@ function montarQuestoesProva(
 
 
 // ======================================================
-// TÓPICOS SEM QUESTÕES
+// 15. TÓPICOS SEM QUESTÕES
 // ======================================================
 
 const topicosSemQuestoes =
@@ -1447,10 +1468,6 @@ const topicosSemQuestoes =
     );
 
 
-// ======================================================
-// QUANTIDADE REAL
-// ======================================================
-
 const quantidadeReal =
     Math.min(
         quantidadeSolicitada,
@@ -1458,12 +1475,9 @@ const quantidadeReal =
     );
 
 
-// ======================================================
-// QUESTÕES DA PROVA
-// ======================================================
-
 const questoesProva =
-    topicosSemQuestoes.length === 0
+    topicosSemQuestoes.length ===
+    0
 
         ? montarQuestoesProva(
             bancoQuestoes,
@@ -1485,7 +1499,7 @@ if (
 
 
 // ======================================================
-// 10. CRIAR HOTSPOTS
+// 16. CRIAR HOTSPOTS
 // ======================================================
 
 function criarHotspots(
@@ -1660,11 +1674,6 @@ function criarHotspots(
                     estrutura.nome;
 
 
-                hitbox.dataset.info =
-                    estrutura.info ||
-                    "";
-
-
                 svg.appendChild(
                     hitbox
                 );
@@ -1678,7 +1687,7 @@ function criarHotspots(
 
 
 // ======================================================
-// 11. NOVA QUESTÃO
+// 17. NOVA QUESTÃO
 // ======================================================
 
 function novaQuestao() {
@@ -1710,8 +1719,14 @@ function novaQuestao() {
         0;
 
 
-    feedback.textContent =
-        "";
+    if (
+        feedback
+    ) {
+
+        feedback.textContent =
+            "";
+
+    }
 
 
     if (
@@ -1762,7 +1777,6 @@ function novaQuestao() {
                     ".estrutura"
                 )
             )
-
                 .find(
                     function(
                         elemento
@@ -1793,9 +1807,7 @@ function novaQuestao() {
 
             questaoAtual++;
 
-
             novaQuestao();
-
 
             return;
 
@@ -1824,17 +1836,6 @@ function novaQuestao() {
 
             pergunta.textContent =
                 "Modo de prova inválido.";
-
-
-            if (
-                typeof esconderLoadingProva ===
-                "function"
-            ) {
-
-                esconderLoadingProva();
-
-            }
-
 
             return;
 
@@ -1866,11 +1867,13 @@ function novaQuestao() {
 
     const novaURL =
         new URL(
+
             questaoEmAndamento
                 .mapa
                 .imagem,
 
             document.baseURI
+
         ).href;
 
 
@@ -1881,8 +1884,12 @@ function novaQuestao() {
 
     if (
         imagem.complete &&
-        imagem.naturalWidth > 0 &&
-        imagemAtual === novaURL
+
+        imagem.naturalWidth >
+        0 &&
+
+        imagemAtual ===
+        novaURL
     ) {
 
         prepararImagem();
@@ -1901,24 +1908,12 @@ function novaQuestao() {
 
             console.error(
                 "Imagem não carregada:",
-                questaoEmAndamento
-                    .mapa
-                    .imagem
+                novaURL
             );
 
 
             pergunta.textContent =
                 "Erro ao carregar imagem.";
-
-
-            if (
-                typeof esconderLoadingProva ===
-                "function"
-            ) {
-
-                esconderLoadingProva();
-
-            }
 
         };
 
@@ -1930,7 +1925,7 @@ function novaQuestao() {
 
 
 // ======================================================
-// 12. MODO CLICAR
+// 18. MODO CLICAR
 // ======================================================
 
 function prepararModoClicar() {
@@ -1983,7 +1978,8 @@ function verificarClique(
     if (
         bloqueado ||
         questaoRespondida ||
-        modoProva !== "clicar"
+        modoProva !==
+        "clicar"
     ) {
 
         return;
@@ -2026,7 +2022,8 @@ function verificarClique(
 
         acertos++;
 
-        pontos += 100;
+        pontos +=
+            100;
 
     }
 
@@ -2040,6 +2037,7 @@ function verificarClique(
 
 
     registrarResultadoQuestao(
+
         estruturaClicada
             .dataset
             .nome,
@@ -2048,19 +2046,34 @@ function verificarClique(
 
         acertou
             ? "acerto"
-            : "erro"
+            : "erro",
+
+        {
+
+            estruturaClicadaId:
+                estruturaClicada
+                    .dataset
+                    .id
+
+        }
+
     );
 
 
-    // Não mostra se acertou ou errou.
+    if (
+        feedback
+    ) {
 
-    feedback.textContent =
-        "Resposta registrada.";
+        feedback.textContent =
+            "Resposta registrada.";
+
+    }
 
 
     try {
 
         registrarAnalytics(
+
             estruturaClicada
                 .dataset
                 .nome,
@@ -2068,6 +2081,7 @@ function verificarClique(
             acertou,
 
             tempoResposta
+
         );
 
     }
@@ -2077,7 +2091,7 @@ function verificarClique(
     ) {
 
         console.error(
-            "⚠️ Erro no analytics da prova:",
+            "⚠️ Erro no analytics:",
             erroAnalytics
         );
 
@@ -2092,6 +2106,7 @@ function verificarClique(
             novaQuestao();
 
         },
+
         800
     );
 
@@ -2165,7 +2180,6 @@ svg.addEventListener(
                         ".estrutura"
                     )
                 )
-
                     .find(
                         function(
                             estrutura
@@ -2197,7 +2211,7 @@ svg.addEventListener(
 
 
 // ======================================================
-// 13. MODO DIGITAR
+// 19. MODO DIGITAR
 // ======================================================
 
 function prepararModoDigitar() {
@@ -2282,6 +2296,7 @@ function prepararModoDigitar() {
             }
 
         },
+
         50
     );
 
@@ -2297,7 +2312,8 @@ function verificarDigitacao() {
     if (
         bloqueado ||
         questaoRespondida ||
-        modoProva !== "digitar"
+        modoProva !==
+        "digitar"
     ) {
 
         return;
@@ -2371,7 +2387,8 @@ function verificarDigitacao() {
 
         acertos++;
 
-        pontos += 100;
+        pontos +=
+            100;
 
     }
 
@@ -2385,6 +2402,7 @@ function verificarDigitacao() {
 
 
     registrarResultadoQuestao(
+
         resposta,
 
         acertou,
@@ -2392,6 +2410,7 @@ function verificarDigitacao() {
         acertou
             ? "acerto"
             : "erro"
+
     );
 
 
@@ -2407,8 +2426,6 @@ function verificarDigitacao() {
 
     }
 
-
-    // Não mostra se acertou ou errou.
 
     feedback.textContent =
         "Resposta registrada.";
@@ -2437,7 +2454,7 @@ function verificarDigitacao() {
     ) {
 
         console.error(
-            "⚠️ Erro no analytics da prova:",
+            "⚠️ Erro no analytics:",
             erroAnalytics
         );
 
@@ -2452,6 +2469,7 @@ function verificarDigitacao() {
             novaQuestao();
 
         },
+
         800
     );
 
@@ -2459,7 +2477,7 @@ function verificarDigitacao() {
 
 
 // ======================================================
-// 14. ANALYTICS
+// 20. ANALYTICS
 // ======================================================
 
 function registrarAnalytics(
@@ -2526,7 +2544,721 @@ function registrarAnalytics(
 
 
 // ======================================================
-// 15. TELA FINAL
+// 21. ESTILOS DA REVISÃO
+// ======================================================
+
+function adicionarEstilosRevisaoProva() {
+
+    if (
+        document.getElementById(
+            "estilosRevisaoProva"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const estilo =
+        document.createElement(
+            "style"
+        );
+
+
+    estilo.id =
+        "estilosRevisaoProva";
+
+
+    estilo.textContent =
+        `
+
+        .botao-revisar-questao {
+            border: 0;
+            border-radius: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+
+        .linha-revisavel {
+            cursor: pointer;
+        }
+
+
+        .linha-revisavel:hover {
+            background:
+                rgba(99, 102, 241, 0.08);
+        }
+
+
+        .revisao-prova-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            background:
+                rgba(0, 0, 0, 0.72);
+        }
+
+
+        .revisao-prova-card {
+            width: min(900px, 96vw);
+            max-height: 92vh;
+
+            overflow-y: auto;
+
+            padding: 22px;
+
+            border-radius: 18px;
+
+            background:
+                var(--fundo-card, #ffffff);
+
+            color:
+                var(--texto-principal, #111827);
+        }
+
+
+        html.tema-escuro
+        .revisao-prova-card {
+            background: #111827;
+            color: #f8fafc;
+        }
+
+
+        .revisao-prova-respostas {
+            display: grid;
+            gap: 10px;
+
+            margin: 18px 0;
+        }
+
+
+        .revisao-prova-resposta {
+            padding: 12px 14px;
+
+            border-radius: 12px;
+
+            border:
+                1px solid rgba(
+                    148,
+                    163,
+                    184,
+                    0.35
+                );
+        }
+
+
+        .revisao-prova-legenda {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+
+            margin: 14px 0;
+
+            font-weight: 700;
+        }
+
+
+        .revisao-prova-imagem {
+            position: relative;
+
+            width: 100%;
+
+            margin-top: 14px;
+        }
+
+
+        .revisao-prova-imagem img {
+            display: block;
+
+            width: 100%;
+            height: auto;
+
+            border-radius: 12px;
+        }
+
+
+        .revisao-prova-imagem svg {
+            position: absolute;
+            inset: 0;
+
+            width: 100%;
+            height: 100%;
+
+            pointer-events: none;
+        }
+
+
+        .revisao-prova-fechar {
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 12px 16px;
+
+            border: 0;
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-weight: 700;
+        }
+
+        `;
+
+
+    document.head.appendChild(
+        estilo
+    );
+
+}
+
+
+adicionarEstilosRevisaoProva();
+
+
+// ======================================================
+// 22. DESENHAR ESTRUTURA NA REVISÃO
+// ======================================================
+
+function criarEstruturaRevisao(
+    estrutura,
+    svgRevisao
+) {
+
+    let elemento;
+
+
+    if (
+        estrutura.tipo ===
+        "linha"
+    ) {
+
+        elemento =
+            document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "polyline"
+            );
+
+
+        elemento.setAttribute(
+            "fill",
+            "none"
+        );
+
+
+        elemento.setAttribute(
+            "stroke-width",
+            "5"
+        );
+
+
+        elemento.setAttribute(
+            "stroke-linecap",
+            "round"
+        );
+
+
+        elemento.setAttribute(
+            "stroke-linejoin",
+            "round"
+        );
+
+    }
+
+    else {
+
+        elemento =
+            document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "polygon"
+            );
+
+    }
+
+
+    elemento.setAttribute(
+        "points",
+        estrutura.pontos
+    );
+
+
+    elemento.dataset.id =
+        estrutura.id;
+
+
+    svgRevisao.appendChild(
+        elemento
+    );
+
+
+    return elemento;
+
+}
+
+
+// ======================================================
+// 23. REVISAR RESULTADO
+// ======================================================
+
+function abrirRevisaoResultadoProva(
+    resultado
+) {
+
+    const anterior =
+        document.getElementById(
+            "revisaoResultadoProva"
+        );
+
+
+    if (
+        anterior
+    ) {
+
+        anterior.remove();
+
+    }
+
+
+    const mapa =
+        catalogoMapas.find(
+            function(
+                item
+            ) {
+
+                return (
+                    item.id ===
+                    resultado.mapa
+                );
+
+            }
+        );
+
+
+    if (
+        !mapa
+    ) {
+
+        alert(
+            "Não foi possível localizar o mapa desta questão."
+        );
+
+        return;
+
+    }
+
+
+    const overlay =
+        document.createElement(
+            "div"
+        );
+
+
+    overlay.id =
+        "revisaoResultadoProva";
+
+
+    overlay.className =
+        "revisao-prova-overlay";
+
+
+    const card =
+        document.createElement(
+            "section"
+        );
+
+
+    card.className =
+        "revisao-prova-card";
+
+
+    const titulo =
+        document.createElement(
+            "h2"
+        );
+
+
+    titulo.textContent =
+        `🔎 Revisão — Questão ${resultado.numero}`;
+
+
+    card.appendChild(
+        titulo
+    );
+
+
+    const respostas =
+        document.createElement(
+            "div"
+        );
+
+
+    respostas.className =
+        "revisao-prova-respostas";
+
+
+    const respostaAluno =
+        document.createElement(
+            "div"
+        );
+
+
+    respostaAluno.className =
+        "revisao-prova-resposta";
+
+
+    respostaAluno.innerHTML =
+        `
+        <strong>
+            Sua resposta:
+        </strong>
+
+        <br>
+
+        ${resultado.respostaDada}
+        `;
+
+
+    respostas.appendChild(
+        respostaAluno
+    );
+
+
+    const respostaCorreta =
+        document.createElement(
+            "div"
+        );
+
+
+    respostaCorreta.className =
+        "revisao-prova-resposta";
+
+
+    respostaCorreta.innerHTML =
+        `
+        <strong>
+            Resposta correta:
+        </strong>
+
+        <br>
+
+        ${resultado.respostaEsperada}
+        `;
+
+
+    respostas.appendChild(
+        respostaCorreta
+    );
+
+
+    card.appendChild(
+        respostas
+    );
+
+
+    const legenda =
+        document.createElement(
+            "div"
+        );
+
+
+    legenda.className =
+        "revisao-prova-legenda";
+
+
+    if (
+        resultado.modo ===
+        "clicar" &&
+        resultado.estruturaClicadaId &&
+        !resultado.acertou
+    ) {
+
+        legenda.innerHTML =
+            `
+            <span>
+                🔴 Onde você clicou
+            </span>
+
+            <span>
+                🟢 Onde deveria clicar
+            </span>
+            `;
+
+    }
+
+    else {
+
+        legenda.innerHTML =
+            `
+            <span>
+                🟢 Estrutura correta
+            </span>
+            `;
+
+    }
+
+
+    card.appendChild(
+        legenda
+    );
+
+
+    const areaImagem =
+        document.createElement(
+            "div"
+        );
+
+
+    areaImagem.className =
+        "revisao-prova-imagem";
+
+
+    const imagemRevisao =
+        document.createElement(
+            "img"
+        );
+
+
+    imagemRevisao.alt =
+        "Imagem da questão revisada";
+
+
+    const svgRevisao =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "svg"
+        );
+
+
+    areaImagem.appendChild(
+        imagemRevisao
+    );
+
+
+    areaImagem.appendChild(
+        svgRevisao
+    );
+
+
+    card.appendChild(
+        areaImagem
+    );
+
+
+    imagemRevisao.onload =
+        function() {
+
+            svgRevisao.setAttribute(
+                "viewBox",
+                `0 0 ${
+                    imagemRevisao.naturalWidth
+                } ${
+                    imagemRevisao.naturalHeight
+                }`
+            );
+
+
+            const correta =
+                mapa.estruturas.find(
+                    function(
+                        estrutura
+                    ) {
+
+                        return (
+                            estrutura.id ===
+                            resultado
+                                .estruturaEsperadaId
+                        );
+
+                    }
+                );
+
+
+            const clicada =
+                mapa.estruturas.find(
+                    function(
+                        estrutura
+                    ) {
+
+                        return (
+                            estrutura.id ===
+                            resultado
+                                .estruturaClicadaId
+                        );
+
+                    }
+                );
+
+
+            if (
+                correta
+            ) {
+
+                const elementoCorreto =
+                    criarEstruturaRevisao(
+                        correta,
+                        svgRevisao
+                    );
+
+
+                if (
+                    correta.tipo ===
+                    "linha"
+                ) {
+
+                    elementoCorreto.style.stroke =
+                        "#16a34a";
+
+                }
+
+                else {
+
+                    elementoCorreto.style.fill =
+                        "rgba(22,163,74,0.28)";
+
+
+                    elementoCorreto.style.stroke =
+                        "#16a34a";
+
+
+                    elementoCorreto.style.strokeWidth =
+                        "4";
+
+                }
+
+            }
+
+
+            if (
+                resultado.modo ===
+                "clicar" &&
+
+                clicada &&
+
+                clicada.id !==
+                resultado
+                    .estruturaEsperadaId
+            ) {
+
+                const elementoErrado =
+                    criarEstruturaRevisao(
+                        clicada,
+                        svgRevisao
+                    );
+
+
+                if (
+                    clicada.tipo ===
+                    "linha"
+                ) {
+
+                    elementoErrado.style.stroke =
+                        "#dc2626";
+
+                }
+
+                else {
+
+                    elementoErrado.style.fill =
+                        "rgba(220,38,38,0.28)";
+
+
+                    elementoErrado.style.stroke =
+                        "#dc2626";
+
+
+                    elementoErrado.style.strokeWidth =
+                        "4";
+
+                }
+
+            }
+
+        };
+
+
+    imagemRevisao.src =
+        new URL(
+            mapa.imagem,
+            document.baseURI
+        ).href;
+
+
+    const fechar =
+        document.createElement(
+            "button"
+        );
+
+
+    fechar.type =
+        "button";
+
+
+    fechar.className =
+        "revisao-prova-fechar";
+
+
+    fechar.textContent =
+        "← Voltar para a correção";
+
+
+    fechar.addEventListener(
+        "click",
+        function() {
+
+            overlay.remove();
+
+        }
+    );
+
+
+    card.appendChild(
+        fechar
+    );
+
+
+    overlay.appendChild(
+        card
+    );
+
+
+    overlay.addEventListener(
+        "click",
+        function(
+            evento
+        ) {
+
+            if (
+                evento.target ===
+                overlay
+            ) {
+
+                overlay.remove();
+
+            }
+
+        }
+    );
+
+
+    document.body.appendChild(
+        overlay
+    );
+
+}
+
+
+// ======================================================
+// 24. TELA FINAL
 // ======================================================
 
 function mostrarTelaFeedbackProva() {
@@ -2631,10 +3363,6 @@ function mostrarTelaFeedbackProva() {
         "feedback-final-card";
 
 
-    // ==================================================
-    // TÍTULO
-    // ==================================================
-
     const titulo =
         document.createElement(
             "h2"
@@ -2649,10 +3377,6 @@ function mostrarTelaFeedbackProva() {
         titulo
     );
 
-
-    // ==================================================
-    // CLASSIFICAÇÃO
-    // ==================================================
 
     const tituloClassificacao =
         document.createElement(
@@ -2710,7 +3434,6 @@ function mostrarTelaFeedbackProva() {
         `
 
         <div>
-
             <strong>
                 ${nota}
             </strong>
@@ -2718,12 +3441,10 @@ function mostrarTelaFeedbackProva() {
             <span>
                 Nota
             </span>
-
         </div>
 
 
         <div>
-
             <strong>
                 ${acertos} / ${totalDaProva}
             </strong>
@@ -2731,12 +3452,10 @@ function mostrarTelaFeedbackProva() {
             <span>
                 Acertos
             </span>
-
         </div>
 
 
         <div>
-
             <strong>
                 ${erros}
             </strong>
@@ -2744,12 +3463,10 @@ function mostrarTelaFeedbackProva() {
             <span>
                 Erros
             </span>
-
         </div>
 
 
         <div>
-
             <strong>
                 ${aproveitamento}%
             </strong>
@@ -2757,7 +3474,6 @@ function mostrarTelaFeedbackProva() {
             <span>
                 Aproveitamento
             </span>
-
         </div>
 
         `;
@@ -2769,7 +3485,7 @@ function mostrarTelaFeedbackProva() {
 
 
     // ==================================================
-    // CORREÇÃO DETALHADA
+    // CORREÇÃO
     // ==================================================
 
     const secaoCorrecao =
@@ -2797,6 +3513,21 @@ function mostrarTelaFeedbackProva() {
     );
 
 
+    const instrucao =
+        document.createElement(
+            "p"
+        );
+
+
+    instrucao.textContent =
+        "Clique em Revisar para ver visualmente onde você marcou e qual era a resposta correta.";
+
+
+    secaoCorrecao.appendChild(
+        instrucao
+    );
+
+
     const tabelaContainer =
         document.createElement(
             "div"
@@ -2817,8 +3548,6 @@ function mostrarTelaFeedbackProva() {
         "tabela-correcao-prova";
 
 
-    // Cabeçalho
-
     const cabecalho =
         document.createElement(
             "thead"
@@ -2835,7 +3564,8 @@ function mostrarTelaFeedbackProva() {
         "Questão",
         "Resultado",
         "Resposta dada",
-        "Resposta esperada"
+        "Resposta esperada",
+        "Revisão"
 
     ].forEach(
         function(
@@ -2870,8 +3600,6 @@ function mostrarTelaFeedbackProva() {
     );
 
 
-    // Corpo
-
     const corpo =
         document.createElement(
             "tbody"
@@ -2889,7 +3617,7 @@ function mostrarTelaFeedbackProva() {
                 );
 
 
-            // Questão
+            // QUESTÃO
 
             const colunaQuestao =
                 document.createElement(
@@ -2906,7 +3634,7 @@ function mostrarTelaFeedbackProva() {
             );
 
 
-            // Resultado
+            // RESULTADO
 
             const colunaResultado =
                 document.createElement(
@@ -2915,7 +3643,8 @@ function mostrarTelaFeedbackProva() {
 
 
             if (
-                resultado.acertou
+                resultado.acertou &&
+                !resultado.parcialmenteCorreta
             ) {
 
                 colunaResultado.textContent =
@@ -2929,17 +3658,26 @@ function mostrarTelaFeedbackProva() {
             }
 
             else if (
+                resultado.parcialmenteCorreta
+            ) {
+
+                colunaResultado.textContent =
+                    "🟡 Parcial";
+
+
+                colunaResultado.classList.add(
+                    "resultado-parcial"
+                );
+
+            }
+
+            else if (
                 resultado.motivo ===
                 "tempo"
             ) {
 
                 colunaResultado.textContent =
                     "⏰ Tempo";
-
-
-                colunaResultado.classList.add(
-                    "resultado-tempo"
-                );
 
             }
 
@@ -2961,7 +3699,7 @@ function mostrarTelaFeedbackProva() {
             );
 
 
-            // Resposta dada
+            // RESPOSTA DADA
 
             const colunaRespostaDada =
                 document.createElement(
@@ -2978,7 +3716,7 @@ function mostrarTelaFeedbackProva() {
             );
 
 
-            // Resposta esperada
+            // RESPOSTA ESPERADA
 
             const colunaRespostaEsperada =
                 document.createElement(
@@ -2992,6 +3730,94 @@ function mostrarTelaFeedbackProva() {
 
             linha.appendChild(
                 colunaRespostaEsperada
+            );
+
+
+            // REVISÃO
+
+            const colunaRevisao =
+                document.createElement(
+                    "td"
+                );
+
+
+            const deveRevisar =
+                !resultado.acertou ||
+                resultado.parcialmenteCorreta;
+
+
+            if (
+                deveRevisar
+            ) {
+
+                const botaoRevisar =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                botaoRevisar.type =
+                    "button";
+
+
+                botaoRevisar.className =
+                    "botao-revisar-questao";
+
+
+                botaoRevisar.textContent =
+                    "🔎 Revisar";
+
+
+                botaoRevisar.addEventListener(
+                    "click",
+                    function(
+                        evento
+                    ) {
+
+                        evento.stopPropagation();
+
+
+                        abrirRevisaoResultadoProva(
+                            resultado
+                        );
+
+                    }
+                );
+
+
+                colunaRevisao.appendChild(
+                    botaoRevisar
+                );
+
+
+                linha.classList.add(
+                    "linha-revisavel"
+                );
+
+
+                linha.addEventListener(
+                    "click",
+                    function() {
+
+                        abrirRevisaoResultadoProva(
+                            resultado
+                        );
+
+                    }
+                );
+
+            }
+
+            else {
+
+                colunaRevisao.textContent =
+                    "—";
+
+            }
+
+
+            linha.appendChild(
+                colunaRevisao
             );
 
 
@@ -3044,7 +3870,8 @@ function mostrarTelaFeedbackProva() {
 
 
     tituloRevisao.textContent =
-        estruturasErradas.length > 0
+        estruturasErradas.length >
+        0
 
             ? "Estruturas para revisar"
 
@@ -3057,17 +3884,14 @@ function mostrarTelaFeedbackProva() {
 
 
     if (
-        estruturasErradas.length === 0
+        estruturasErradas.length ===
+        0
     ) {
 
         const perfeito =
             document.createElement(
                 "p"
             );
-
-
-        perfeito.className =
-            "feedback-final-perfeito";
 
 
         perfeito.textContent =
@@ -3124,7 +3948,8 @@ function mostrarTelaFeedbackProva() {
 
 
                 quantidade.textContent =
-                    item.erros === 1
+                    item.erros ===
+                    1
 
                         ? "1 erro"
 
@@ -3162,7 +3987,7 @@ function mostrarTelaFeedbackProva() {
 
 
     // ==================================================
-    // BOTÕES FINAIS
+    // BOTÕES
     // ==================================================
 
     const botoes =
@@ -3282,7 +4107,7 @@ function mostrarTelaFeedbackProva() {
 
 
 // ======================================================
-// 16. BOTÃO RESPONDER
+// 25. BOTÃO RESPONDER
 // ======================================================
 
 if (
@@ -3307,6 +4132,7 @@ if (
 
     campoResposta.addEventListener(
         "keydown",
+
         function(
             evento
         ) {
@@ -3317,6 +4143,7 @@ if (
             ) {
 
                 evento.preventDefault();
+
 
                 verificarDigitacao();
 
@@ -3329,7 +4156,7 @@ if (
 
 
 // ======================================================
-// 17. FINALIZAR PROVA
+// 26. FINALIZAR
 // ======================================================
 
 function finalizarProva() {
@@ -3359,8 +4186,14 @@ function finalizarProva() {
         "🎉 Prova concluída!";
 
 
-    feedback.textContent =
-        `Acertos: ${acertos} | Erros: ${erros}`;
+    if (
+        feedback
+    ) {
+
+        feedback.textContent =
+            "";
+
+    }
 
 
     svg.innerHTML =
@@ -3419,7 +4252,7 @@ function finalizarProva() {
 
 
 // ======================================================
-// 18. REINICIAR
+// 27. REINICIAR
 // ======================================================
 
 if (
@@ -3428,6 +4261,7 @@ if (
 
     botaoReiniciar.addEventListener(
         "click",
+
         function() {
 
             window.location.reload();
@@ -3448,6 +4282,7 @@ if (
 
     botaoVoltar.addEventListener(
         "click",
+
         function() {
 
             window.location.href =
@@ -3460,7 +4295,7 @@ if (
 
 
 // ======================================================
-// 19. LOGS
+// 28. LOGS
 // ======================================================
 
 console.log(
@@ -3488,7 +4323,8 @@ console.log(
 console.log(
     "Tempo por questão:",
 
-    tempoQuestaoSegundos > 0
+    tempoQuestaoSegundos >
+    0
 
         ? `${tempoQuestaoSegundos} segundos`
 
@@ -3499,7 +4335,8 @@ console.log(
 console.log(
     "Tópicos selecionados:",
 
-    topicosSelecionados.length > 0
+    topicosSelecionados.length >
+    0
 
         ? topicosSelecionados
 
@@ -3543,7 +4380,7 @@ console.log(
 
 
 // ======================================================
-// 20. INICIAR
+// 29. INICIAR
 // ======================================================
 
 if (
@@ -3571,7 +4408,8 @@ if (
 
 
 else if (
-    topicosSemQuestoes.length > 0
+    topicosSemQuestoes.length >
+    0
 ) {
 
     pergunta.textContent =
@@ -3597,15 +4435,12 @@ else if (
 
 
 else if (
-    questoesProva.length === 0
+    questoesProva.length ===
+    0
 ) {
 
     pergunta.textContent =
-        topicosSelecionados.length === 0
-
-            ? "Erro: nenhuma questão disponível."
-
-            : "Erro: nenhuma questão disponível para os tópicos selecionados.";
+        "Erro: nenhuma questão disponível.";
 
 
     if (
@@ -3621,17 +4456,6 @@ else if (
 
 
 else {
-
-    if (
-        topicosSelecionados.length === 0
-    ) {
-
-        console.warn(
-            "⚠️ Nenhum tópico informado. A prova utilizará todos os mapas."
-        );
-
-    }
-
 
     novaQuestao();
 

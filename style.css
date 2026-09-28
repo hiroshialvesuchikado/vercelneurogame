@@ -3801,3 +3801,223 @@ html.tema-escuro .menu-principal,
 html.tema-escuro .game {
     color: white;
 }
+
+/* ======================================================
+   TEMA CLARO — CONFIGURAÇÃO DA PROVA
+   ====================================================== */
+
+html.tema-claro .configuracao-prova,
+html.tema-claro .card-prova,
+html.tema-claro .selecao-topicos-prova {
+    background: #ffffff;
+    color: #1e293b;
+}
+
+
+/* TÍTULOS */
+
+html.tema-claro .configuracao-prova h2,
+html.tema-claro .configuracao-prova h3,
+html.tema-claro .card-prova h2,
+html.tema-claro .card-prova h3,
+html.tema-claro .selecao-topicos-prova h2,
+html.tema-claro .selecao-topicos-prova h3 {
+    color: #1e293b;
+}
+
+
+/* TEXTOS AUXILIARES */
+
+html.tema-claro .configuracao-prova p,
+html.tema-claro .card-prova p,
+html.tema-claro .selecao-topicos-prova p {
+    color: #64748b;
+}
+
+
+/* LABELS */
+
+html.tema-claro .campo-prova label {
+    color: #1e293b;
+}
+
+
+/* INPUTS E SELECTS */
+
+html.tema-claro .campo-prova input,
+html.tema-claro .campo-prova select {
+    background: #ffffff;
+    color: #111827;
+
+    border: 1px solid #cbd5e1;
+
+    box-shadow: none;
+}
+
+
+/* OPÇÕES DO SELECT */
+
+html.tema-claro .campo-prova select option {
+    background: #ffffff;
+    color: #111827;
+}
+
+
+/* ÁREA DOS TÓPICOS */
+
+html.tema-claro .topicos-prova,
+html.tema-claro .conteudos-prova,
+html.tema-claro #topicosProva,
+html.tema-claro #listaTopicosProva {
+    background: #f8fafc;
+    color: #1e293b;
+
+    border: 1px solid #dbe3ee;
+}
+
+
+/* CARDS DOS TÓPICOS */
+
+html.tema-claro .opcao-topico-prova,
+html.tema-claro .item-topico-prova,
+html.tema-claro .topico-prova {
+    background: #ffffff;
+    color: #1e293b;
+
+    border: 1px solid #cbd5e1;
+}
+
+
+/* TEXTO DOS TÓPICOS */
+
+html.tema-claro .opcao-topico-prova label,
+html.tema-claro .item-topico-prova label,
+html.tema-claro .topico-prova label {
+    color: #1e293b;
+}
+
+
+/* CHECKBOX */
+
+html.tema-claro input[type="checkbox"] {
+    accent-color: #4f46e5;
+}
+
+/* ======================================================
+   CORREÇÃO — RESULTADO FINAL NO TEMA CLARO
+   ====================================================== */
+
+html.tema-claro .feedback-final-card {
+    background: #ffffff;
+    color: #1e293b;
+}
+
+
+/* TÍTULOS */
+
+html.tema-claro .feedback-final-card h2,
+html.tema-claro .feedback-final-card h3 {
+    color: #111827;
+}
+
+
+/* TEXTO */
+
+html.tema-claro .feedback-final-mensagem,
+html.tema-claro .feedback-final-card p {
+    color: #475569;
+}
+
+
+/* BLOCOS DO RESUMO */
+
+html.tema-claro .feedback-final-resumo > div {
+    background: #f8fafc;
+
+    border: 1px solid #d1d5db;
+
+    color: #111827;
+}
+
+
+/* NÚMEROS */
+
+html.tema-claro .feedback-final-resumo strong {
+    color: #111827;
+}
+
+
+/* RÓTULOS */
+
+html.tema-claro .feedback-final-resumo span {
+    color: #475569;
+}
+
+
+/* SEÇÃO DE CORREÇÃO */
+
+html.tema-claro .feedback-final-revisao {
+    color: #1e293b;
+}
+
+
+html.tema-claro .feedback-final-revisao h3 {
+    color: #111827;
+}
+
+
+/* TABELA */
+
+html.tema-claro .tabela-correcao-prova {
+    background: #ffffff;
+
+    color: #111827;
+}
+
+
+html.tema-claro .tabela-correcao-prova th {
+    background: #f1f5f9;
+
+    color: #111827;
+}
+
+
+html.tema-claro .tabela-correcao-prova td {
+    color: #1e293b;
+
+    border-bottom:
+        1px solid #e2e8f0;
+}
+
+
+/* ITENS DE REVISÃO */
+
+html.tema-claro .feedback-final-item {
+    background: #f8fafc;
+
+    color: #1e293b;
+
+    border:
+        1px solid #e2e8f0;
+}
+
+
+/* BOTÕES */
+
+html.tema-claro .feedback-final-botoes button,
+html.tema-claro .botao-revisar-questao {
+    background: #ffffff;
+
+    color: #111827;
+
+    border:
+        1px solid #cbd5e1;
+}
+
+
+/* HOVER */
+
+html.tema-claro .feedback-final-botoes button:hover,
+html.tema-claro .botao-revisar-questao:hover {
+    background: #f1f5f9;
+}
