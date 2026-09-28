@@ -2,7 +2,16 @@
 // PROVA — NEUROGAME
 // ======================================================
 
-const parametrosProva = new URLSearchParams(window.location.search);
+
+// ======================================================
+// 1. PARÂMETROS DA URL
+// ======================================================
+
+const parametrosProva =
+    new URLSearchParams(
+        window.location.search
+    );
+
 
 let quantidadeSolicitada =
     parseInt(
@@ -11,15 +20,18 @@ let quantidadeSolicitada =
         )
     );
 
+
 const modoProva =
     parametrosProva.get(
         "modo"
     ) || "clicar";
 
+
 const parametroTopicos =
     parametrosProva.get(
         "topicos"
     );
+
 
 let tempoQuestaoSegundos =
     parseInt(
@@ -36,8 +48,7 @@ if (
     tempoQuestaoSegundos < 0
 ) {
 
-    tempoQuestaoSegundos =
-        0;
+    tempoQuestaoSegundos = 0;
 
 }
 
@@ -51,9 +62,7 @@ const topicosSelecionados =
                 topico =>
                     topico.trim()
             )
-            .filter(
-                Boolean
-            )
+            .filter(Boolean)
 
         : [];
 
@@ -63,14 +72,13 @@ if (
     quantidadeSolicitada < 1
 ) {
 
-    quantidadeSolicitada =
-        10;
+    quantidadeSolicitada = 10;
 
 }
 
 
 // ======================================================
-// ELEMENTOS HTML
+// 2. ELEMENTOS HTML
 // ======================================================
 
 const imagem =
@@ -78,70 +86,72 @@ const imagem =
         "imagemAnatomica"
     );
 
+
 const svg =
     document.getElementById(
         "camadaHotspots"
     );
+
 
 const pergunta =
     document.getElementById(
         "pergunta"
     );
 
+
 const feedback =
     document.getElementById(
         "feedback"
     );
 
-const pontosElemento =
-    document.getElementById(
-        "pontos"
-    );
-
-const errosElemento =
-    document.getElementById(
-        "erros"
-    );
 
 const numeroQuestao =
     document.getElementById(
         "numeroQuestao"
     );
 
+
 const totalQuestoes =
     document.getElementById(
         "totalQuestoes"
     );
+
 
 const areaDigitar =
     document.getElementById(
         "areaDigitar"
     );
 
+
 const campoResposta =
     document.getElementById(
         "respostaDigitada"
     );
+
 
 const botaoResponder =
     document.getElementById(
         "confirmarResposta"
     );
 
+
 const caixaInfo =
     document.getElementById(
         "infoEstrutura"
     );
+
 
 const acoesPartida =
     document.getElementById(
         "acoesPartida"
     );
 
+
 const botaoReiniciar =
     document.getElementById(
         "reiniciarPartida"
     );
+
 
 const botaoVoltar =
     document.getElementById(
@@ -150,50 +160,37 @@ const botaoVoltar =
 
 
 // ======================================================
-// ESTADO DA PROVA
+// 3. ESTADO DA PROVA
 // ======================================================
 
-let pontos =
-    0;
+let pontos = 0;
 
-let acertos =
-    0;
+let acertos = 0;
 
-let erros =
-    0;
+let erros = 0;
 
-let questaoAtual =
-    0;
+let questaoAtual = 0;
 
-let questaoEmAndamento =
-    null;
+let questaoEmAndamento = null;
 
-let estruturaAlvoSVG =
-    null;
+let estruturaAlvoSVG = null;
 
-let bloqueado =
-    false;
+let bloqueado = false;
 
-let questaoRespondida =
-    false;
+let questaoRespondida = false;
 
-let inicioQuestao =
-    0;
+let inicioQuestao = 0;
 
-let tentativasQuestao =
-    0;
+let tentativasQuestao = 0;
 
 
 // Cronômetro
 
-let intervaloCronometro =
-    null;
+let intervaloCronometro = null;
 
-let timeoutQuestao =
-    null;
+let timeoutQuestao = null;
 
-let cronometroElemento =
-    null;
+let cronometroElemento = null;
 
 
 // Erros para revisão final
@@ -202,14 +199,13 @@ const errosPorEstrutura =
     new Map();
 
 
-// Histórico completo das respostas
+// Histórico completo
 
-const respostasProva =
-    [];
+const respostasProva = [];
 
 
 // ======================================================
-// CRONÔMETRO
+// 4. CRONÔMETRO
 // ======================================================
 
 function criarCronometroProva() {
@@ -307,8 +303,7 @@ function atualizarCronometroProva(
 
 
     if (
-        tempoQuestaoSegundos ===
-        0
+        tempoQuestaoSegundos === 0
     ) {
 
         cronometroElemento.textContent =
@@ -388,8 +383,7 @@ function iniciarCronometroProva() {
 
 
     if (
-        tempoQuestaoSegundos ===
-        0
+        tempoQuestaoSegundos === 0
     ) {
 
         atualizarCronometroProva(
@@ -426,7 +420,6 @@ function iniciarCronometroProva() {
                 );
 
             },
-
             1000
         );
 
@@ -438,69 +431,8 @@ function iniciarCronometroProva() {
                 tempoEsgotadoProva();
 
             },
-
-            tempoQuestaoSegundos *
-            1000
+            tempoQuestaoSegundos * 1000
         );
-
-}
-
-
-// ======================================================
-// REGISTRAR RESULTADO DE UMA QUESTÃO
-// ======================================================
-
-function registrarResultadoQuestao(
-    respostaDada,
-    acertou,
-    motivo
-) {
-
-    if (
-        !questaoEmAndamento
-    ) {
-
-        return;
-
-    }
-
-
-    respostasProva.push(
-        {
-
-            numero:
-                questaoAtual + 1,
-
-            modo:
-                modoProva,
-
-            mapa:
-                questaoEmAndamento
-                    .mapa
-                    .id,
-
-            topico:
-                obterTopicoQuestaoProva(
-                    questaoEmAndamento
-                ),
-
-            respostaDada:
-                respostaDada ||
-                "Sem resposta",
-
-            respostaEsperada:
-                questaoEmAndamento
-                    .estrutura
-                    .nome,
-
-            acertou:
-                acertou,
-
-            motivo:
-                motivo
-
-        }
-    );
 
 }
 
@@ -523,17 +455,14 @@ function tempoEsgotadoProva() {
 
 
     questaoRespondida = true;
+
     bloqueado = true;
+
 
     pararCronometroProva();
 
 
-    // Conta internamente como erro
     erros++;
-
-
-    // Não tenta mais atualizar o elemento "Erros"
-    // porque ele foi removido do HTML
 
 
     registrarErroEstruturaProva();
@@ -546,13 +475,9 @@ function tempoEsgotadoProva() {
     );
 
 
-    // Feedback neutro
     feedback.textContent =
         "Tempo esgotado. Resposta registrada.";
 
-
-    // Se estiver no modo digitar,
-    // remove apenas o destaque
 
     if (
         modoProva === "digitar"
@@ -615,8 +540,6 @@ function tempoEsgotadoProva() {
     }
 
 
-    // Vai automaticamente para a próxima questão
-
     setTimeout(
         function() {
 
@@ -625,14 +548,14 @@ function tempoEsgotadoProva() {
             novaQuestao();
 
         },
-
         800
     );
 
 }
 
+
 // ======================================================
-// NORMALIZAR TEXTO
+// 5. NORMALIZAÇÃO DAS RESPOSTAS
 // ======================================================
 
 function normalizar(
@@ -655,13 +578,8 @@ function normalizar(
         .toLowerCase()
 
         .replace(
-            /[-_]/g,
-            " "
-        )
-
-        .replace(
-            /\s+/g,
-            " "
+            /[\s\-_]+/g,
+            ""
         )
 
         .trim();
@@ -670,7 +588,7 @@ function normalizar(
 
 
 // ======================================================
-// TÓPICO DO MAPA
+// 6. TÓPICO DO MAPA
 // ======================================================
 
 function obterTopicoMapaProva(
@@ -743,8 +661,13 @@ function obterTopicoEstruturaProva(
 
 
     const id =
-        estrutura.id.toLowerCase();
+        estrutura.id
+            .toLowerCase();
 
+
+    // ==================================================
+    // TELENCÉFALO
+    // ==================================================
 
     if (
         id.startsWith(
@@ -776,6 +699,10 @@ function obterTopicoEstruturaProva(
 
     }
 
+
+    // ==================================================
+    // DIENCÉFALO
+    // ==================================================
 
     if (
         id.startsWith(
@@ -845,6 +772,65 @@ function obterTopicoQuestaoProva(
 
 
 // ======================================================
+// 7. REGISTRAR RESULTADO DA QUESTÃO
+// ======================================================
+
+function registrarResultadoQuestao(
+    respostaDada,
+    acertou,
+    motivo
+) {
+
+    if (
+        !questaoEmAndamento
+    ) {
+
+        return;
+
+    }
+
+
+    respostasProva.push(
+        {
+
+            numero:
+                questaoAtual + 1,
+
+            modo:
+                modoProva,
+
+            mapa:
+                questaoEmAndamento
+                    .mapa
+                    .id,
+
+            topico:
+                obterTopicoQuestaoProva(
+                    questaoEmAndamento
+                ),
+
+            respostaDada:
+                respostaDada ||
+                "Sem resposta",
+
+            respostaEsperada:
+                questaoEmAndamento
+                    .estrutura
+                    .nome,
+
+            acertou:
+                acertou,
+
+            motivo:
+                motivo
+
+        }
+    );
+
+}
+
+
+// ======================================================
 // REGISTRAR ESTRUTURA ERRADA
 // ======================================================
 
@@ -852,7 +838,8 @@ function registrarErroEstruturaProva() {
 
     if (
         !questaoEmAndamento ||
-        !questaoEmAndamento.estrutura
+        !questaoEmAndamento
+            .estrutura
     ) {
 
         return;
@@ -932,7 +919,7 @@ function registrarErroEstruturaProva() {
 
 
 // ======================================================
-// CLASSIFICAÇÃO FINAL
+// 8. CLASSIFICAÇÃO FINAL
 // ======================================================
 
 function obterClassificacaoProva(
@@ -940,8 +927,7 @@ function obterClassificacaoProva(
 ) {
 
     if (
-        aproveitamento >=
-        90
+        aproveitamento >= 90
     ) {
 
         return {
@@ -958,8 +944,7 @@ function obterClassificacaoProva(
 
 
     if (
-        aproveitamento >=
-        75
+        aproveitamento >= 75
     ) {
 
         return {
@@ -976,8 +961,7 @@ function obterClassificacaoProva(
 
 
     if (
-        aproveitamento >=
-        60
+        aproveitamento >= 60
     ) {
 
         return {
@@ -994,8 +978,7 @@ function obterClassificacaoProva(
 
 
     if (
-        aproveitamento >=
-        40
+        aproveitamento >= 40
     ) {
 
         return {
@@ -1025,7 +1008,7 @@ function obterClassificacaoProva(
 
 
 // ======================================================
-// EMBARALHAR
+// 9. EMBARALHAR
 // ======================================================
 
 function embaralhar(
@@ -1079,8 +1062,7 @@ function embaralhar(
 
 function criarBancoQuestoes() {
 
-    const banco =
-        [];
+    const banco = [];
 
 
     catalogoMapas.forEach(
@@ -1175,8 +1157,7 @@ function distribuirMapas(
         [...banco];
 
 
-    const resultado =
-        [];
+    const resultado = [];
 
 
     let ultimoMapa =
@@ -1184,8 +1165,7 @@ function distribuirMapas(
 
 
     while (
-        restantes.length >
-        0
+        restantes.length > 0
     ) {
 
         let opcoes =
@@ -1216,7 +1196,6 @@ function distribuirMapas(
                     ) {
 
                         return (
-
                             !ultimoMapa ||
 
                             item
@@ -1224,7 +1203,6 @@ function distribuirMapas(
                                 .mapa
                                 .id !==
                             ultimoMapa
-
                         );
 
                     }
@@ -1232,8 +1210,7 @@ function distribuirMapas(
 
 
         if (
-            opcoes.length ===
-            0
+            opcoes.length === 0
         ) {
 
             opcoes =
@@ -1303,8 +1280,7 @@ function montarQuestoesProva(
     topicos
 ) {
 
-    const selecionadas =
-        [];
+    const selecionadas = [];
 
 
     const chavesSelecionadas =
@@ -1316,18 +1292,18 @@ function montarQuestoesProva(
             topicos
         ) ||
 
-        topicos.length ===
-        0
+        topicos.length === 0
     ) {
 
         return distribuirMapas(
             embaralhar(
                 banco
             )
-        ).slice(
-            0,
-            quantidade
-        );
+        )
+            .slice(
+                0,
+                quantidade
+            );
 
     }
 
@@ -1355,8 +1331,7 @@ function montarQuestoesProva(
 
 
             if (
-                questoesDoTopico.length ===
-                0
+                questoesDoTopico.length === 0
             ) {
 
                 console.warn(
@@ -1422,8 +1397,7 @@ function montarQuestoesProva(
         selecionadas.length <
         quantidade &&
 
-        restantes.length >
-        0
+        restantes.length > 0
     ) {
 
         selecionadas.push(
@@ -1489,8 +1463,7 @@ const quantidadeReal =
 // ======================================================
 
 const questoesProva =
-    topicosSemQuestoes.length ===
-    0
+    topicosSemQuestoes.length === 0
 
         ? montarQuestoesProva(
             bancoQuestoes,
@@ -1512,7 +1485,7 @@ if (
 
 
 // ======================================================
-// CRIAR HOTSPOTS
+// 10. CRIAR HOTSPOTS
 // ======================================================
 
 function criarHotspots(
@@ -1705,7 +1678,7 @@ function criarHotspots(
 
 
 // ======================================================
-// NOVA QUESTÃO
+// 11. NOVA QUESTÃO
 // ======================================================
 
 function novaQuestao() {
@@ -1723,7 +1696,6 @@ function novaQuestao() {
     ) {
 
         finalizarProva();
-
 
         return;
 
@@ -1758,8 +1730,14 @@ function novaQuestao() {
         ];
 
 
-    numeroQuestao.textContent =
-        questaoAtual + 1;
+    if (
+        numeroQuestao
+    ) {
+
+        numeroQuestao.textContent =
+            questaoAtual + 1;
+
+    }
 
 
     pergunta.textContent =
@@ -1903,14 +1881,11 @@ function novaQuestao() {
 
     if (
         imagem.complete &&
-        imagem.naturalWidth >
-        0 &&
-        imagemAtual ===
-        novaURL
+        imagem.naturalWidth > 0 &&
+        imagemAtual === novaURL
     ) {
 
         prepararImagem();
-
 
         return;
 
@@ -1955,7 +1930,7 @@ function novaQuestao() {
 
 
 // ======================================================
-// MODO CLICAR
+// 12. MODO CLICAR
 // ======================================================
 
 function prepararModoClicar() {
@@ -2008,8 +1983,7 @@ function verificarClique(
     if (
         bloqueado ||
         questaoRespondida ||
-        modoProva !==
-        "clicar"
+        modoProva !== "clicar"
     ) {
 
         return;
@@ -2052,21 +2026,7 @@ function verificarClique(
 
         acertos++;
 
-
-        pontos +=
-            100;
-
-
-
-
-
-
-
-        estruturaClicada
-            .classList
-            .add(
-                "correto"
-            );
+        pontos += 100;
 
     }
 
@@ -2074,20 +2034,7 @@ function verificarClique(
 
         erros++;
 
-
-        errosElemento.textContent =
-            erros;
-
-
         registrarErroEstruturaProva();
-
-
-
-        estruturaClicada
-            .classList
-            .add(
-                "errado"
-            );
 
     }
 
@@ -2103,6 +2050,12 @@ function verificarClique(
             ? "acerto"
             : "erro"
     );
+
+
+    // Não mostra se acertou ou errou.
+
+    feedback.textContent =
+        "Resposta registrada.";
 
 
     try {
@@ -2136,12 +2089,10 @@ function verificarClique(
 
             questaoAtual++;
 
-
             novaQuestao();
 
         },
-
-        1200
+        800
     );
 
 }
@@ -2246,7 +2197,7 @@ svg.addEventListener(
 
 
 // ======================================================
-// MODO DIGITAR
+// 13. MODO DIGITAR
 // ======================================================
 
 function prepararModoDigitar() {
@@ -2278,36 +2229,59 @@ function prepararModoDigitar() {
     }
 
 
-    estruturaAlvoSVG
-        .classList
-        .add(
-            "destacada"
-        );
+    if (
+        estruturaAlvoSVG
+    ) {
+
+        estruturaAlvoSVG
+            .classList
+            .add(
+                "destacada"
+            );
+
+    }
 
 
     pergunta.textContent =
         "Qual é a estrutura destacada?";
 
 
-    campoResposta.value =
-        "";
+    if (
+        campoResposta
+    ) {
+
+        campoResposta.value =
+            "";
 
 
-    campoResposta.disabled =
-        false;
+        campoResposta.disabled =
+            false;
+
+    }
 
 
-    botaoResponder.disabled =
-        false;
+    if (
+        botaoResponder
+    ) {
+
+        botaoResponder.disabled =
+            false;
+
+    }
 
 
     setTimeout(
         function() {
 
-            campoResposta.focus();
+            if (
+                campoResposta
+            ) {
+
+                campoResposta.focus();
+
+            }
 
         },
-
         50
     );
 
@@ -2323,8 +2297,7 @@ function verificarDigitacao() {
     if (
         bloqueado ||
         questaoRespondida ||
-        modoProva !==
-        "digitar"
+        modoProva !== "digitar"
     ) {
 
         return;
@@ -2398,42 +2371,47 @@ function verificarDigitacao() {
 
         acertos++;
 
+        pontos += 100;
 
-        pontos +=
-            100;
-
-
-
-
-
- 
     }
 
     else {
 
         erros++;
 
-
-        errosElemento.textContent =
-            erros;
-
-
         registrarErroEstruturaProva();
-
-
-
- 
 
     }
 
 
     registrarResultadoQuestao(
         resposta,
+
         acertou,
+
         acertou
             ? "acerto"
             : "erro"
     );
+
+
+    if (
+        estruturaAlvoSVG
+    ) {
+
+        estruturaAlvoSVG
+            .classList
+            .remove(
+                "destacada"
+            );
+
+    }
+
+
+    // Não mostra se acertou ou errou.
+
+    feedback.textContent =
+        "Resposta registrada.";
 
 
     campoResposta.disabled =
@@ -2471,19 +2449,17 @@ function verificarDigitacao() {
 
             questaoAtual++;
 
-
             novaQuestao();
 
         },
-
-        1500
+        800
     );
 
 }
 
 
 // ======================================================
-// ANALYTICS
+// 14. ANALYTICS
 // ======================================================
 
 function registrarAnalytics(
@@ -2550,7 +2526,7 @@ function registrarAnalytics(
 
 
 // ======================================================
-// TELA FINAL
+// 15. TELA FINAL
 // ======================================================
 
 function mostrarTelaFeedbackProva() {
@@ -2560,8 +2536,7 @@ function mostrarTelaFeedbackProva() {
 
 
     const aproveitamento =
-        totalDaProva >
-        0
+        totalDaProva > 0
 
             ? Math.round(
                 (
@@ -2575,8 +2550,7 @@ function mostrarTelaFeedbackProva() {
 
 
     const nota =
-        totalDaProva >
-        0
+        totalDaProva > 0
 
             ? (
                 (
@@ -2584,9 +2558,10 @@ function mostrarTelaFeedbackProva() {
                     totalDaProva
                 ) *
                 10
-            ).toFixed(
-                1
             )
+                .toFixed(
+                    1
+                )
 
             : "0.0";
 
@@ -2656,7 +2631,9 @@ function mostrarTelaFeedbackProva() {
         "feedback-final-card";
 
 
+    // ==================================================
     // TÍTULO
+    // ==================================================
 
     const titulo =
         document.createElement(
@@ -2673,7 +2650,9 @@ function mostrarTelaFeedbackProva() {
     );
 
 
+    // ==================================================
     // CLASSIFICAÇÃO
+    // ==================================================
 
     const tituloClassificacao =
         document.createElement(
@@ -2727,7 +2706,8 @@ function mostrarTelaFeedbackProva() {
         "feedback-final-resumo";
 
 
-    resumo.innerHTML = `
+    resumo.innerHTML =
+        `
 
         <div>
 
@@ -2780,7 +2760,7 @@ function mostrarTelaFeedbackProva() {
 
         </div>
 
-    `;
+        `;
 
 
     card.appendChild(
@@ -3064,8 +3044,7 @@ function mostrarTelaFeedbackProva() {
 
 
     tituloRevisao.textContent =
-        estruturasErradas.length >
-        0
+        estruturasErradas.length > 0
 
             ? "Estruturas para revisar"
 
@@ -3078,8 +3057,7 @@ function mostrarTelaFeedbackProva() {
 
 
     if (
-        estruturasErradas.length ===
-        0
+        estruturasErradas.length === 0
     ) {
 
         const perfeito =
@@ -3146,8 +3124,7 @@ function mostrarTelaFeedbackProva() {
 
 
                 quantidade.textContent =
-                    item.erros ===
-                    1
+                    item.erros === 1
 
                         ? "1 erro"
 
@@ -3185,7 +3162,7 @@ function mostrarTelaFeedbackProva() {
 
 
     // ==================================================
-    // BOTÕES
+    // BOTÕES FINAIS
     // ==================================================
 
     const botoes =
@@ -3214,7 +3191,6 @@ function mostrarTelaFeedbackProva() {
 
     refazer.addEventListener(
         "click",
-
         function() {
 
             window.location.reload();
@@ -3239,7 +3215,6 @@ function mostrarTelaFeedbackProva() {
 
     atlas.addEventListener(
         "click",
-
         function() {
 
             window.location.href =
@@ -3265,7 +3240,6 @@ function mostrarTelaFeedbackProva() {
 
     voltar.addEventListener(
         "click",
-
         function() {
 
             window.location.href =
@@ -3308,7 +3282,7 @@ function mostrarTelaFeedbackProva() {
 
 
 // ======================================================
-// BOTÃO RESPONDER
+// 16. BOTÃO RESPONDER
 // ======================================================
 
 if (
@@ -3333,7 +3307,6 @@ if (
 
     campoResposta.addEventListener(
         "keydown",
-
         function(
             evento
         ) {
@@ -3344,7 +3317,6 @@ if (
             ) {
 
                 evento.preventDefault();
-
 
                 verificarDigitacao();
 
@@ -3357,7 +3329,7 @@ if (
 
 
 // ======================================================
-// FINALIZAR PROVA
+// 17. FINALIZAR PROVA
 // ======================================================
 
 function finalizarProva() {
@@ -3447,7 +3419,7 @@ function finalizarProva() {
 
 
 // ======================================================
-// REINICIAR
+// 18. REINICIAR
 // ======================================================
 
 if (
@@ -3456,7 +3428,6 @@ if (
 
     botaoReiniciar.addEventListener(
         "click",
-
         function() {
 
             window.location.reload();
@@ -3477,7 +3448,6 @@ if (
 
     botaoVoltar.addEventListener(
         "click",
-
         function() {
 
             window.location.href =
@@ -3490,7 +3460,7 @@ if (
 
 
 // ======================================================
-// LOGS
+// 19. LOGS
 // ======================================================
 
 console.log(
@@ -3518,8 +3488,7 @@ console.log(
 console.log(
     "Tempo por questão:",
 
-    tempoQuestaoSegundos >
-    0
+    tempoQuestaoSegundos > 0
 
         ? `${tempoQuestaoSegundos} segundos`
 
@@ -3530,8 +3499,7 @@ console.log(
 console.log(
     "Tópicos selecionados:",
 
-    topicosSelecionados.length >
-    0
+    topicosSelecionados.length > 0
 
         ? topicosSelecionados
 
@@ -3575,7 +3543,7 @@ console.log(
 
 
 // ======================================================
-// INICIAR
+// 20. INICIAR
 // ======================================================
 
 if (
@@ -3603,8 +3571,7 @@ if (
 
 
 else if (
-    topicosSemQuestoes.length >
-    0
+    topicosSemQuestoes.length > 0
 ) {
 
     pergunta.textContent =
@@ -3630,57 +3597,15 @@ else if (
 
 
 else if (
-    topicosSelecionados.length ===
-    0
-) {
-
-    console.warn(
-        "⚠️ Nenhum tópico informado. A prova utilizará todos os mapas."
-    );
-
-
-    if (
-        questoesProva.length ===
-        0
-    ) {
-
-        pergunta.textContent =
-            "Erro: nenhuma questão disponível.";
-
-
-        if (
-            typeof esconderLoadingProva ===
-            "function"
-        ) {
-
-            esconderLoadingProva();
-
-        }
-
-    }
-
-    else {
-
-        novaQuestao();
-
-    }
-
-}
-
-
-else if (
-    questoesProva.length ===
-    0
+    questoesProva.length === 0
 ) {
 
     pergunta.textContent =
-        "Erro: nenhuma questão disponível para os tópicos selecionados.";
+        topicosSelecionados.length === 0
 
+            ? "Erro: nenhuma questão disponível."
 
-    console.error(
-        "Nenhuma questão encontrada para:",
-        topicosSelecionados
-    );
+            : "Erro: nenhuma questão disponível para os tópicos selecionados.";
 
 
     if (
@@ -3696,6 +3621,17 @@ else if (
 
 
 else {
+
+    if (
+        topicosSelecionados.length === 0
+    ) {
+
+        console.warn(
+            "⚠️ Nenhum tópico informado. A prova utilizará todos os mapas."
+        );
+
+    }
+
 
     novaQuestao();
 

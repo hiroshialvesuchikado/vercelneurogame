@@ -3649,3 +3649,155 @@ body.modo-clicar #camadaHotspots {
 .resultado-tempo {
     font-weight: 700;
 }
+
+/* ======================================================
+   SELETOR DE TEMA
+   ====================================================== */
+
+.botao-tema {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 7px 10px;
+
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 999px;
+
+    background: rgba(15, 23, 42, 0.92);
+
+    cursor: pointer;
+}
+
+
+.interruptor-tema {
+    position: relative;
+
+    display: block;
+
+    width: 48px;
+    height: 26px;
+
+    border-radius: 999px;
+
+    background: #4f46e5;
+}
+
+
+.bolinha-tema {
+    position: absolute;
+
+    top: 3px;
+    left: 25px;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    transition:
+        left 0.25s ease;
+}
+
+
+.botao-tema.claro
+.bolinha-tema {
+    left: 3px;
+}
+
+
+.icone-sol,
+.icone-lua {
+    font-size: 18px;
+}
+
+
+/* ======================================================
+   TEMA ESCURO
+   ====================================================== */
+
+html.tema-escuro,
+html.tema-escuro body {
+    background: #080d1c;
+    color: #f8fafc;
+}
+
+
+/* ======================================================
+   TEMA CLARO
+   ====================================================== */
+
+html.tema-claro,
+html.tema-claro body {
+    background: #f4f7fb;
+    color: #1e293b;
+}
+
+
+html.tema-claro .game {
+    color: #1e293b;
+}
+
+
+html.tema-claro h1,
+html.tema-claro h2,
+html.tema-claro h3,
+html.tema-claro p {
+    color: #1e293b;
+}
+
+
+html.tema-claro .botao-categoria,
+html.tema-claro .botao-modo,
+html.tema-claro .card-mapa {
+    background: #ffffff;
+    color: #1e293b;
+}
+
+
+html.tema-claro .botao-acao {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+
+html.tema-claro .painel {
+    background: #ffffff;
+    color: #1e293b;
+}
+
+
+html.tema-claro input,
+html.tema-claro select {
+    background: #ffffff;
+    color: #1e293b;
+}
+
+html.tema-escuro body {
+    background: #080d1c;
+    color: white;
+}
+
+html.tema-claro body {
+    background: #f5f7fb;
+    color: #1e293b;
+}
+
+html.tema-claro .menu-principal,
+html.tema-claro .game {
+    color: #1e293b;
+}
+
+html.tema-escuro .menu-principal,
+html.tema-escuro .game {
+    color: white;
+}

@@ -2,26 +2,19 @@
 // TEMA — NEUROGAME
 // ======================================================
 
-
-// ======================================================
-// 1. CONFIGURAÇÃO
-// ======================================================
-
-const CHAVE_TEMA_NEUROGAME =
-    "neurogame-tema";
+const CHAVE_TEMA_NEUROGAME = "neurogame-tema";
 
 
 // ======================================================
-// 2. OBTER TEMA SALVO
+// OBTER TEMA
 // ======================================================
 
-function obterTemaSalvo() {
+function obterTemaNeuroGame() {
 
     const temaSalvo =
         localStorage.getItem(
             CHAVE_TEMA_NEUROGAME
         );
-
 
     if (
         temaSalvo === "claro" ||
@@ -32,217 +25,114 @@ function obterTemaSalvo() {
 
     }
 
-
-    // Tema padrão
-
     return "escuro";
-
 }
 
 
 // ======================================================
-// 3. APLICAR TEMA
+// APLICAR TEMA
 // ======================================================
 
-function aplicarTema(
-    tema
-) {
+function aplicarTemaNeuroGame(tema) {
 
     const html =
         document.documentElement;
 
+    html.classList.remove(
+        "tema-claro",
+        "tema-escuro"
+    );
 
-    if (
+    html.classList.add(
         tema === "claro"
-    ) {
-
-        html.classList.add(
-            "tema-claro"
-        );
-
-
-        html.classList.remove(
-            "tema-escuro"
-        );
-
-    }
-
-    else {
-
-        html.classList.add(
-            "tema-escuro"
-        );
-
-
-        html.classList.remove(
-            "tema-claro"
-        );
-
-    }
-
+            ? "tema-claro"
+            : "tema-escuro"
+    );
 
     localStorage.setItem(
         CHAVE_TEMA_NEUROGAME,
         tema
     );
 
-
-    atualizarBotaoTema(
-        tema
-    );
-
+    atualizarBotaoTema();
 }
 
 
 // ======================================================
-// 4. ATUALIZAR BOTÃO
+// ALTERNAR
 // ======================================================
 
-function atualizarBotaoTema(
-    tema
-) {
+function alternarTemaNeuroGame() {
+
+    const temaAtual =
+        document.documentElement
+            .classList
+            .contains("tema-claro")
+            ? "claro"
+            : "escuro";
+
+    const novoTema =
+        temaAtual === "claro"
+            ? "escuro"
+            : "claro";
+
+    aplicarTemaNeuroGame(
+        novoTema
+    );
+}
+
+
+// ======================================================
+// ATUALIZAR INTERRUPTOR
+// ======================================================
+
+function atualizarBotaoTema() {
 
     const botao =
         document.getElementById(
             "alternarTema"
         );
 
-
-    if (
-        !botao
-    ) {
-
+    if (!botao) {
         return;
-
     }
 
-
-    const interruptor =
-        botao.querySelector(
-            ".interruptor-tema"
-        );
-
-
-    if (
-        tema === "claro"
-    ) {
-
-        botao.classList.add(
-            "tema-claro-ativo"
-        );
-
-
-        botao.setAttribute(
-            "aria-label",
-            "Ativar tema escuro"
-        );
-
-
-        botao.setAttribute(
-            "title",
-            "Ativar tema escuro"
-        );
-
-
-        if (
-            interruptor
-        ) {
-
-            interruptor.classList.add(
-                "ativo-claro"
-            );
-
-        }
-
-    }
-
-    else {
-
-        botao.classList.remove(
-            "tema-claro-ativo"
-        );
-
-
-        botao.setAttribute(
-            "aria-label",
-            "Ativar tema claro"
-        );
-
-
-        botao.setAttribute(
-            "title",
-            "Ativar tema claro"
-        );
-
-
-        if (
-            interruptor
-        ) {
-
-            interruptor.classList.remove(
-                "ativo-claro"
-            );
-
-        }
-
-    }
-
-}
-
-
-// ======================================================
-// 5. ALTERNAR TEMA
-// ======================================================
-
-function alternarTema() {
-
-    const temaAtual =
+    const temaClaro =
         document.documentElement
             .classList
             .contains(
                 "tema-claro"
-            )
+            );
 
-            ? "claro"
-
-            : "escuro";
-
-
-    const novoTema =
-        temaAtual === "claro"
-
-            ? "escuro"
-
-            : "claro";
-
-
-    aplicarTema(
-        novoTema
+    botao.classList.toggle(
+        "claro",
+        temaClaro
     );
 
+    botao.setAttribute(
+        "aria-label",
+        temaClaro
+            ? "Ativar tema escuro"
+            : "Ativar tema claro"
+    );
 }
 
 
 // ======================================================
-// 6. APLICAR TEMA IMEDIATAMENTE
+// APLICAR TEMA SALVO
 // ======================================================
 
-const temaInicial =
-    obterTemaSalvo();
-
-
-aplicarTema(
-    temaInicial
+aplicarTemaNeuroGame(
+    obterTemaNeuroGame()
 );
 
 
 // ======================================================
-// 7. BOTÃO
+// ATIVAR BOTÃO
 // ======================================================
 
 document.addEventListener(
     "DOMContentLoaded",
-
     function() {
 
         const botao =
@@ -250,34 +140,15 @@ document.addEventListener(
                 "alternarTema"
             );
 
-
-        if (
-            !botao
-        ) {
-
-            console.warn(
-                "⚠️ Botão de tema não encontrado nesta página."
-            );
-
-
+        if (!botao) {
             return;
-
         }
 
-
-        atualizarBotaoTema(
-            obterTemaSalvo()
-        );
-
+        atualizarBotaoTema();
 
         botao.addEventListener(
             "click",
-
-            function() {
-
-                alternarTema();
-
-            }
+            alternarTemaNeuroGame
         );
 
     }
@@ -285,18 +156,18 @@ document.addEventListener(
 
 
 // ======================================================
-// 8. DISPONIBILIZAR GLOBALMENTE
+// DISPONIBILIZAR GLOBALMENTE
 // ======================================================
 
 window.NeuroGameTema = {
 
     aplicar:
-        aplicarTema,
+        aplicarTemaNeuroGame,
 
     alternar:
-        alternarTema,
+        alternarTemaNeuroGame,
 
     obter:
-        obterTemaSalvo
+        obterTemaNeuroGame
 
 };

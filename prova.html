@@ -11,6 +11,7 @@
     >
 
     <title>
+        NeuroGame — Prova
     </title>
 
     <link
@@ -18,11 +19,39 @@
         href="style.css"
     >
 
-<script src="js/tema.js"></script>
 </head>
 
 
 <body>
+
+
+<!-- ==================================================
+     BOTÃO DE TEMA
+     ================================================== -->
+
+<button
+    id="alternarTema"
+    class="botao-tema"
+    type="button"
+    aria-label="Alternar tema"
+>
+
+    <span class="icone-sol">
+        ☀️
+    </span>
+
+    <span class="interruptor-tema">
+
+        <span class="bolinha-tema">
+        </span>
+
+    </span>
+
+    <span class="icone-lua">
+        🌙
+    </span>
+
+</button>
 
 
 <!-- ==================================================
@@ -114,10 +143,6 @@
         aria-label="Informações da prova"
     >
 
-
-
-
-
         <span>
 
             Questão:
@@ -133,10 +158,6 @@
             </strong>
 
         </span>
-
-
-
-
 
     </div>
 
@@ -206,7 +227,6 @@
 
     <div class="cerebro">
 
-
         <img
             id="imagemAnatomica"
             alt="Imagem anatômica utilizada na prova"
@@ -220,7 +240,6 @@
             aria-label="Áreas interativas da imagem anatômica"
         >
         </svg>
-
 
     </div>
 
@@ -451,6 +470,13 @@
         );
 
 </script>
+
+
+<!-- ==================================================
+     TEMA
+     ================================================== -->
+
+<script src="js/tema.js"></script>
 
 
 </body>
