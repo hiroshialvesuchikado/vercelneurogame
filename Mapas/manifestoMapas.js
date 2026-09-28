@@ -455,7 +455,7 @@ window.definicoesMapas = [
                 "imagens/CadaverTelencefaloeViasOpticasTransversal.webp",
             
             arquivo:
-                "Mapas/mapaCadaverTelencefaloeViasOpticasTransversal.js",
+                "Mapas/mapaCadaverTelencefaloViasOpticasTransversal.js",
 
                         obterEstruturas:
             function() {

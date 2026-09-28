@@ -651,19 +651,6 @@ else {
 }
 
 
-// ======================================================
-// CADÁVER — TELENCÉFALO LATERAL
-//
-// Aceita os dois nomes utilizados durante
-// o desenvolvimento do NeuroGame:
-//
-// mapaCadaverSulcosTelencefaloLateral
-//
-// ou
-//
-// mapaCadaverTelencefaloLateral
-// ======================================================
-
 
 
 
