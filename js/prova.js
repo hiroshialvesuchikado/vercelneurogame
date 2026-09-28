@@ -8,6 +8,7 @@
 // - Seleção de tópicos
 // - Cronômetro
 // - Correção final
+// - Respostas parciais
 // - Revisão visual das questões
 // ======================================================
 
@@ -178,6 +179,8 @@ let acertos = 0;
 
 let erros = 0;
 
+let parciais = 0;
+
 let questaoAtual = 0;
 
 let questaoEmAndamento = null;
@@ -213,10 +216,27 @@ const respostasProva =
 
 
 // ======================================================
-// 4. NORMALIZAÇÃO
+// 4. NORMALIZAÇÃO DA RESPOSTA
 // ======================================================
 
-function normalizar(
+
+// Palavras que podem ser esquecidas sem perder pontos.
+
+const PALAVRAS_IGNORADAS_PROVA =
+    new Set(
+        [
+            "da",
+            "do",
+            "de"
+        ]
+    );
+
+
+// ======================================================
+// NORMALIZAR TEXTO
+// ======================================================
+
+function normalizarTextoProva(
     texto
 ) {
 
@@ -236,11 +256,248 @@ function normalizar(
         .toLowerCase()
 
         .replace(
-            /[\s\-_]+/g,
-            ""
+            /[-_]/g,
+            " "
+        )
+
+        .replace(
+            /[^a-z0-9\s]/g,
+            " "
+        )
+
+        .replace(
+            /\s+/g,
+            " "
         )
 
         .trim();
+
+}
+
+
+// ======================================================
+// PEGAR SOMENTE PALAVRAS IMPORTANTES
+// ======================================================
+
+function obterPalavrasSignificativasProva(
+    texto
+) {
+
+    const textoNormalizado =
+        normalizarTextoProva(
+            texto
+        );
+
+
+    if (
+        !textoNormalizado
+    ) {
+
+        return [];
+
+    }
+
+
+    return textoNormalizado
+        .split(" ")
+        .filter(
+            function(
+                palavra
+            ) {
+
+                return (
+
+                    palavra &&
+
+                    !PALAVRAS_IGNORADAS_PROVA
+                        .has(
+                            palavra
+                        )
+
+                );
+
+            }
+        );
+
+}
+
+
+// ======================================================
+// NORMALIZAR
+//
+// Mantida para compatibilidade.
+// ======================================================
+
+function normalizar(
+    texto
+) {
+
+    return obterPalavrasSignificativasProva(
+        texto
+    )
+        .join(
+            " "
+        );
+
+}
+
+
+// ======================================================
+// AVALIAR RESPOSTA DIGITADA
+//
+// 1,0 = correta
+// 0,5 = mesmas palavras em ordem diferente
+// 0,0 = incorreta
+//
+// da / do / de são ignorados.
+// ======================================================
+
+function avaliarRespostaDigitada(
+    respostaAluno,
+    respostaEsperada
+) {
+
+    const palavrasAluno =
+        obterPalavrasSignificativasProva(
+            respostaAluno
+        );
+
+
+    const palavrasEsperadas =
+        obterPalavrasSignificativasProva(
+            respostaEsperada
+        );
+
+
+    if (
+        palavrasAluno.length === 0 ||
+        palavrasEsperadas.length === 0
+    ) {
+
+        return {
+
+            valorAcerto:
+                0,
+
+            acertou:
+                false,
+
+            parcialmenteCorreta:
+                false,
+
+            tipo:
+                "erro"
+
+        };
+
+    }
+
+
+    const alunoNaOrdem =
+        palavrasAluno
+            .join(
+                " "
+            );
+
+
+    const corretaNaOrdem =
+        palavrasEsperadas
+            .join(
+                " "
+            );
+
+
+    // ==================================================
+    // CORRETA — 1 PONTO
+    // ==================================================
+
+    if (
+        alunoNaOrdem ===
+        corretaNaOrdem
+    ) {
+
+        return {
+
+            valorAcerto:
+                1,
+
+            acertou:
+                true,
+
+            parcialmenteCorreta:
+                false,
+
+            tipo:
+                "acerto"
+
+        };
+
+    }
+
+
+    // ==================================================
+    // TESTAR INVERSÃO / MUDANÇA DE ORDEM
+    // ==================================================
+
+    const alunoSemOrdem =
+        [...palavrasAluno]
+            .sort()
+            .join(
+                " "
+            );
+
+
+    const corretaSemOrdem =
+        [...palavrasEsperadas]
+            .sort()
+            .join(
+                " "
+            );
+
+
+    if (
+        alunoSemOrdem ===
+        corretaSemOrdem
+    ) {
+
+        return {
+
+            valorAcerto:
+                0.5,
+
+            acertou:
+                false,
+
+            parcialmenteCorreta:
+                true,
+
+            tipo:
+                "parcial"
+
+        };
+
+    }
+
+
+    // ==================================================
+    // ERRADA
+    // ==================================================
+
+    return {
+
+        valorAcerto:
+            0,
+
+        acertou:
+            false,
+
+        parcialmenteCorreta:
+            false,
+
+        tipo:
+            "erro"
+
+    };
 
 }
 
@@ -370,7 +627,9 @@ function atualizarCronometroProva(
 
     cronometroElemento.style.fontWeight =
         segundos <= 10
+
             ? "800"
+
             : "700";
 
 }
@@ -505,18 +764,19 @@ function obterTopicoMapaProva(
     ) {
 
         const definicao =
-            window.definicoesMapas.find(
-                function(
-                    item
-                ) {
+            window.definicoesMapas
+                .find(
+                    function(
+                        item
+                    ) {
 
-                    return (
-                        item.id ===
-                        mapa.id
-                    );
+                        return (
+                            item.id ===
+                            mapa.id
+                        );
 
-                }
-            );
+                    }
+                );
 
 
         if (
@@ -555,10 +815,13 @@ function obterTopicoEstruturaProva(
 
 
     const id =
-        estrutura.id.toLowerCase();
+        estrutura.id
+            .toLowerCase();
 
 
+    // ==================================================
     // TELENCÉFALO
+    // ==================================================
 
     if (
         id.startsWith("giro_") ||
@@ -574,7 +837,9 @@ function obterTopicoEstruturaProva(
     }
 
 
+    // ==================================================
     // DIENCÉFALO
+    // ==================================================
 
     if (
         id.startsWith("talamo_") ||
@@ -652,6 +917,19 @@ function registrarResultadoQuestao(
     }
 
 
+    const valorAcerto =
+        typeof dadosExtras.valorAcerto ===
+        "number"
+
+            ? dadosExtras.valorAcerto
+
+            : (
+                acertou
+                    ? 1
+                    : 0
+            );
+
+
     respostasProva.push(
         {
 
@@ -711,6 +989,10 @@ function registrarResultadoQuestao(
                 true,
 
 
+            valorAcerto:
+                valorAcerto,
+
+
             acertou:
                 acertou,
 
@@ -755,13 +1037,21 @@ function tempoEsgotadoProva() {
     erros++;
 
 
-    registrarErroEstruturaProva();
+    registrarErroEstruturaProva(
+        "erro"
+    );
 
 
     registrarResultadoQuestao(
         "Tempo esgotado",
         false,
-        "tempo"
+        "tempo",
+        {
+
+            valorAcerto:
+                0
+
+        }
     );
 
 
@@ -854,15 +1144,16 @@ function tempoEsgotadoProva() {
 
 
 // ======================================================
-// 9. REGISTRAR ERRO
+// 9. ESTRUTURAS PARA REVISÃO
 // ======================================================
 
-function registrarErroEstruturaProva() {
+function registrarErroEstruturaProva(
+    tipo = "erro"
+) {
 
     if (
         !questaoEmAndamento ||
-        !questaoEmAndamento
-            .estrutura
+        !questaoEmAndamento.estrutura
     ) {
 
         return;
@@ -904,11 +1195,26 @@ function registrarErroEstruturaProva() {
         )
     ) {
 
-        errosPorEstrutura
-            .get(
+        const registro =
+            errosPorEstrutura.get(
                 chave
-            )
-            .erros++;
+            );
+
+
+        if (
+            tipo ===
+            "parcial"
+        ) {
+
+            registro.parciais++;
+
+        }
+
+        else {
+
+            registro.erros++;
+
+        }
 
     }
 
@@ -925,7 +1231,14 @@ function registrarErroEstruturaProva() {
                     nome,
 
                 erros:
-                    1,
+                    tipo === "erro"
+                        ? 1
+                        : 0,
+
+                parciais:
+                    tipo === "parcial"
+                        ? 1
+                        : 0,
 
                 mapa:
                     mapaId,
@@ -1085,7 +1398,8 @@ function embaralhar(
 
 function criarBancoQuestoes() {
 
-    const banco = [];
+    const banco =
+        [];
 
 
     catalogoMapas.forEach(
@@ -1315,7 +1629,6 @@ function montarQuestoesProva(
         !Array.isArray(
             topicos
         ) ||
-
         topicos.length ===
         0
     ) {
@@ -1438,7 +1751,7 @@ function montarQuestoesProva(
 
 
 // ======================================================
-// 15. TÓPICOS SEM QUESTÕES
+// 15. QUESTÕES DA PROVA
 // ======================================================
 
 const topicosSemQuestoes =
@@ -1499,7 +1812,7 @@ if (
 
 
 // ======================================================
-// 16. CRIAR HOTSPOTS
+// 16. HOTSPOTS
 // ======================================================
 
 function criarHotspots(
@@ -1807,7 +2120,9 @@ function novaQuestao() {
 
             questaoAtual++;
 
+
             novaQuestao();
+
 
             return;
 
@@ -1836,6 +2151,7 @@ function novaQuestao() {
 
             pergunta.textContent =
                 "Modo de prova inválido.";
+
 
             return;
 
@@ -1884,15 +2200,13 @@ function novaQuestao() {
 
     if (
         imagem.complete &&
-
-        imagem.naturalWidth >
-        0 &&
-
+        imagem.naturalWidth > 0 &&
         imagemAtual ===
         novaURL
     ) {
 
         prepararImagem();
+
 
         return;
 
@@ -2020,7 +2334,9 @@ function verificarClique(
         acertou
     ) {
 
-        acertos++;
+        acertos +=
+            1;
+
 
         pontos +=
             100;
@@ -2031,7 +2347,10 @@ function verificarClique(
 
         erros++;
 
-        registrarErroEstruturaProva();
+
+        registrarErroEstruturaProva(
+            "erro"
+        );
 
     }
 
@@ -2053,7 +2372,12 @@ function verificarClique(
             estruturaClicadaId:
                 estruturaClicada
                     .dataset
-                    .id
+                    .id,
+
+            valorAcerto:
+                acertou
+                    ? 1
+                    : 0
 
         }
 
@@ -2102,6 +2426,7 @@ function verificarClique(
         function() {
 
             questaoAtual++;
+
 
             novaQuestao();
 
@@ -2362,54 +2687,105 @@ function verificarDigitacao() {
         inicioQuestao;
 
 
-    const respostaAluno =
-        normalizar(
-            resposta
-        );
+    const avaliacao =
+        avaliarRespostaDigitada(
 
+            resposta,
 
-    const respostaCorreta =
-        normalizar(
             questaoEmAndamento
                 .estrutura
                 .nome
+
         );
 
 
-    const acertou =
-        respostaAluno ===
-        respostaCorreta;
-
+    // ==================================================
+    // ACERTO COMPLETO
+    // 1 ACERTO
+    // ==================================================
 
     if (
-        acertou
+        avaliacao.valorAcerto ===
+        1
     ) {
 
-        acertos++;
+        acertos +=
+            1;
+
 
         pontos +=
             100;
 
     }
 
+
+    // ==================================================
+    // ACERTO PARCIAL
+    // 0,5 ACERTO
+    // ==================================================
+
+    else if (
+        avaliacao.valorAcerto ===
+        0.5
+    ) {
+
+        acertos +=
+            0.5;
+
+
+        parciais++;
+
+
+        pontos +=
+            50;
+
+
+        registrarErroEstruturaProva(
+            "parcial"
+        );
+
+    }
+
+
+    // ==================================================
+    // ERRO COMPLETO
+    // ==================================================
+
     else {
 
         erros++;
 
-        registrarErroEstruturaProva();
+
+        registrarErroEstruturaProva(
+            "erro"
+        );
 
     }
 
+
+    // ==================================================
+    // SALVAR RESULTADO
+    // ==================================================
 
     registrarResultadoQuestao(
 
         resposta,
 
-        acertou,
+        avaliacao.acertou,
 
-        acertou
-            ? "acerto"
-            : "erro"
+        avaliacao.tipo,
+
+        {
+
+            parcialmenteCorreta:
+                avaliacao
+                    .parcialmenteCorreta,
+
+            valorAcerto:
+                avaliacao
+                    .valorAcerto
+
+        }
 
     );
 
@@ -2427,6 +2803,8 @@ function verificarDigitacao() {
     }
 
 
+    // Não revela o resultado durante a prova.
+
     feedback.textContent =
         "Resposta registrada.";
 
@@ -2442,9 +2820,13 @@ function verificarDigitacao() {
     try {
 
         registrarAnalytics(
+
             resposta,
-            acertou,
+
+            avaliacao.acertou,
+
             tempoResposta
+
         );
 
     }
@@ -2465,6 +2847,7 @@ function verificarDigitacao() {
         function() {
 
             questaoAtual++;
+
 
             novaQuestao();
 
@@ -2581,17 +2964,14 @@ function adicionarEstilosRevisaoProva() {
             font-weight: 700;
         }
 
-
         .linha-revisavel {
             cursor: pointer;
         }
-
 
         .linha-revisavel:hover {
             background:
                 rgba(99, 102, 241, 0.08);
         }
-
 
         .revisao-prova-overlay {
             position: fixed;
@@ -2608,7 +2988,6 @@ function adicionarEstilosRevisaoProva() {
                 rgba(0, 0, 0, 0.72);
         }
 
-
         .revisao-prova-card {
             width: min(900px, 96vw);
             max-height: 92vh;
@@ -2619,13 +2998,9 @@ function adicionarEstilosRevisaoProva() {
 
             border-radius: 18px;
 
-            background:
-                var(--fundo-card, #ffffff);
-
-            color:
-                var(--texto-principal, #111827);
+            background: #ffffff;
+            color: #111827;
         }
-
 
         html.tema-escuro
         .revisao-prova-card {
@@ -2633,14 +3008,12 @@ function adicionarEstilosRevisaoProva() {
             color: #f8fafc;
         }
 
-
         .revisao-prova-respostas {
             display: grid;
             gap: 10px;
 
             margin: 18px 0;
         }
-
 
         .revisao-prova-resposta {
             padding: 12px 14px;
@@ -2656,7 +3029,6 @@ function adicionarEstilosRevisaoProva() {
                 );
         }
 
-
         .revisao-prova-legenda {
             display: flex;
             flex-wrap: wrap;
@@ -2667,7 +3039,6 @@ function adicionarEstilosRevisaoProva() {
             font-weight: 700;
         }
 
-
         .revisao-prova-imagem {
             position: relative;
 
@@ -2675,7 +3046,6 @@ function adicionarEstilosRevisaoProva() {
 
             margin-top: 14px;
         }
-
 
         .revisao-prova-imagem img {
             display: block;
@@ -2686,7 +3056,6 @@ function adicionarEstilosRevisaoProva() {
             border-radius: 12px;
         }
 
-
         .revisao-prova-imagem svg {
             position: absolute;
             inset: 0;
@@ -2696,7 +3065,6 @@ function adicionarEstilosRevisaoProva() {
 
             pointer-events: none;
         }
-
 
         .revisao-prova-fechar {
             width: 100%;
@@ -2727,7 +3095,7 @@ adicionarEstilosRevisaoProva();
 
 
 // ======================================================
-// 22. DESENHAR ESTRUTURA NA REVISÃO
+// 22. CRIAR ESTRUTURA NA REVISÃO
 // ======================================================
 
 function criarEstruturaRevisao(
@@ -2807,7 +3175,7 @@ function criarEstruturaRevisao(
 
 
 // ======================================================
-// 23. REVISAR RESULTADO
+// 23. ABRIR REVISÃO
 // ======================================================
 
 function abrirRevisaoResultadoProva(
@@ -2852,6 +3220,7 @@ function abrirRevisaoResultadoProva(
             "Não foi possível localizar o mapa desta questão."
         );
 
+
         return;
 
     }
@@ -2893,6 +3262,47 @@ function abrirRevisaoResultadoProva(
 
     card.appendChild(
         titulo
+    );
+
+
+    // ==================================================
+    // RESULTADO DA QUESTÃO
+    // ==================================================
+
+    const resultadoTexto =
+        document.createElement(
+            "p"
+        );
+
+
+    if (
+        resultado.parcialmenteCorreta
+    ) {
+
+        resultadoTexto.textContent =
+            "🟡 Resposta parcialmente correta — 0,5 acerto";
+
+    }
+
+    else if (
+        resultado.acertou
+    ) {
+
+        resultadoTexto.textContent =
+            "✅ Resposta correta — 1 acerto";
+
+    }
+
+    else {
+
+        resultadoTexto.textContent =
+            "❌ Resposta incorreta — 0 acerto";
+
+    }
+
+
+    card.appendChild(
+        resultadoTexto
     );
 
 
@@ -2978,7 +3388,9 @@ function abrirRevisaoResultadoProva(
     if (
         resultado.modo ===
         "clicar" &&
+
         resultado.estruturaClicadaId &&
+
         !resultado.acertou
     ) {
 
@@ -3099,6 +3511,10 @@ function abrirRevisaoResultadoProva(
                 );
 
 
+            // ==================================================
+            // CORRETA — VERDE
+            // ==================================================
+
             if (
                 correta
             ) {
@@ -3137,6 +3553,10 @@ function abrirRevisaoResultadoProva(
 
             }
 
+
+            // ==================================================
+            // CLICADA ERRADA — VERMELHO
+            // ==================================================
 
             if (
                 resultado.modo ===
@@ -3267,6 +3687,9 @@ function mostrarTelaFeedbackProva() {
         questoesProva.length;
 
 
+    // Como acertos pode ser 0,5,
+    // ele já entra naturalmente no cálculo.
+
     const aproveitamento =
         totalDaProva > 0
 
@@ -3310,8 +3733,17 @@ function mostrarTelaFeedbackProva() {
                 ) {
 
                     return (
-                        b.erros -
-                        a.erros
+
+                        (
+                            b.erros +
+                            b.parciais
+                        ) -
+
+                        (
+                            a.erros +
+                            a.parciais
+                        )
+
                     );
 
                 }
@@ -3363,6 +3795,10 @@ function mostrarTelaFeedbackProva() {
         "feedback-final-card";
 
 
+    // ==================================================
+    // TÍTULO
+    // ==================================================
+
     const titulo =
         document.createElement(
             "h2"
@@ -3377,6 +3813,10 @@ function mostrarTelaFeedbackProva() {
         titulo
     );
 
+
+    // ==================================================
+    // CLASSIFICAÇÃO
+    // ==================================================
 
     const tituloClassificacao =
         document.createElement(
@@ -3434,6 +3874,7 @@ function mostrarTelaFeedbackProva() {
         `
 
         <div>
+
             <strong>
                 ${nota}
             </strong>
@@ -3441,10 +3882,12 @@ function mostrarTelaFeedbackProva() {
             <span>
                 Nota
             </span>
+
         </div>
 
 
         <div>
+
             <strong>
                 ${acertos} / ${totalDaProva}
             </strong>
@@ -3452,10 +3895,25 @@ function mostrarTelaFeedbackProva() {
             <span>
                 Acertos
             </span>
+
         </div>
 
 
         <div>
+
+            <strong>
+                ${parciais}
+            </strong>
+
+            <span>
+                Parciais
+            </span>
+
+        </div>
+
+
+        <div>
+
             <strong>
                 ${erros}
             </strong>
@@ -3463,10 +3921,12 @@ function mostrarTelaFeedbackProva() {
             <span>
                 Erros
             </span>
+
         </div>
 
 
         <div>
+
             <strong>
                 ${aproveitamento}%
             </strong>
@@ -3474,6 +3934,7 @@ function mostrarTelaFeedbackProva() {
             <span>
                 Aproveitamento
             </span>
+
         </div>
 
         `;
@@ -3520,7 +3981,7 @@ function mostrarTelaFeedbackProva() {
 
 
     instrucao.textContent =
-        "Clique em Revisar para ver visualmente onde você marcou e qual era a resposta correta.";
+        "Clique em Revisar para ver a resposta dada e a resposta correta.";
 
 
     secaoCorrecao.appendChild(
@@ -3547,6 +4008,10 @@ function mostrarTelaFeedbackProva() {
     tabela.className =
         "tabela-correcao-prova";
 
+
+    // ==================================================
+    // CABEÇALHO
+    // ==================================================
 
     const cabecalho =
         document.createElement(
@@ -3600,6 +4065,10 @@ function mostrarTelaFeedbackProva() {
     );
 
 
+    // ==================================================
+    // CORPO
+    // ==================================================
+
     const corpo =
         document.createElement(
             "tbody"
@@ -3617,7 +4086,9 @@ function mostrarTelaFeedbackProva() {
                 );
 
 
+            // ==================================================
             // QUESTÃO
+            // ==================================================
 
             const colunaQuestao =
                 document.createElement(
@@ -3634,7 +4105,9 @@ function mostrarTelaFeedbackProva() {
             );
 
 
+            // ==================================================
             // RESULTADO
+            // ==================================================
 
             const colunaResultado =
                 document.createElement(
@@ -3648,7 +4121,7 @@ function mostrarTelaFeedbackProva() {
             ) {
 
                 colunaResultado.textContent =
-                    "✅ Correta";
+                    "✅ Correta — 1";
 
 
                 colunaResultado.classList.add(
@@ -3662,7 +4135,7 @@ function mostrarTelaFeedbackProva() {
             ) {
 
                 colunaResultado.textContent =
-                    "🟡 Parcial";
+                    "🟡 Parcial — 0,5";
 
 
                 colunaResultado.classList.add(
@@ -3677,14 +4150,19 @@ function mostrarTelaFeedbackProva() {
             ) {
 
                 colunaResultado.textContent =
-                    "⏰ Tempo";
+                    "⏰ Tempo — 0";
+
+
+                colunaResultado.classList.add(
+                    "resultado-tempo"
+                );
 
             }
 
             else {
 
                 colunaResultado.textContent =
-                    "❌ Incorreta";
+                    "❌ Incorreta — 0";
 
 
                 colunaResultado.classList.add(
@@ -3699,7 +4177,9 @@ function mostrarTelaFeedbackProva() {
             );
 
 
+            // ==================================================
             // RESPOSTA DADA
+            // ==================================================
 
             const colunaRespostaDada =
                 document.createElement(
@@ -3716,7 +4196,9 @@ function mostrarTelaFeedbackProva() {
             );
 
 
+            // ==================================================
             // RESPOSTA ESPERADA
+            // ==================================================
 
             const colunaRespostaEsperada =
                 document.createElement(
@@ -3733,7 +4215,9 @@ function mostrarTelaFeedbackProva() {
             );
 
 
+            // ==================================================
             // REVISÃO
+            // ==================================================
 
             const colunaRevisao =
                 document.createElement(
@@ -3742,8 +4226,11 @@ function mostrarTelaFeedbackProva() {
 
 
             const deveRevisar =
+
                 !resultado.acertou ||
-                resultado.parcialmenteCorreta;
+
+                resultado
+                    .parcialmenteCorreta;
 
 
             if (
@@ -3947,13 +4434,52 @@ function mostrarTelaFeedbackProva() {
                     );
 
 
+                const partesRevisao =
+                    [];
+
+
+                if (
+                    item.erros >
+                    0
+                ) {
+
+                    partesRevisao.push(
+
+                        item.erros ===
+                        1
+
+                            ? "1 erro"
+
+                            : `${item.erros} erros`
+
+                    );
+
+                }
+
+
+                if (
+                    item.parciais >
+                    0
+                ) {
+
+                    partesRevisao.push(
+
+                        item.parciais ===
+                        1
+
+                            ? "1 parcial"
+
+                            : `${item.parciais} parciais`
+
+                    );
+
+                }
+
+
                 quantidade.textContent =
-                    item.erros ===
-                    1
-
-                        ? "1 erro"
-
-                        : `${item.erros} erros`;
+                    partesRevisao.join(
+                        " • "
+                    );
 
 
                 linha.appendChild(
@@ -4156,7 +4682,7 @@ if (
 
 
 // ======================================================
-// 26. FINALIZAR
+// 26. FINALIZAR PROVA
 // ======================================================
 
 function finalizarProva() {
@@ -4365,12 +4891,6 @@ console.log(
 console.log(
     "Questões da prova:",
     questoesProva.length
-);
-
-
-console.log(
-    "Tópicos sem questões:",
-    topicosSemQuestoes
 );
 
 

@@ -44,7 +44,7 @@ const mapaCadaverTelencefaloLateral02 = [
 
 {
     id: "sulco_temporalsup",
-    nome: "Sulco Temporal Superio",
+    nome: "Sulco Temporal Superior",
     tipo: "linha",
     pontos: "1073,2348 1138,2354 1231,2331 1324,2261 1453,2179 1575,2103 1750,2033 1878,2010 2065,1975 2158,1958 2246,1946 2304,1888 2421,1858 2543,1806 2666,1742 2777,1666 2841,1631 2893,1578 2934,1479 2969,1386 2998,1316 2998,1263 3051,1199"
 },
@@ -66,7 +66,7 @@ const mapaCadaverTelencefaloLateral02 = [
 
 {
     id: "sulco_frontalInferior",
-    nome: "Sulco Frontal Inferioro",
+    nome: "Sulco Frontal Inferior",
     tipo: "linha",
     pontos: "303,1613 368,1549 438,1479 484,1351 578,1211 688,1094 753,1030 916,890 1033,791 1114,657 1237,487"
 },
