@@ -607,52 +607,6 @@ else {
 }
 
 
-// ======================================================
-// TELENCÉFALO — GIROS LATERAIS 02
-//
-// USA A MESMA FOTO DO MAPA ACIMA,
-// MAS POSSUI OUTRO CONJUNTO DE HOTSPOTS.
-// ======================================================
-
-if (
-    typeof CadaverTelencefaloLateralGiros !==
-    "undefined"
-) {
-
-    registrarMapa(
-        {
-
-            id:
-                "telencefagiroloLateral",
-
-            topico:
-                "telencefalo",
-
-            titulo:
-                "Telencéfalo — Giros 02",
-
-            imagem:
-                "imagens/CadaverTelencefaloLateral02.webp",
-
-            estruturas:
-                CadaverTelencefaloLateralGiros
-
-        }
-    );
-
-}
-
-else {
-
-    console.warn(
-        "⚠️ CadaverTelencefaloLateralGiros não foi carregado."
-    );
-
-}
-
-
-
-
 
 
 // ======================================================

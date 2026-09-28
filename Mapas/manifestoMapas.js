@@ -405,36 +405,6 @@ window.definicoesMapas = [
         },
 
 
-        // ==================================================
-    // CADÁVER — TELENCÉFALO lateral 02
-    // ==================================================
-
-            {
-
-            id:
-                "telencefagiroloLateral",
-
-                        topico:
-            "telencefalo",
-
-            titulo:
-                "Telencefalo Giros 02",
-
-            imagem:
-                "imagens/CadaverTelencefaloLateral02.webp",
-            
-            arquivo:
-                "Mapas/mapaCadaverTelencefaloLateralGiros.js",
-
-                        obterEstruturas:
-            function() {
-
-                return  CadaverTelencefaloLateralGiros ;
-
-            }
-
-        },
-
         
         // ==================================================
     // CADÁVER — TELENCÉFALO e VIASOPTICAS
