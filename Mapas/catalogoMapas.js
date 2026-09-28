@@ -623,7 +623,7 @@ if (
         {
 
             id:
-                "telencefalo-giros-lateral-02",
+                "telencefagiroloLateral",
 
             topico:
                 "telencefalo",
