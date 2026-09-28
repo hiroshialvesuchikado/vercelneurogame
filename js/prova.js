@@ -4796,20 +4796,42 @@ if (
     );
 
 }
-
-
 // ======================================================
-// VOLTAR
+// SAIR DA PROVA
 // ======================================================
 
 if (
     botaoVoltar
 ) {
 
+    // Garante que o botão fique visível durante a prova
+
+    botaoVoltar.style.display =
+        "inline-flex";
+
+
     botaoVoltar.addEventListener(
         "click",
 
         function() {
+
+            const confirmarSaida =
+                confirm(
+                    "Deseja sair da prova? Seu progresso atual será perdido."
+                );
+
+
+            if (
+                !confirmarSaida
+            ) {
+
+                return;
+
+            }
+
+
+            pararCronometroProva();
+
 
             window.location.href =
                 "jogo-menu.html";
@@ -4818,6 +4840,8 @@ if (
     );
 
 }
+
+
 
 
 // ======================================================

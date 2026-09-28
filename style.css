@@ -4021,3 +4021,14 @@ html.tema-claro .feedback-final-botoes button:hover,
 html.tema-claro .botao-revisar-questao:hover {
     background: #f1f5f9;
 }
+
+/* ======================================================
+   BOTÃO SAIR — MODO PROVA
+   ====================================================== */
+
+body .acoes-partida {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
