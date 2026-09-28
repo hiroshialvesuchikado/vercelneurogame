@@ -664,66 +664,6 @@ else {
 // mapaCadaverTelencefaloLateral
 // ======================================================
 
-let estruturasCadaverLateral =
-    null;
-
-
-if (
-    typeof mapaCadaverSulcosTelencefaloLateral !==
-    "undefined"
-) {
-
-    estruturasCadaverLateral =
-        mapaCadaverSulcosTelencefaloLateral;
-
-}
-
-else if (
-    typeof mapaCadaverTelencefaloLateral !==
-    "undefined"
-) {
-
-    estruturasCadaverLateral =
-        mapaCadaverTelencefaloLateral;
-
-}
-
-
-if (
-    estruturasCadaverLateral
-) {
-
-    registrarMapa(
-        {
-
-            id:
-                "cadaver-telencefalo-lateral",
-
-            topico:
-                "telencefalo",
-
-            titulo:
-                "Sulcos Telencéfalo — Vista Lateral",
-
-            imagem:
-                "imagens/CadaverTelencefaloLateral.webp",
-
-            estruturas:
-                estruturasCadaverLateral
-
-        }
-    );
-
-}
-
-else {
-
-    console.warn(
-        "⚠️ Mapa do cadáver lateral não foi carregado."
-    );
-
-}
-
 
 
 
