@@ -4032,3 +4032,89 @@ body .acoes-partida {
     gap: 10px;
     flex-wrap: wrap;
 }
+
+/* ======================================================
+   MENU PRINCIPAL — CORREÇÃO
+   ====================================================== */
+
+#menuTipoEstudo {
+    width: min(520px, calc(100% - 32px));
+    margin: 24px auto 28px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+#menuTipoEstudo .botao-categoria {
+    width: 100%;
+    min-height: 58px;
+
+    padding: 14px 18px;
+
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+    font-weight: 700;
+}
+
+
+/* ======================================================
+   MENU DE TÓPICOS
+   COMEÇA ESCONDIDO
+   ====================================================== */
+
+#menuTopicos {
+    display: none;
+}
+
+
+/* O JavaScript aplica inline display:flex
+   somente quando o menu deve aparecer. */
+
+
+/* ======================================================
+   BOTÕES DOS TÓPICOS
+   ====================================================== */
+
+.lista-topicos {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(190px, 1fr)
+        );
+
+    gap: 12px;
+}
+
+
+.botao-topico {
+    width: 100%;
+
+    min-height: 58px;
+
+    padding: 14px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #d7dce2;
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    cursor: pointer;
+}

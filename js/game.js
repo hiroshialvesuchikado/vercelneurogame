@@ -2,9 +2,10 @@
 // GAME — NEUROGAME
 //
 // SUPORTA:
+//
 // - ESTUDO POR CATEGORIA
 // - ESTUDO POR MAPA
-// - FILTRO POR TÓPICO
+// - ESTUDO POR TÓPICO
 // - MAPAS MISTOS
 // - TROCA AUTOMÁTICA DE IMAGENS
 // - REUTILIZAÇÃO DA MESMA IMAGEM ENTRE QUESTÕES
@@ -12,7 +13,7 @@
 
 
 // ======================================================
-// 1. LER PARÂMETROS DA URL
+// 1. PARÂMETROS DA URL
 // ======================================================
 
 const parametros =
@@ -74,7 +75,34 @@ const svg =
 
 
 // ======================================================
-// 3. DESCOBRIR TÓPICO DE UM MAPA
+// 3. NOMES DOS TÓPICOS
+// ======================================================
+
+const NOMES_TOPICOS_NEUROGAME = {
+
+    medula:
+        "Medula Espinhal",
+
+    tronco:
+        "Tronco Encefálico",
+
+    cerebelo:
+        "Cerebelo",
+
+    diencefalo:
+        "Diencéfalo",
+
+    telencefalo:
+        "Telencéfalo",
+
+    vascularizacao:
+        "Vascularização do SN"
+
+};
+
+
+// ======================================================
+// 4. DESCOBRIR TÓPICO DO MAPA
 // ======================================================
 
 function obterTopicoMapa(
@@ -98,7 +126,9 @@ function obterTopicoMapa(
 
         const definicao =
             window.definicoesMapas.find(
-                function(item) {
+                function(
+                    item
+                ) {
 
                     return (
                         item.id ===
@@ -127,12 +157,22 @@ function obterTopicoMapa(
 
 
 // ======================================================
-// 4. DESCOBRIR CATEGORIA DA ESTRUTURA
+// 5. DESCOBRIR CATEGORIA DA ESTRUTURA
 // ======================================================
 
 function obterCategoria(
     estrutura
 ) {
+
+    if (
+        !estrutura ||
+        !estrutura.id
+    ) {
+
+        return "outros";
+
+    }
+
 
     const id =
         estrutura.id
@@ -256,7 +296,7 @@ function obterCategoria(
 
 
 // ======================================================
-// 4.1 DESCOBRIR TÓPICO DA ESTRUTURA
+// 6. DESCOBRIR TÓPICO DA ESTRUTURA
 // ======================================================
 
 function obterTopicoEstrutura(
@@ -340,13 +380,55 @@ function obterTopicoEstrutura(
     }
 
 
+    /*
+        Para estruturas que ainda não usam
+        prefixos específicos, retornamos null.
+
+        Depois usamos o tópico do mapa
+        como fallback.
+    */
+
     return null;
 
 }
 
 
 // ======================================================
-// 4.2 VERIFICAR SE O MAPA PERTENCE AO TÓPICO
+// 7. TÓPICO REAL DE UMA ESTRUTURA
+//
+// Primeiro tenta pela estrutura.
+// Se não conseguir, usa o tópico do mapa.
+// ======================================================
+
+function obterTopicoRealEstrutura(
+    estrutura,
+    mapa
+) {
+
+    const topicoEstrutura =
+        obterTopicoEstrutura(
+            estrutura
+        );
+
+
+    if (
+        topicoEstrutura
+    ) {
+
+        return topicoEstrutura;
+
+    }
+
+
+    return obterTopicoMapa(
+        mapa
+    );
+
+}
+
+
+// ======================================================
+// 8. VERIFICAR SE MAPA POSSUI O TÓPICO
 // ======================================================
 
 function mapaPertenceAoTopico(
@@ -364,29 +446,26 @@ function mapaPertenceAoTopico(
     }
 
 
-    // ==================================================
-    // PRIMEIRO VERIFICA AS ESTRUTURAS
-    //
-    // Isso permite mapas mistos.
-    // ==================================================
-
     if (
         Array.isArray(
             mapa.estruturas
         )
     ) {
 
-        const possuiEstruturaDoTopico =
+        const possui =
             mapa.estruturas.some(
                 function(
                     estrutura
                 ) {
 
                     return (
-                        obterTopicoEstrutura(
-                            estrutura
+
+                        obterTopicoRealEstrutura(
+                            estrutura,
+                            mapa
                         ) ===
                         topico
+
                     );
 
                 }
@@ -394,7 +473,7 @@ function mapaPertenceAoTopico(
 
 
         if (
-            possuiEstruturaDoTopico
+            possui
         ) {
 
             return true;
@@ -404,22 +483,20 @@ function mapaPertenceAoTopico(
     }
 
 
-    // ==================================================
-    // COMPATIBILIDADE COM MAPAS ANTIGOS
-    // ==================================================
-
     return (
+
         obterTopicoMapa(
             mapa
         ) ===
         topico
+
     );
 
 }
 
 
 // ======================================================
-// 5. PEGAR ESTRUTURAS QUE DEVEM APARECER
+// 9. ESTRUTURAS DO MAPA
 // ======================================================
 
 function obterEstruturasDoMapa(
@@ -439,13 +516,41 @@ function obterEstruturasDoMapa(
 
 
     // ==================================================
-    // ESTUDO POR MAPA
+    // MODO TÓPICO
     //
-    // Se o mapa for misto:
-    // mostra apenas as estruturas do tópico escolhido.
-    //
-    // Se for mapa antigo:
-    // mantém compatibilidade.
+    // PEGA SOMENTE AS ESTRUTURAS DO TÓPICO
+    // ==================================================
+
+    if (
+        tipoEstudo ===
+        "topico"
+    ) {
+
+        return mapa
+            .estruturas
+            .filter(
+                function(
+                    estrutura
+                ) {
+
+                    return (
+
+                        obterTopicoRealEstrutura(
+                            estrutura,
+                            mapa
+                        ) ===
+                        topicoSelecionado
+
+                    );
+
+                }
+            );
+
+    }
+
+
+    // ==================================================
+    // MODO MAPA
     // ==================================================
 
     if (
@@ -464,10 +569,13 @@ function obterEstruturasDoMapa(
                     ) {
 
                         return (
-                            obterTopicoEstrutura(
-                                estrutura
+
+                            obterTopicoRealEstrutura(
+                                estrutura,
+                                mapa
                             ) ===
                             topicoSelecionado
+
                         );
 
                     }
@@ -492,13 +600,7 @@ function obterEstruturasDoMapa(
 
 
     // ==================================================
-    // ESTUDO POR CATEGORIA
-    //
-    // Filtra:
-    // - tópico
-    // - categoria
-    //
-    // Permite mapas mistos.
+    // MODO CATEGORIA
     // ==================================================
 
     if (
@@ -506,52 +608,41 @@ function obterEstruturasDoMapa(
         "categoria"
     ) {
 
-        return mapa.estruturas.filter(
-            function(
-                estrutura
-            ) {
+        return mapa
+            .estruturas
+            .filter(
+                function(
+                    estrutura
+                ) {
 
-                const topicoEstrutura =
-                    obterTopicoEstrutura(
-                        estrutura
-                    );
+                    const pertenceAoTopico =
 
+                        !topicoSelecionado ||
 
-                // ==================================================
-                // ESTRUTURAS COM PREFIXO NOVO
-                // ==================================================
-
-                const pertenceAoTopico =
-                    !topicoSelecionado ||
-
-                    topicoEstrutura ===
-                    topicoSelecionado ||
-
-                    // ==============================================
-                    // FALLBACK PARA ESTRUTURAS ANTIGAS
-                    // ==============================================
-
-                    (
-                        !topicoEstrutura &&
-
-                        obterTopicoMapa(
+                        obterTopicoRealEstrutura(
+                            estrutura,
                             mapa
                         ) ===
-                        topicoSelecionado
+                        topicoSelecionado;
+
+
+                    const pertenceCategoria =
+
+                        obterCategoria(
+                            estrutura
+                        ) ===
+                        categoriaSelecionada;
+
+
+                    return (
+
+                        pertenceAoTopico &&
+                        pertenceCategoria
+
                     );
 
-
-                return (
-                    pertenceAoTopico &&
-
-                    obterCategoria(
-                        estrutura
-                    ) ===
-                    categoriaSelecionada
-                );
-
-            }
-        );
+                }
+            );
 
     }
 
@@ -562,7 +653,7 @@ function obterEstruturasDoMapa(
 
 
 // ======================================================
-// 6. BANCO DE QUESTÕES
+// 10. BANCO DE QUESTÕES
 // ======================================================
 
 let bancoQuestoes =
@@ -570,7 +661,7 @@ let bancoQuestoes =
 
 
 // ======================================================
-// 7. POR CATEGORIA
+// 11. MODO — CATEGORIA
 // ======================================================
 
 if (
@@ -582,13 +673,6 @@ if (
         function(
             mapa
         ) {
-
-            // ==================================================
-            // MAPAS MISTOS
-            //
-            // Não usa apenas mapa.topico.
-            // Verifica também as estruturas do mapa.
-            // ==================================================
 
             if (
                 topicoSelecionado &&
@@ -637,7 +721,7 @@ if (
 
 
 // ======================================================
-// 8. POR MAPA
+// 12. MODO — MAPA
 // ======================================================
 
 else if (
@@ -651,14 +735,28 @@ else if (
                 mapa
             ) {
 
-                return (
-                    mapa.id ===
-                    mapaSelecionado &&
+                if (
+                    mapa.id !==
+                    mapaSelecionado
+                ) {
 
-                    mapaPertenceAoTopico(
-                        mapa,
-                        topicoSelecionado
-                    )
+                    return false;
+
+                }
+
+
+                if (
+                    !topicoSelecionado
+                ) {
+
+                    return true;
+
+                }
+
+
+                return mapaPertenceAoTopico(
+                    mapa,
+                    topicoSelecionado
                 );
 
             }
@@ -701,7 +799,129 @@ else if (
 
 
 // ======================================================
-// 9. EMBARALHAR
+// 13. MODO — TÓPICO
+//
+// NOVO MODO.
+//
+// Exemplo:
+//
+// tipo=topico
+// topico=diencefalo
+//
+// Percorre TODOS os mapas e adiciona TODAS
+// as estruturas pertencentes ao Diencéfalo.
+// ======================================================
+
+else if (
+    tipoEstudo ===
+    "topico"
+) {
+
+    catalogoMapas.forEach(
+        function(
+            mapa
+        ) {
+
+            if (
+                !mapaPertenceAoTopico(
+                    mapa,
+                    topicoSelecionado
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            const estruturas =
+                obterEstruturasDoMapa(
+                    mapa
+                );
+
+
+            estruturas.forEach(
+                function(
+                    estrutura
+                ) {
+
+                    bancoQuestoes.push(
+                        {
+
+                            mapa:
+                                mapa,
+
+                            estrutura:
+                                estrutura
+
+                        }
+                    );
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+// ======================================================
+// 14. REMOVER QUESTÕES DUPLICADAS
+//
+// Evita a mesma estrutura do mesmo mapa
+// entrar duas vezes.
+// ======================================================
+
+function removerQuestoesDuplicadas(
+    lista
+) {
+
+    const vistos =
+        new Set();
+
+
+    return lista.filter(
+        function(
+            questao
+        ) {
+
+            const chave =
+                `${questao.mapa.id}::${questao.estrutura.id}`;
+
+
+            if (
+                vistos.has(
+                    chave
+                )
+            ) {
+
+                return false;
+
+            }
+
+
+            vistos.add(
+                chave
+            );
+
+
+            return true;
+
+        }
+    );
+
+}
+
+
+bancoQuestoes =
+    removerQuestoesDuplicadas(
+        bancoQuestoes
+    );
+
+
+// ======================================================
+// 15. EMBARALHAR
 // ======================================================
 
 function embaralhar(
@@ -756,7 +976,7 @@ bancoQuestoes =
 
 
 // ======================================================
-// 10. GUARDAR TOTAL ORIGINAL
+// 16. TOTAL ORIGINAL
 // ======================================================
 
 const totalQuestoesInicial =
@@ -764,7 +984,10 @@ const totalQuestoesInicial =
 
 
 // ======================================================
-// 11. CONTROLE DE MAPA ANTERIOR
+// 17. MAPA ANTERIOR
+//
+// Usado para evitar repetir a mesma imagem
+// consecutivamente quando existem alternativas.
 // ======================================================
 
 let mapaAnterior =
@@ -772,7 +995,7 @@ let mapaAnterior =
 
 
 // ======================================================
-// 12. PEGAR PRÓXIMA QUESTÃO
+// 18. PEGAR PRÓXIMA QUESTÃO
 // ======================================================
 
 function obterProximaQuestao() {
@@ -788,7 +1011,9 @@ function obterProximaQuestao() {
 
 
     // ==================================================
-    // POR MAPA
+    // MODO MAPA
+    //
+    // Só existe uma imagem.
     // ==================================================
 
     if (
@@ -810,10 +1035,9 @@ function obterProximaQuestao() {
 
 
     // ==================================================
-    // POR CATEGORIA
+    // CATEGORIA OU TÓPICO
     //
-    // Evita repetir a mesma imagem
-    // duas vezes seguidas quando possível.
+    // Tenta variar a imagem entre perguntas.
     // ==================================================
 
     let indice =
@@ -823,10 +1047,12 @@ function obterProximaQuestao() {
             ) {
 
                 return (
+
                     !mapaAnterior ||
 
                     questao.mapa.id !==
                     mapaAnterior
+
                 );
 
             }
@@ -861,7 +1087,7 @@ function obterProximaQuestao() {
 
 
 // ======================================================
-// 13. CRIAR HOTSPOTS SVG
+// 19. CRIAR HOTSPOTS SVG
 // ======================================================
 
 function criarHotspots(
@@ -923,7 +1149,7 @@ function criarHotspots(
 
 
             // ==================================================
-            // ÁREA / POLÍGONO
+            // ÁREA
             // ==================================================
 
             else {
@@ -979,7 +1205,7 @@ function criarHotspots(
 
 
             // ==================================================
-            // HITBOX INVISÍVEL PARA LINHAS
+            // HITBOX PARA LINHAS
             // ==================================================
 
             if (
@@ -1085,7 +1311,7 @@ function criarHotspots(
 
 
 // ======================================================
-// 14. NORMALIZAR URL DA IMAGEM
+// 20. NORMALIZAR URL DA IMAGEM
 // ======================================================
 
 function normalizarURLImagem(
@@ -1113,7 +1339,7 @@ function normalizarURLImagem(
 
 
 // ======================================================
-// 15. CARREGAR QUESTÃO
+// 21. CARREGAR QUESTÃO
 // ======================================================
 
 function carregarQuestao(
@@ -1160,18 +1386,19 @@ function carregarQuestao(
                 svg.querySelectorAll(
                     ".estrutura"
                 )
-            ).find(
-                function(
-                    elemento
-                ) {
+            )
+                .find(
+                    function(
+                        elemento
+                    ) {
 
-                    return (
-                        elemento.dataset.id ===
-                        estrutura.id
-                    );
+                        return (
+                            elemento.dataset.id ===
+                            estrutura.id
+                        );
 
-                }
-            );
+                    }
+                );
 
 
         const todasEstruturas =
@@ -1228,7 +1455,7 @@ function carregarQuestao(
 
 
     // ==================================================
-    // IMAGEM JÁ CARREGADA / CACHE
+    // IMAGEM JÁ CARREGADA
     // ==================================================
 
     if (
@@ -1237,16 +1464,17 @@ function carregarQuestao(
         imagem.naturalWidth > 0
     ) {
 
-        console.log(
-            "♻️ Imagem já carregada:",
-            mapa.id
-        );
-
-
         prepararQuestao();
 
 
-        esconderLoadingJogo();
+        if (
+            typeof esconderLoadingJogo ===
+            "function"
+        ) {
+
+            esconderLoadingJogo();
+
+        }
 
 
         return;
@@ -1254,11 +1482,9 @@ function carregarQuestao(
     }
 
 
-    console.log(
-        "🖼️ Carregando imagem:",
-        mapa.id
-    );
-
+    // ==================================================
+    // CARREGAR NOVA IMAGEM
+    // ==================================================
 
     imagem.onload =
         null;
@@ -1268,30 +1494,23 @@ function carregarQuestao(
         null;
 
 
-    // ==================================================
-    // IMAGEM CARREGADA
-    // ==================================================
-
     imagem.onload =
         function() {
-
-            console.log(
-                "✅ Imagem carregada:",
-                mapa.id
-            );
-
 
             prepararQuestao();
 
 
-            esconderLoadingJogo();
+            if (
+                typeof esconderLoadingJogo ===
+                "function"
+            ) {
+
+                esconderLoadingJogo();
+
+            }
 
         };
 
-
-    // ==================================================
-    // ERRO NA IMAGEM
-    // ==================================================
 
     imagem.onerror =
         function() {
@@ -1306,7 +1525,14 @@ function carregarQuestao(
             );
 
 
-            esconderLoadingJogo();
+            if (
+                typeof esconderLoadingJogo ===
+                "function"
+            ) {
+
+                esconderLoadingJogo();
+
+            }
 
 
             if (
@@ -1315,8 +1541,11 @@ function carregarQuestao(
             ) {
 
                 mostrarErroAmigavel(
+
                     "Não foi possível carregar a imagem",
+
                     "A imagem anatômica deste mapa não pôde ser carregada. Tente novamente."
+
                 );
 
             }
@@ -1331,7 +1560,7 @@ function carregarQuestao(
 
 
 // ======================================================
-// 16. DISPONIBILIZAR PARA OS MODOS
+// 22. DISPONIBILIZAR PARA OS MODOS
 // ======================================================
 
 window.NeuroGame =
@@ -1356,18 +1585,24 @@ window.NeuroGame =
             mapaSelecionado,
 
         topico:
+            topicoSelecionado,
+
+        nomeTopico:
+            NOMES_TOPICOS_NEUROGAME[
+                topicoSelecionado
+            ] ||
             topicoSelecionado
 
     };
 
 
 // ======================================================
-// 17. VALIDAÇÕES
+// 23. VALIDAÇÕES
 // ======================================================
 
 
 // ======================================================
-// TIPO DE ESTUDO
+// TIPO
 // ======================================================
 
 if (
@@ -1375,19 +1610,32 @@ if (
     "categoria" &&
 
     tipoEstudo !==
-    "mapa"
+    "mapa" &&
+
+    tipoEstudo !==
+    "topico"
 ) {
 
     pergunta.textContent =
         "Erro: tipo de estudo inválido.";
 
 
-    esconderLoadingJogo();
+    if (
+        typeof esconderLoadingJogo ===
+        "function"
+    ) {
+
+        esconderLoadingJogo();
+
+    }
 
 
     mostrarErroAmigavel(
+
         "Configuração inválida",
+
         "Não foi possível identificar o tipo de estudo. Volte ao menu e escolha uma opção novamente."
+
     );
 
 
@@ -1400,9 +1648,19 @@ if (
 
 // ======================================================
 // TÓPICO
+//
+// Categoria e o novo modo tópico exigem tópico.
 // ======================================================
 
 if (
+    (
+        tipoEstudo ===
+        "categoria" ||
+
+        tipoEstudo ===
+        "topico"
+    ) &&
+
     !topicoSelecionado
 ) {
 
@@ -1410,12 +1668,22 @@ if (
         "Erro: tópico não selecionado.";
 
 
-    esconderLoadingJogo();
+    if (
+        typeof esconderLoadingJogo ===
+        "function"
+    ) {
+
+        esconderLoadingJogo();
+
+    }
 
 
     mostrarErroAmigavel(
+
         "Tópico não selecionado",
+
         "Escolha um tópico antes de iniciar o jogo."
+
     );
 
 
@@ -1441,12 +1709,22 @@ if (
         "Erro: categoria não selecionada.";
 
 
-    esconderLoadingJogo();
+    if (
+        typeof esconderLoadingJogo ===
+        "function"
+    ) {
+
+        esconderLoadingJogo();
+
+    }
 
 
     mostrarErroAmigavel(
+
         "Categoria não selecionada",
+
         "Escolha uma categoria de estruturas antes de iniciar o jogo."
+
     );
 
 
@@ -1472,12 +1750,22 @@ if (
         "Erro: mapa não selecionado.";
 
 
-    esconderLoadingJogo();
+    if (
+        typeof esconderLoadingJogo ===
+        "function"
+    ) {
+
+        esconderLoadingJogo();
+
+    }
 
 
     mostrarErroAmigavel(
+
         "Mapa não selecionado",
+
         "Escolha um mapa anatômico antes de iniciar o jogo."
+
     );
 
 
@@ -1499,6 +1787,31 @@ if (
 
     if (
         tipoEstudo ===
+        "topico"
+    ) {
+
+        pergunta.textContent =
+            "Nenhuma estrutura encontrada neste tópico.";
+
+
+        mostrarErroAmigavel(
+
+            "Tópico sem estruturas",
+
+            `Não existem estruturas cadastradas para ${
+                NOMES_TOPICOS_NEUROGAME[
+                    topicoSelecionado
+                ] ||
+                topicoSelecionado
+            }.`
+
+        );
+
+    }
+
+
+    else if (
+        tipoEstudo ===
         "categoria"
     ) {
 
@@ -1506,15 +1819,16 @@ if (
             "Nenhuma estrutura dessa categoria foi encontrada neste tópico.";
 
 
-        esconderLoadingJogo();
-
-
         mostrarErroAmigavel(
+
             "Nenhuma estrutura encontrada",
+
             "Não existem estruturas cadastradas nesta categoria para o tópico selecionado."
+
         );
 
     }
+
 
     else {
 
@@ -1522,13 +1836,23 @@ if (
             "Nenhuma estrutura foi encontrada nesse mapa.";
 
 
-        esconderLoadingJogo();
-
-
         mostrarErroAmigavel(
+
             "Mapa sem estruturas",
+
             "Este mapa ainda não possui estruturas disponíveis para jogar."
+
         );
+
+    }
+
+
+    if (
+        typeof esconderLoadingJogo ===
+        "function"
+    ) {
+
+        esconderLoadingJogo();
 
     }
 
@@ -1541,7 +1865,7 @@ if (
 
 
 // ======================================================
-// 18. LOGS
+// 24. LOGS
 // ======================================================
 
 console.log(
@@ -1590,13 +1914,29 @@ console.log(
 );
 
 
+if (
+    tipoEstudo ===
+    "topico"
+) {
+
+    console.log(
+        "🎮 Jogando todas as estruturas de:",
+        NOMES_TOPICOS_NEUROGAME[
+            topicoSelecionado
+        ] ||
+        topicoSelecionado
+    );
+
+}
+
+
 console.log(
     "======================================"
 );
 
 
 // ======================================================
-// 19. INICIAR MODO
+// 25. INICIAR
 // ======================================================
 
 if (
@@ -1641,19 +1981,29 @@ else {
     );
 
 
-    esconderLoadingJogo();
+    if (
+        typeof esconderLoadingJogo ===
+        "function"
+    ) {
+
+        esconderLoadingJogo();
+
+    }
 
 
     mostrarErroAmigavel(
+
         "Modo de jogo inválido",
+
         "Não foi possível identificar o modo de jogo. Volte ao menu e tente novamente."
+
     );
 
 }
 
 
 // ======================================================
-// 20. ERRO AMIGÁVEL
+// 26. ERRO AMIGÁVEL
 // ======================================================
 
 function mostrarErroAmigavel(

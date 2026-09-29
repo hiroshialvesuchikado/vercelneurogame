@@ -2,11 +2,15 @@
 // MENU DO JOGO — NEUROGAME
 //
 // SUPORTA:
-// - Seleção por tópico
+//
+// - Estudo por tópico
 // - Estudo por estruturas
 // - Estudo por mapa
 // - Mapas mistos
+// - Modo clicar
+// - Modo digitar
 // - Prova com múltiplos tópicos
+// - Tempo configurável na prova
 // ======================================================
 
 
@@ -49,29 +53,38 @@ const CATEGORIAS_POR_TOPICO = {
     telencefalo: [
 
         {
-            id: "giro",
-            nome: "🧠 Giros"
+            id:
+                "giro",
+
+            nome:
+                "🧠 Giros"
         },
 
         {
-            id: "sulco",
-            nome: "➰ Sulcos"
+            id:
+                "sulco",
+
+            nome:
+                "➰ Sulcos"
         },
 
         {
-            id: "lobo",
-            nome: "🧩 Lobos e Lóbulos"
+            id:
+                "lobo",
+
+            nome:
+                "🧩 Lobos e Lóbulos"
         },
 
         {
-            id: "nucleosdabase",
-            nome: "🧠 Núcleos da Base e Regiões Capsulares"
+            id:
+                "nucleosdabase",
+
+            nome:
+                "🧠 Núcleos da Base e Regiões Capsulares"
         }
 
-    ],
-
-
-   
+    ]
 
 };
 
@@ -89,6 +102,12 @@ const botaoPorEstrutura =
 const botaoPorMapa =
     document.getElementById(
         "escolherPorMapa"
+    );
+
+
+const botaoPorTopico =
+    document.getElementById(
+        "escolherPorTopico"
     );
 
 
@@ -203,7 +222,8 @@ const modoRespostaProva =
         "modoRespostaProva"
     );
 
-    const tempoQuestaoProva =
+
+const tempoQuestaoProva =
     document.getElementById(
         "tempoQuestaoProva"
     );
@@ -234,7 +254,7 @@ let areaTopicosProva =
 
 
 // ======================================================
-// 9. DESCOBRIR TÓPICO CADASTRADO NO MAPA
+// 9. TÓPICO DO MAPA
 // ======================================================
 
 function obterTopicoMapa(
@@ -258,7 +278,9 @@ function obterTopicoMapa(
 
         const definicao =
             window.definicoesMapas.find(
-                function(item) {
+                function(
+                    item
+                ) {
 
                     return (
                         item.id ===
@@ -343,13 +365,69 @@ function obterTopicoEstrutura(
     }
 
 
+    // ==================================================
+    // CEREBELO
+    // ==================================================
+
+    if (
+        id.startsWith("cerebelo_")
+    ) {
+
+        return "cerebelo";
+
+    }
+
+
+    // ==================================================
+    // TRONCO ENCEFÁLICO
+    // ==================================================
+
+    if (
+        id.startsWith("mesencefalo_") ||
+        id.startsWith("ponte_") ||
+        id.startsWith("bulbo_") ||
+        id.startsWith("tronco_")
+    ) {
+
+        return "tronco";
+
+    }
+
+
+    // ==================================================
+    // MEDULA
+    // ==================================================
+
+    if (
+        id.startsWith("medula_")
+    ) {
+
+        return "medula";
+
+    }
+
+
+    // ==================================================
+    // VASCULARIZAÇÃO
+    // ==================================================
+
+    if (
+        id.startsWith("vascularizacao_") ||
+        id.startsWith("arteria_")
+    ) {
+
+        return "vascularizacao";
+
+    }
+
+
     return null;
 
 }
 
 
 // ======================================================
-// 11. VERIFICAR SE UM MAPA PERTENCE AO TÓPICO
+// 11. VERIFICAR SE MAPA PERTENCE AO TÓPICO
 // ======================================================
 
 function mapaPertenceAoTopico(
@@ -366,13 +444,6 @@ function mapaPertenceAoTopico(
 
     }
 
-
-    // ==================================================
-    // VERIFICAR ESTRUTURAS
-    //
-    // Isso permite que o mesmo mapa pertença
-    // a mais de um tópico.
-    // ==================================================
 
     if (
         Array.isArray(
@@ -408,10 +479,6 @@ function mapaPertenceAoTopico(
     }
 
 
-    // ==================================================
-    // FALLBACK PARA MAPAS ANTIGOS
-    // ==================================================
-
     return (
         obterTopicoMapa(
             mapa
@@ -443,7 +510,9 @@ function obterTopicosDisponiveis() {
 
 
     catalogoMapas.forEach(
-        function(mapa) {
+        function(
+            mapa
+        ) {
 
             // ==========================================
             // TÓPICO DO MAPA
@@ -467,7 +536,7 @@ function obterTopicosDisponiveis() {
 
 
             // ==========================================
-            // TÓPICOS ENCONTRADOS NAS ESTRUTURAS
+            // TÓPICOS PELAS ESTRUTURAS
             // ==========================================
 
             if (
@@ -610,6 +679,10 @@ menuTopicos.appendChild(
 );
 
 
+// ======================================================
+// INSERIR MENU NO HTML
+// ======================================================
+
 if (
     menuTipoEstudo &&
     menuTipoEstudo.parentNode
@@ -621,7 +694,8 @@ if (
             menuTopicos
         );
 
-    }
+}
+
 
 // ======================================================
 // 14. CRIAR BOTÕES DOS TÓPICOS
@@ -663,7 +737,9 @@ function criarBotoesTopicos() {
 
 
     topicosDisponiveis.forEach(
-        function(topico) {
+        function(
+            topico
+        ) {
 
             const botao =
                 document.createElement(
@@ -719,7 +795,7 @@ function criarBotoesTopicos() {
 
 
                     // ==================================
-                    // POR ESTRUTURAS
+                    // ESTUDO POR ESTRUTURA
                     // ==================================
 
                     if (
@@ -733,15 +809,10 @@ function criarBotoesTopicos() {
                             ] || [];
 
 
-                        // ==================================
+                        // ==============================
                         // TEM SUBCATEGORIAS
-                        //
-                        // Exemplo:
-                        // Telencéfalo
-                        // → Giros
-                        // → Sulcos
-                        // → Lobos
-                        // ==================================
+                        // Ex.: Telencéfalo
+                        // ==============================
 
                         if (
                             categoriasDoTopico.length >
@@ -763,44 +834,46 @@ function criarBotoesTopicos() {
 
                             }
 
+
+                            return;
+
                         }
 
 
-                        // ==================================
-                        // NÃO TEM SUBCATEGORIAS
+                        // ==============================
+                        // SEM SUBCATEGORIAS
                         //
-                        // Exemplo:
-                        // Diencéfalo
-                        // → vai direto para os mapas
-                        // ==================================
+                        // Ex.: Diencéfalo
+                        //
+                        // Vai para mapas.
+                        // ==============================
 
-                        else {
-
-                            criarListaMapasJogo();
+                        criarListaMapasJogo();
 
 
-                            if (
-                                menuMapas
-                            ) {
+                        if (
+                            menuMapas
+                        ) {
 
-                                menuMapas
-                                    .classList
-                                    .add(
-                                        "visivel"
-                                    );
-
-                            }
+                            menuMapas
+                                .classList
+                                .add(
+                                    "visivel"
+                                );
 
                         }
+
+
+                        return;
 
                     }
 
 
                     // ==================================
-                    // POR MAPA
+                    // ESTUDO POR MAPA
                     // ==================================
 
-                    else if (
+                    if (
                         tipoEstudoSelecionado ===
                         "mapa"
                     ) {
@@ -819,6 +892,39 @@ function criarBotoesTopicos() {
                                 );
 
                         }
+
+
+                        return;
+
+                    }
+
+
+                    // ==================================
+                    // ESTUDO POR TÓPICO
+                    //
+                    // NOVO MODO:
+                    // vai direto para clicar/digitar.
+                    // ==================================
+
+                    if (
+                        tipoEstudoSelecionado ===
+                        "topico"
+                    ) {
+
+                        if (
+                            menuModos
+                        ) {
+
+                            menuModos
+                                .classList
+                                .add(
+                                    "visivel"
+                                );
+
+                        }
+
+
+                        return;
 
                     }
 
@@ -930,7 +1036,7 @@ function esconderMenusSecundarios() {
 
 
 // ======================================================
-// 18. MOSTRAR MENU INICIAL
+// 18. MENU INICIAL
 // ======================================================
 
 function mostrarMenuInicial() {
@@ -973,32 +1079,11 @@ function mostrarMenuInicial() {
     mapaSelecionado =
         null;
 
-
-    if (
-        menuCategorias
-    ) {
-
-        menuCategorias
-            .querySelectorAll(
-                ".botao-categoria[data-categoria]"
-            )
-            .forEach(
-                function(botao) {
-
-                    botao.classList.remove(
-                        "selecionado"
-                    );
-
-                }
-            );
-
-    }
-
 }
 
 
 // ======================================================
-// 19. POR ESTRUTURAS
+// 19. ESTUDAR POR ESTRUTURA
 // ======================================================
 
 if (
@@ -1055,7 +1140,7 @@ if (
 
 
 // ======================================================
-// 20. POR MAPA
+// 20. ESTUDAR POR MAPA
 // ======================================================
 
 if (
@@ -1112,7 +1197,69 @@ if (
 
 
 // ======================================================
-// 21. VOLTAR DOS TÓPICOS
+// 21. ESTUDAR POR TÓPICO
+// ======================================================
+
+if (
+    botaoPorTopico
+) {
+
+    botaoPorTopico.addEventListener(
+        "click",
+
+        function() {
+
+            console.log(
+                "🧠 Modo por tópico selecionado"
+            );
+
+
+            tipoEstudoSelecionado =
+                "topico";
+
+
+            topicoSelecionado =
+                null;
+
+
+            categoriaSelecionada =
+                null;
+
+
+            mapaSelecionado =
+                null;
+
+
+            if (
+                menuTipoEstudo
+            ) {
+
+                menuTipoEstudo.style.display =
+                    "none";
+
+            }
+
+
+            if (
+                menuProvaInicial
+            ) {
+
+                menuProvaInicial.style.display =
+                    "none";
+
+            }
+
+
+            mostrarMenuTopicos();
+
+        }
+    );
+
+}
+
+
+// ======================================================
+// 22. VOLTAR DOS TÓPICOS
 // ======================================================
 
 botaoVoltarTopicos.addEventListener(
@@ -1127,7 +1274,7 @@ botaoVoltarTopicos.addEventListener(
 
 
 // ======================================================
-// 22. CRIAR CATEGORIAS DO TÓPICO
+// 23. CRIAR CATEGORIAS DO TÓPICO
 // ======================================================
 
 function criarCategoriasDoTopico() {
@@ -1141,6 +1288,31 @@ function criarCategoriasDoTopico() {
 
     }
 
+
+    // ==================================================
+    // REMOVER BOTÕES ANTIGOS
+    // ==================================================
+
+    const botoesAntigos =
+        menuCategorias.querySelectorAll(
+            ".botao-categoria[data-categoria]"
+        );
+
+
+    botoesAntigos.forEach(
+        function(
+            botao
+        ) {
+
+            botao.remove();
+
+        }
+    );
+
+
+    // ==================================================
+    // REMOVER AVISO ANTIGO
+    // ==================================================
 
     const avisoAntigo =
         menuCategorias.querySelector(
@@ -1157,32 +1329,10 @@ function criarCategoriasDoTopico() {
     }
 
 
-    const botoesAntigos =
-        menuCategorias.querySelectorAll(
-            ".botao-categoria[data-categoria]"
-        );
-
-
-    botoesAntigos.forEach(
-        function(botao) {
-
-            botao.remove();
-
-        }
-    );
-
-
     const categorias =
         CATEGORIAS_POR_TOPICO[
             topicoSelecionado
         ] || [];
-
-
-    console.log(
-        "📚 Categorias do tópico:",
-        topicoSelecionado,
-        categorias
-    );
 
 
     if (
@@ -1230,7 +1380,9 @@ function criarCategoriasDoTopico() {
 
 
     categorias.forEach(
-        function(categoria) {
+        function(
+            categoria
+        ) {
 
             const botao =
                 document.createElement(
@@ -1269,32 +1421,8 @@ function criarCategoriasDoTopico() {
 
 
                     console.log(
-                        "🧠 Categoria selecionada:",
+                        "🧠 Categoria:",
                         categoriaSelecionada
-                    );
-
-
-                    const todosBotoes =
-                        menuCategorias.querySelectorAll(
-                            ".botao-categoria[data-categoria]"
-                        );
-
-
-                    todosBotoes.forEach(
-                        function(outroBotao) {
-
-                            outroBotao
-                                .classList
-                                .remove(
-                                    "selecionado"
-                                );
-
-                        }
-                    );
-
-
-                    botao.classList.add(
-                        "selecionado"
                     );
 
 
@@ -1347,7 +1475,7 @@ function criarCategoriasDoTopico() {
 
 
 // ======================================================
-// 23. CRIAR LISTA DE MAPAS
+// 24. CRIAR LISTA DE MAPAS
 // ======================================================
 
 function criarListaMapasJogo() {
@@ -1380,13 +1508,11 @@ function criarListaMapasJogo() {
     }
 
 
-    // ==================================================
-    // MAPAS PODEM PERTENCER A MAIS DE UM TÓPICO
-    // ==================================================
-
     const mapasFiltrados =
         catalogoMapas.filter(
-            function(mapa) {
+            function(
+                mapa
+            ) {
 
                 if (
                     !topicoSelecionado
@@ -1432,7 +1558,9 @@ function criarListaMapasJogo() {
 
 
     mapasFiltrados.forEach(
-        function(mapa) {
+        function(
+            mapa
+        ) {
 
             const botao =
                 document.createElement(
@@ -1464,7 +1592,8 @@ function criarListaMapasJogo() {
 
 
             imagemMapa.alt =
-                mapa.titulo;
+                mapa.titulo ||
+                mapa.id;
 
 
             const titulo =
@@ -1474,7 +1603,8 @@ function criarListaMapasJogo() {
 
 
             titulo.textContent =
-                mapa.titulo;
+                mapa.titulo ||
+                mapa.id;
 
 
             botao.appendChild(
@@ -1498,29 +1628,6 @@ function criarListaMapasJogo() {
 
                     categoriaSelecionada =
                         null;
-
-
-                    const cards =
-                        listaMapasJogo
-                            .querySelectorAll(
-                                ".card-atlas"
-                            );
-
-
-                    cards.forEach(
-                        function(card) {
-
-                            card.classList.remove(
-                                "selecionado"
-                            );
-
-                        }
-                    );
-
-
-                    botao.classList.add(
-                        "selecionado"
-                    );
 
 
                     if (
@@ -1561,7 +1668,7 @@ function criarListaMapasJogo() {
 
 
     console.log(
-        "🗺️ Mapas disponíveis para:",
+        "🗺️ Mapas do tópico:",
         topicoSelecionado,
         mapasFiltrados.length
     );
@@ -1570,11 +1677,13 @@ function criarListaMapasJogo() {
 
 
 // ======================================================
-// 24. ESCOLHER MODO
+// 25. ESCOLHER MODO
 // ======================================================
 
 botoesModo.forEach(
-    function(botao) {
+    function(
+        botao
+    ) {
 
         botao.addEventListener(
             "click",
@@ -1586,6 +1695,15 @@ botoesModo.forEach(
 
 
                 if (
+                    !modo
+                ) {
+
+                    return;
+
+                }
+
+
+                if (
                     !topicoSelecionado
                 ) {
 
@@ -1593,73 +1711,68 @@ botoesModo.forEach(
                         "Escolha um tópico primeiro."
                     );
 
+
                     return;
 
                 }
 
 
-                const categoriasDoTopico =
-                    CATEGORIAS_POR_TOPICO[
-                        topicoSelecionado
-                    ] || [];
-
-
                 // ======================================
-                // ESTUDO POR ESTRUTURAS
-                // COM CATEGORIAS
-                //
-                // Exemplo:
-                // Telencéfalo → Giros
+                // ESTUDO POR ESTRUTURA
                 // ======================================
 
                 if (
                     tipoEstudoSelecionado ===
-                    "categoria" &&
-                    categoriasDoTopico.length >
-                    0
+                    "categoria"
                 ) {
 
+                    const categoriasDoTopico =
+                        CATEGORIAS_POR_TOPICO[
+                            topicoSelecionado
+                        ] || [];
+
+
+                    // ==============================
+                    // TÓPICO COM SUBCATEGORIAS
+                    // ==============================
+
                     if (
-                        !categoriaSelecionada
+                        categoriasDoTopico.length >
+                        0
                     ) {
 
-                        alert(
-                            "Escolha uma categoria."
-                        );
+                        if (
+                            !categoriaSelecionada
+                        ) {
+
+                            alert(
+                                "Escolha uma categoria."
+                            );
+
+
+                            return;
+
+                        }
+
+
+                        window.location.href =
+                            `jogo.html?tipo=categoria&categoria=${encodeURIComponent(
+                                categoriaSelecionada
+                            )}&topico=${encodeURIComponent(
+                                topicoSelecionado
+                            )}&modo=${encodeURIComponent(
+                                modo
+                            )}`;
+
 
                         return;
 
                     }
 
 
-                    window.location.href =
-                        `jogo.html?tipo=categoria&categoria=${encodeURIComponent(
-                            categoriaSelecionada
-                        )}&topico=${encodeURIComponent(
-                            topicoSelecionado
-                        )}&modo=${encodeURIComponent(
-                            modo
-                        )}`;
-
-
-                    return;
-
-                }
-
-
-                // ======================================
-                // TÓPICO SEM SUBCATEGORIAS
-                //
-                // Exemplo:
-                // Diencéfalo → mapa diretamente
-                // ======================================
-
-                if (
-                    tipoEstudoSelecionado ===
-                    "categoria" &&
-                    categoriasDoTopico.length ===
-                    0
-                ) {
+                    // ==============================
+                    // SEM SUBCATEGORIAS
+                    // ==============================
 
                     if (
                         !mapaSelecionado
@@ -1668,6 +1781,7 @@ botoesModo.forEach(
                         alert(
                             "Escolha um mapa."
                         );
+
 
                         return;
 
@@ -1690,7 +1804,7 @@ botoesModo.forEach(
 
 
                 // ======================================
-                // POR MAPA
+                // ESTUDO POR MAPA
                 // ======================================
 
                 if (
@@ -1706,6 +1820,7 @@ botoesModo.forEach(
                             "Escolha um mapa."
                         );
 
+
                         return;
 
                     }
@@ -1715,6 +1830,30 @@ botoesModo.forEach(
                         `jogo.html?tipo=mapa&mapa=${encodeURIComponent(
                             mapaSelecionado
                         )}&topico=${encodeURIComponent(
+                            topicoSelecionado
+                        )}&modo=${encodeURIComponent(
+                            modo
+                        )}`;
+
+
+                    return;
+
+                }
+
+
+                // ======================================
+                // ESTUDO POR TÓPICO
+                //
+                // TODAS AS ESTRUTURAS DO TÓPICO
+                // ======================================
+
+                if (
+                    tipoEstudoSelecionado ===
+                    "topico"
+                ) {
+
+                    window.location.href =
+                        `jogo.html?tipo=topico&topico=${encodeURIComponent(
                             topicoSelecionado
                         )}&modo=${encodeURIComponent(
                             modo
@@ -1736,8 +1875,9 @@ botoesModo.forEach(
     }
 );
 
+
 // ======================================================
-// 25. VOLTAR — CATEGORIA
+// 26. VOLTAR — CATEGORIA
 // ======================================================
 
 if (
@@ -1762,11 +1902,11 @@ if (
             }
 
 
-            topicoSelecionado =
+            categoriaSelecionada =
                 null;
 
 
-            categoriaSelecionada =
+            topicoSelecionado =
                 null;
 
 
@@ -1779,7 +1919,7 @@ if (
 
 
 // ======================================================
-// 26. VOLTAR — MAPA
+// 27. VOLTAR — MAPA
 // ======================================================
 
 if (
@@ -1821,7 +1961,7 @@ if (
 
 
 // ======================================================
-// 27. VOLTAR DA ESCOLHA CLICAR / DIGITAR
+// 28. VOLTAR DA ESCOLHA CLICAR / DIGITAR
 // ======================================================
 
 if (
@@ -1833,7 +1973,6 @@ if (
 
         function() {
 
-            // Esconder menu de modos
             if (
                 menuModos
             ) {
@@ -1848,7 +1987,28 @@ if (
 
 
             // ==========================================
-            // ESTUDO POR ESTRUTURAS
+            // POR TÓPICO
+            // ==========================================
+
+            if (
+                tipoEstudoSelecionado ===
+                "topico"
+            ) {
+
+                topicoSelecionado =
+                    null;
+
+
+                mostrarMenuTopicos();
+
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // POR ESTRUTURA
             // ==========================================
 
             if (
@@ -1861,13 +2021,6 @@ if (
                         topicoSelecionado
                     ] || [];
 
-
-                // ======================================
-                // TÓPICO COM SUBCATEGORIAS
-                //
-                // Exemplo:
-                // Telencéfalo
-                // ======================================
 
                 if (
                     categoriasDoTopico.length >
@@ -1893,36 +2046,28 @@ if (
 
                     }
 
+
+                    return;
+
                 }
 
 
-                // ======================================
-                // TÓPICO SEM SUBCATEGORIAS
-                //
-                // Exemplo:
-                // Diencéfalo
-                // ======================================
-
-                else {
-
-                    mapaSelecionado =
-                        null;
+                mapaSelecionado =
+                    null;
 
 
-                    criarListaMapasJogo();
+                criarListaMapasJogo();
 
 
-                    if (
-                        menuMapas
-                    ) {
+                if (
+                    menuMapas
+                ) {
 
-                        menuMapas
-                            .classList
-                            .add(
-                                "visivel"
-                            );
-
-                    }
+                    menuMapas
+                        .classList
+                        .add(
+                            "visivel"
+                        );
 
                 }
 
@@ -1933,7 +2078,7 @@ if (
 
 
             // ==========================================
-            // ESTUDO POR MAPA
+            // POR MAPA
             // ==========================================
 
             if (
@@ -1966,8 +2111,10 @@ if (
     );
 
 }
+
+
 // ======================================================
-// 28. CRIAR SELEÇÃO DE TÓPICOS DA PROVA
+// 29. CRIAR SELEÇÃO DOS TÓPICOS DA PROVA
 // ======================================================
 
 function criarSelecaoTopicosProva() {
@@ -2079,7 +2226,9 @@ function criarSelecaoTopicosProva() {
 
 
     topicos.forEach(
-        function(topico) {
+        function(
+            topico
+        ) {
 
             const label =
                 document.createElement(
@@ -2174,7 +2323,7 @@ function criarSelecaoTopicosProva() {
 
 
 // ======================================================
-// 29. ABRIR MODO PROVA
+// 30. ABRIR MODO PROVA
 // ======================================================
 
 if (
@@ -2236,7 +2385,7 @@ if (
 
 
 // ======================================================
-// 30. VOLTAR DO MODO PROVA
+// 31. VOLTAR DA PROVA
 // ======================================================
 
 if (
@@ -2257,7 +2406,7 @@ if (
 
 
 // ======================================================
-// 31. INICIAR PROVA
+// 32. INICIAR PROVA
 // ======================================================
 
 if (
@@ -2277,12 +2426,16 @@ if (
 
             const modo =
                 modoRespostaProva.value;
+
+
             const tempo =
-    tempoQuestaoProva
-        ? parseInt(
-            tempoQuestaoProva.value
-        ) || 0
-        : 0;
+                tempoQuestaoProva
+
+                    ? parseInt(
+                        tempoQuestaoProva.value
+                    ) || 0
+
+                    : 0;
 
 
             if (
@@ -2309,13 +2462,16 @@ if (
             const topicosSelecionados =
                 Array.from(
                     checkboxes
-                ).map(
-                    function(checkbox) {
+                )
+                    .map(
+                        function(
+                            checkbox
+                        ) {
 
-                        return checkbox.value;
+                            return checkbox.value;
 
-                    }
-                );
+                        }
+                    );
 
 
             if (
@@ -2332,10 +2488,6 @@ if (
 
             }
 
-
-            // ==================================================
-            // MÍNIMO DE 1 QUESTÃO PARA CADA TÓPICO
-            // ==================================================
 
             if (
                 quantidade <
@@ -2358,35 +2510,12 @@ if (
                 );
 
 
-            console.log(
-                "📝 Iniciando prova"
-            );
-
-
-            console.log(
-                "Quantidade:",
-                quantidade
-            );
-
-
-            console.log(
-                "Modo:",
-                modo
-            );
-
-
-            console.log(
-                "Tópicos:",
-                topicosSelecionados
-            );
-
-
-window.location.href =
-    `prova.html?quantidade=${quantidade}&modo=${encodeURIComponent(
-        modo
-    )}&topicos=${encodeURIComponent(
-        topicosURL
-    )}&tempo=${tempo}`;
+            window.location.href =
+                `prova.html?quantidade=${quantidade}&modo=${encodeURIComponent(
+                    modo
+                )}&topicos=${encodeURIComponent(
+                    topicosURL
+                )}&tempo=${tempo}`;
 
         }
     );
@@ -2395,7 +2524,7 @@ window.location.href =
 
 
 // ======================================================
-// 32. INICIAR MENU
+// 33. INICIAR MENU
 // ======================================================
 
 criarBotoesTopicos();
