@@ -7,8 +7,9 @@
 // - ESTUDO POR MAPA
 // - ESTUDO POR TÓPICO
 // - MAPAS MISTOS
+// - IDs ANTIGOS
+// - IDs NOVOS HIERÁRQUICOS
 // - TROCA AUTOMÁTICA DE IMAGENS
-// - REUTILIZAÇÃO DA MESMA IMAGEM ENTRE QUESTÕES
 // ======================================================
 
 
@@ -102,7 +103,7 @@ const NOMES_TOPICOS_NEUROGAME = {
 
 
 // ======================================================
-// 4. DESCOBRIR TÓPICO DO MAPA
+// 4. TÓPICO CADASTRADO NO MAPA
 // ======================================================
 
 function obterTopicoMapa(
@@ -158,6 +159,18 @@ function obterTopicoMapa(
 
 // ======================================================
 // 5. DESCOBRIR CATEGORIA DA ESTRUTURA
+//
+// IMPORTANTE:
+//
+// Compatível com IDs ANTIGOS:
+//
+// sulco_central
+// giro_precentral
+//
+// E IDs NOVOS:
+//
+// telencefalo_sulco_central
+// ponte_sulco_bulbopontino
 // ======================================================
 
 function obterCategoria(
@@ -180,13 +193,12 @@ function obterCategoria(
 
 
     // ==================================================
-    // TELENCÉFALO
+    // GIROS
     // ==================================================
 
     if (
-        id.startsWith(
-            "giro_"
-        )
+        id.startsWith("giro_") ||
+        id.includes("_giro_")
     ) {
 
         return "giro";
@@ -194,21 +206,13 @@ function obterCategoria(
     }
 
 
-    if (
-        id.startsWith(
-            "nucleosdabase_"
-        )
-    ) {
-
-        return "nucleosdabase";
-
-    }
-
+    // ==================================================
+    // SULCOS
+    // ==================================================
 
     if (
-        id.startsWith(
-            "sulco_"
-        )
+        id.startsWith("sulco_") ||
+        id.includes("_sulco_")
     ) {
 
         return "sulco";
@@ -216,25 +220,15 @@ function obterCategoria(
     }
 
 
-    if (
-        id.startsWith(
-            "trans_"
-        )
-    ) {
-
-        return "trans";
-
-    }
-
+    // ==================================================
+    // LOBOS / LÓBULOS
+    // ==================================================
 
     if (
-        id.startsWith(
-            "lobo_"
-        ) ||
-
-        id.startsWith(
-            "lobulo_"
-        )
+        id.startsWith("lobo_") ||
+        id.startsWith("lobulo_") ||
+        id.includes("_lobo_") ||
+        id.includes("_lobulo_")
     ) {
 
         return "lobo";
@@ -243,13 +237,45 @@ function obterCategoria(
 
 
     // ==================================================
-    // DIENCÉFALO
+    // NÚCLEOS DA BASE
     // ==================================================
 
     if (
         id.startsWith(
-            "talamo_"
+            "nucleosdabase_"
+        ) ||
+
+        id.includes(
+            "_nucleosdabase_"
         )
+    ) {
+
+        return "nucleosdabase";
+
+    }
+
+
+    // ==================================================
+    // TRANSVERSAIS
+    // ==================================================
+
+    if (
+        id.startsWith("trans_") ||
+        id.includes("_trans_")
+    ) {
+
+        return "trans";
+
+    }
+
+
+    // ==================================================
+    // TÁLAMO
+    // ==================================================
+
+    if (
+        id.startsWith("talamo_") ||
+        id.includes("_talamo_")
     ) {
 
         return "talamo";
@@ -257,9 +283,17 @@ function obterCategoria(
     }
 
 
+    // ==================================================
+    // HIPOTÁLAMO
+    // ==================================================
+
     if (
         id.startsWith(
             "hipotalamo_"
+        ) ||
+
+        id.includes(
+            "_hipotalamo_"
         )
     ) {
 
@@ -268,9 +302,17 @@ function obterCategoria(
     }
 
 
+    // ==================================================
+    // EPITÁLAMO
+    // ==================================================
+
     if (
         id.startsWith(
             "epitalamo_"
+        ) ||
+
+        id.includes(
+            "_epitalamo_"
         )
     ) {
 
@@ -279,15 +321,36 @@ function obterCategoria(
     }
 
 
+    // ==================================================
+    // SUBTÁLAMO
+    // ==================================================
+
     if (
         id.startsWith(
             "subtalamo_"
+        ) ||
+
+        id.includes(
+            "_subtalamo_"
         )
     ) {
 
         return "subtalamo";
 
     }
+
+    // =================================================
+    // Segmentos
+    // =================================================
+
+    if (
+    id.startsWith("cerebelo_segmentos_") ||
+    id.includes("_segmentos_")
+) {
+
+    return "segmentos";
+
+}
 
 
     return "outros";
@@ -297,6 +360,11 @@ function obterCategoria(
 
 // ======================================================
 // 6. DESCOBRIR TÓPICO DA ESTRUTURA
+//
+// A ORDEM É IMPORTANTE.
+//
+// Primeiro verificamos os novos prefixos específicos.
+// Depois mantemos os prefixos antigos do Telencéfalo.
 // ======================================================
 
 function obterTopicoEstrutura(
@@ -319,7 +387,141 @@ function obterTopicoEstrutura(
 
 
     // ==================================================
-    // TELENCÉFALO
+    // TRONCO ENCEFÁLICO
+    //
+    // Exemplos:
+    //
+    // tronco_sulco_x
+    // mesencefalo_coliculo_superior
+    // ponte_sulco_bulbopontino
+    // bulbo_piramide
+    // ==================================================
+
+    if (
+        id.startsWith(
+            "tronco_"
+        ) ||
+
+        id.startsWith(
+            "mesencefalo_"
+        ) ||
+
+        id.startsWith(
+            "ponte_"
+        ) ||
+
+        id.startsWith(
+            "bulbo_"
+        )
+    ) {
+
+        return "tronco";
+
+    }
+
+
+    // ==================================================
+    // CEREBELO
+    // ==================================================
+
+    if (
+        id.startsWith(
+            "cerebelo_"
+        )
+    ) {
+
+        return "cerebelo";
+
+    }
+
+
+    // ==================================================
+    // MEDULA
+    // ==================================================
+
+    if (
+        id.startsWith(
+            "medula_"
+        )
+    ) {
+
+        return "medula";
+
+    }
+
+
+    // ==================================================
+    // VASCULARIZAÇÃO
+    // ==================================================
+
+    if (
+        id.startsWith(
+            "vascularizacao_"
+        ) ||
+
+        id.startsWith(
+            "arteria_"
+        )
+    ) {
+
+        return "vascularizacao";
+
+    }
+
+
+    // ==================================================
+    // DIENCÉFALO — NOVO E ANTIGO
+    // ==================================================
+
+    if (
+        id.startsWith(
+            "diencefalo_"
+        ) ||
+
+        id.startsWith(
+            "talamo_"
+        ) ||
+
+        id.startsWith(
+            "hipotalamo_"
+        ) ||
+
+        id.startsWith(
+            "epitalamo_"
+        ) ||
+
+        id.startsWith(
+            "subtalamo_"
+        )
+    ) {
+
+        return "diencefalo";
+
+    }
+
+
+    // ==================================================
+    // TELENCÉFALO — NOVO
+    // ==================================================
+
+    if (
+        id.startsWith(
+            "telencefalo_"
+        )
+    ) {
+
+        return "telencefalo";
+
+    }
+
+
+    // ==================================================
+    // TELENCÉFALO — IDs ANTIGOS
+    //
+    // NÃO REMOVER.
+    //
+    // Isso mantém todos os mapas que você já criou
+    // funcionando normalmente.
     // ==================================================
 
     if (
@@ -354,39 +556,10 @@ function obterTopicoEstrutura(
 
 
     // ==================================================
-    // DIENCÉFALO
+    // SEM PREFIXO RECONHECIDO
+    //
+    // Será utilizado mapa.topico como fallback.
     // ==================================================
-
-    if (
-        id.startsWith(
-            "talamo_"
-        ) ||
-
-        id.startsWith(
-            "hipotalamo_"
-        ) ||
-
-        id.startsWith(
-            "epitalamo_"
-        ) ||
-
-        id.startsWith(
-            "subtalamo_"
-        )
-    ) {
-
-        return "diencefalo";
-
-    }
-
-
-    /*
-        Para estruturas que ainda não usam
-        prefixos específicos, retornamos null.
-
-        Depois usamos o tópico do mapa
-        como fallback.
-    */
 
     return null;
 
@@ -394,10 +567,12 @@ function obterTopicoEstrutura(
 
 
 // ======================================================
-// 7. TÓPICO REAL DE UMA ESTRUTURA
+// 7. TÓPICO REAL DA ESTRUTURA
 //
-// Primeiro tenta pela estrutura.
-// Se não conseguir, usa o tópico do mapa.
+// Prioridade:
+//
+// 1. Prefixo da estrutura
+// 2. topico cadastrado no mapa
 // ======================================================
 
 function obterTopicoRealEstrutura(
@@ -428,7 +603,7 @@ function obterTopicoRealEstrutura(
 
 
 // ======================================================
-// 8. VERIFICAR SE MAPA POSSUI O TÓPICO
+// 8. VERIFICAR SE MAPA PERTENCE AO TÓPICO
 // ======================================================
 
 function mapaPertenceAoTopico(
@@ -496,7 +671,7 @@ function mapaPertenceAoTopico(
 
 
 // ======================================================
-// 9. ESTRUTURAS DO MAPA
+// 9. PEGAR ESTRUTURAS DO MAPA
 // ======================================================
 
 function obterEstruturasDoMapa(
@@ -516,9 +691,18 @@ function obterEstruturasDoMapa(
 
 
     // ==================================================
-    // MODO TÓPICO
+    // ESTUDO POR TÓPICO
     //
-    // PEGA SOMENTE AS ESTRUTURAS DO TÓPICO
+    // Exemplo:
+    //
+    // topico=tronco
+    //
+    // pega:
+    //
+    // mesencefalo_...
+    // ponte_...
+    // bulbo_...
+    // tronco_...
     // ==================================================
 
     if (
@@ -550,7 +734,7 @@ function obterEstruturasDoMapa(
 
 
     // ==================================================
-    // MODO MAPA
+    // ESTUDO POR MAPA
     // ==================================================
 
     if (
@@ -600,7 +784,7 @@ function obterEstruturasDoMapa(
 
 
     // ==================================================
-    // MODO CATEGORIA
+    // ESTUDO POR CATEGORIA
     // ==================================================
 
     if (
@@ -801,15 +985,22 @@ else if (
 // ======================================================
 // 13. MODO — TÓPICO
 //
-// NOVO MODO.
+// PERCORRE TODOS OS MAPAS.
 //
 // Exemplo:
 //
-// tipo=topico
-// topico=diencefalo
+// topico=telencefalo
 //
-// Percorre TODOS os mapas e adiciona TODAS
-// as estruturas pertencentes ao Diencéfalo.
+// → todos os giros
+// → todos os sulcos
+// → lobos
+// → núcleos da base
+//
+// topico=tronco
+//
+// → mesencéfalo
+// → ponte
+// → bulbo
 // ======================================================
 
 else if (
@@ -868,9 +1059,6 @@ else if (
 
 // ======================================================
 // 14. REMOVER QUESTÕES DUPLICADAS
-//
-// Evita a mesma estrutura do mesmo mapa
-// entrar duas vezes.
 // ======================================================
 
 function removerQuestoesDuplicadas(
@@ -985,9 +1173,6 @@ const totalQuestoesInicial =
 
 // ======================================================
 // 17. MAPA ANTERIOR
-//
-// Usado para evitar repetir a mesma imagem
-// consecutivamente quando existem alternativas.
 // ======================================================
 
 let mapaAnterior =
@@ -1011,9 +1196,7 @@ function obterProximaQuestao() {
 
 
     // ==================================================
-    // MODO MAPA
-    //
-    // Só existe uma imagem.
+    // POR MAPA
     // ==================================================
 
     if (
@@ -1037,7 +1220,8 @@ function obterProximaQuestao() {
     // ==================================================
     // CATEGORIA OU TÓPICO
     //
-    // Tenta variar a imagem entre perguntas.
+    // Evita repetir a mesma imagem seguidamente
+    // quando possível.
     // ==================================================
 
     let indice =
@@ -1205,7 +1389,7 @@ function criarHotspots(
 
 
             // ==================================================
-            // HITBOX PARA LINHAS
+            // HITBOX INVISÍVEL PARA LINHAS
             // ==================================================
 
             if (
@@ -1602,7 +1786,7 @@ window.NeuroGame =
 
 
 // ======================================================
-// TIPO
+// TIPO DE ESTUDO
 // ======================================================
 
 if (
@@ -1648,8 +1832,6 @@ if (
 
 // ======================================================
 // TÓPICO
-//
-// Categoria e o novo modo tópico exigem tópico.
 // ======================================================
 
 if (
@@ -1936,7 +2118,7 @@ console.log(
 
 
 // ======================================================
-// 25. INICIAR
+// 25. INICIAR MODO
 // ======================================================
 
 if (

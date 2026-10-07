@@ -607,6 +607,45 @@ else {
 }
 
 
+// ======================================================
+// CEREBELO SAGITAL MEDIANO
+// ======================================================
+
+if (
+    typeof mapaCerebeloSagitalMediano !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "cerebelo-sagital-mediano",
+
+            topico:
+                "cerebelo",
+
+            titulo:
+                "Cerebelo — Sagital Mediano",
+
+            imagem:
+                "imagens/CerebeloSagitalMediano.webp",
+
+            estruturas:
+                mapaCerebeloSagitalMediano
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCerebeloSagitalMediano não foi carregado."
+    );
+
+}
 
 
 // ======================================================

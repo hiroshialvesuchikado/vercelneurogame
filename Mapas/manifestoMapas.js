@@ -436,4 +436,34 @@ window.definicoesMapas = [
         },
 
 
+
+                // ==================================================
+    // CEREBELO - SAGITAL MEDIANO
+    // ==================================================
+
+            {
+
+            id:
+                "cerebelo-sagital-mediano",
+
+                        topico:
+            "cerebelo",
+
+            titulo:
+                "Cerebelo — Sagital Mediano",
+
+            imagem:
+                "imagens/CerebeloSagitalMediano.webp",
+            
+            arquivo:
+                "Mapas/mapaCerebeloSagitalMediano.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaCerebeloSagitalMediano;
+            }
+
+        },
+
 ];

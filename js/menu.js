@@ -84,7 +84,16 @@ const CATEGORIAS_POR_TOPICO = {
                 "🧠 Núcleos da Base e Regiões Capsulares"
         }
 
-    ]
+    ],
+cerebelo: [
+
+    {
+        id: "segmentos",
+        nome: "🧠 Segmentos"
+    }
+
+]
+    
 
 };
 
