@@ -437,7 +437,7 @@ window.definicoesMapas = [
 
 
 
-                // ==================================================
+    // ==================================================
     // CEREBELO - SAGITAL MEDIANO
     // ==================================================
 
@@ -462,6 +462,34 @@ window.definicoesMapas = [
             function() {
 
                 return mapaCerebeloSagitalMediano;
+            }
+
+        },
+            // ==================================================
+    // CEREBELO - SAGITAL MEDIANO FISSURAS
+    // ==================================================
+
+            {
+
+            id:
+                "cerebelo-sagital-mediano-fissuras",
+
+            topico:
+            "cerebelo",
+
+            titulo:
+                "Cerebelo — Fissuras Sagital Mediano",
+
+            imagem:
+                "imagens/CerebeloSagitalMediano.webp",
+            
+            arquivo:
+                "Mapas/mapaCerebeloFissuraAtlas.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaCerebeloFissuraAtlas;
             }
 
         },

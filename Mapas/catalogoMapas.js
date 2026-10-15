@@ -648,6 +648,47 @@ else {
 }
 
 
+
+// ======================================================
+// CEREBELO SAGITAL MEDIANO FISSURAS
+// ======================================================
+
+if (
+    typeof mapaCerebeloFissuraAtlas !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "cerebelo-sagital-mediano-fissuras",
+
+            topico:
+                "cerebelo",
+
+            titulo:
+                "Cerebelo — Fissuras Sagital Mediano",
+
+            imagem:
+                "imagens/CerebeloSagitalMediano.webp",
+
+            estruturas:
+                mapaCerebeloFissuraAtlas
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCerebeloFissuraAtlas não foi carregado."
+    );
+
+}
+
 // ======================================================
 // VERIFICAÇÃO FINAL
 // ======================================================
