@@ -690,6 +690,168 @@ else {
 }
 
 // ======================================================
+// CEREBELO vista Inferior
+// ======================================================
+
+if (
+    typeof mapaCerebeloVistaInferior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "cerebelo-vista-inferior",
+
+            topico:
+                "cerebelo",
+
+            titulo:
+                "Cerebelo — Vista Inferior",
+
+            imagem:
+                "imagens/CerebeloVistaInferior.webp",
+
+            estruturas:
+                mapaCerebeloVistaInferior
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCerebeloVistaInferior não foi carregado."
+    );
+
+}
+
+// ======================================================
+// CEREBELO vista Sup
+// ======================================================
+
+if (
+    typeof mapaCerebeloVistaSuperior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "cerebelo-vista-superior",
+
+            topico:
+                "cerebelo",
+
+            titulo:
+                "Cerebelo — Vista Superior",
+
+            imagem:
+                "imagens/CerebeloVistaSuperior.webp",
+
+            estruturas:
+                mapaCerebeloVistaSuperior
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCerebeloVistaSuperior não foi carregado."
+    );
+
+}
+
+
+
+// ======================================================
+// CEREBELO vista Sup
+// ======================================================
+
+if (
+    typeof mapaCerebeloVistaSuperior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "cerebelo-vista-anterior",
+
+            topico:
+                "cerebelo",
+
+            titulo:
+                "Cerebelo — Vista Anterior",
+
+            imagem:
+                "imagens/CerebeloVistaAnterior.webp",
+
+            estruturas:
+                mapaCerebeloVistaAnterior
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCerebeloVistaAnterior não foi carregado."
+    );
+
+}
+
+// ======================================================
+// CEREBELO Plano Transversal
+// ======================================================
+
+if (
+    typeof mapaCerebeloPlanoTransversal !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "cerebelo-plano-transversal",
+
+            topico:
+                "cerebelo",
+
+            titulo:
+                "Cerebelo — Plano Transversal",
+
+            imagem:
+                "imagens/CerebeloPlanoTransversal.webp",
+
+            estruturas:
+                mapaCerebeloPlanoTransversal
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaCerebeloPlanoTransversal não foi carregado."
+    );
+
+}
+
+// ======================================================
 // VERIFICAÇÃO FINAL
 // ======================================================
 

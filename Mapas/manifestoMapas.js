@@ -494,4 +494,123 @@ window.definicoesMapas = [
 
         },
 
+                 // ==================================================
+    // CEREBELO - Vista Inferior
+    // ==================================================
+
+            {
+
+            id:
+                "cerebelo-vista-inferior",
+
+            topico:
+            "cerebelo",
+
+            titulo:
+                "Cerebelo — Vista Inferior",
+
+            imagem:
+                "imagens/CerebeloVistaInferior.webp",
+            
+            arquivo:
+                "Mapas/mapaCerebeloVistaInferior.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaCerebeloVistaInferior;
+            }
+
+        },
+
+
+                      // ==================================================
+    // CEREBELO - Vista Superior
+    // ==================================================
+
+            {
+
+            id:
+                "cerebelo-vista-superior",
+
+            topico:
+            "cerebelo",
+
+            titulo:
+                "Cerebelo — Vista Superior",
+
+            imagem:
+                "imagens/CerebeloVistaSuperior.webp",
+            
+            arquivo:
+                "Mapas/mapaCerebeloVistaSuperior.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaCerebeloVistaSuperior;
+            }
+
+        },
+
+
+                              // ==================================================
+    // CEREBELO - Vista Anterior
+    // ==================================================
+
+            {
+
+            id:
+                "cerebelo-vista-anterior",
+
+            topico:
+            "cerebelo",
+
+            titulo:
+                "Cerebelo — Vista Anterior",
+
+            imagem:
+                "imagens/CerebeloVistaAnterior.webp",
+            
+            arquivo:
+                "Mapas/mapaCerebeloVistaAnterior.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaCerebeloVistaAnterior;
+            }
+
+        },
+
+
+    // ==================================================
+    // CEREBELO - Plano Transversal
+    // ==================================================
+
+            {
+
+            id:
+                "cerebelo-plano-transversal",
+
+            topico:
+            "cerebelo",
+
+            titulo:
+                "Cerebelo — Plano Transversal",
+
+            imagem:
+                "imagens/CerebeloPlanoTransversal.webp",
+            
+            arquivo:
+                "Mapas/mapaCerebeloPlanoTransversal.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaCerebeloPlanoTransversal;
+            }
+
+        },
+
 ];
