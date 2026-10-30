@@ -972,6 +972,87 @@ else {
 
 }
 
+
+
+// ======================================================
+// Bulbo Vista Posterior
+// ======================================================
+
+if (
+    typeof mapaBulboVistaPosterior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "tronco-bulbo-vista-posterior",
+
+            topico:
+                "tronco",
+
+            titulo:
+                "Bulbo — Vista Posterior",
+
+            imagem:
+                "imagens/BulboVistaPosterior.webp",
+
+            estruturas:
+                mapaBulboVistaPosterior
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaBulboVistaPosterior não foi carregado."
+    );
+
+}
+
+// ======================================================
+// Bulbo Vista Posterior2
+// ======================================================
+
+if (
+    typeof mapaBulboVistaPosterior2 !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "tronco-bulbo-vista-posterior2",
+
+            topico:
+                "tronco",
+
+            titulo:
+                "Bulbo — Vista Posterior 2",
+
+            imagem:
+                "imagens/BulboVistaPosterior.webp",
+
+            estruturas:
+                mapaBulboVistaPosterior2
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaBulboVistaPosterior2 não foi carregado."
+    );
+
+}
 // ======================================================
 // VERIFICAÇÃO FINAL
 // ======================================================

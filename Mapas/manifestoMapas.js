@@ -699,4 +699,62 @@ window.definicoesMapas = [
             }
 
         },
+
+         // ==================================================
+    // Bulbo - Visão Posterior
+    // ==================================================
+
+            {
+
+            id:
+                "tronco-bulbo-vista-posterior",
+
+            topico:
+            "tronco",
+
+            titulo:
+                "Bulbo — Vista Posterior",
+
+            imagem:
+                "imagens/BulboVistaPosterior.webp",
+            
+            arquivo:
+                "Mapas/mapaBulboVistaPosterior.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaBulboVistaPosterior;
+            }
+
+        },
+
+    // ==================================================
+    // Bulbo - Visão Posterior2
+    // ==================================================
+
+            {
+
+            id:
+                "tronco-bulbo-vista-posterior2",
+
+            topico:
+            "tronco",
+
+            titulo:
+                "Bulbo — Vista Posterior 2",
+
+            imagem:
+                "imagens/BulboVistaPosterior.webp",
+            
+            arquivo:
+                "Mapas/mapaBulboVistaPosterior2.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaBulboVistaPosterior2;
+            }
+
+        },
 ];
