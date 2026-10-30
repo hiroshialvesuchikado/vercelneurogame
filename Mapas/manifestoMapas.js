@@ -613,4 +613,61 @@ window.definicoesMapas = [
 
         },
 
+        // ==================================================
+    // Tronco Encefálico - Vista Frontal
+    // ==================================================
+
+            {
+
+            id:
+                "tronco-vista-frontal",
+
+            topico:
+            "tronco",
+
+            titulo:
+                "Tronco — Vista Frontal",
+
+            imagem:
+                "imagens/TroncoVistaFrontal.webp",
+            
+            arquivo:
+                "Mapas/mapaTroncoVistaFrontal.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaTroncoVistaFrontal;
+            }
+
+        },
+
+            // ==================================================
+    // Bulbo - Visão Obliqua Inferior
+    // ==================================================
+
+            {
+
+            id:
+                "bulbo-vista-obliqua-inferior",
+
+            topico:
+            "tronco",
+
+            titulo:
+                "Bulbo — Vista Anterior Obliqua Inferior",
+
+            imagem:
+                "imagens/BulboVisaoObliquaInferior.webp",
+            
+            arquivo:
+                "Mapas/mapaBulboVisaoObliquaInferior.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaBulboVisaoObliquaInferior;
+            }
+
+        },
 ];

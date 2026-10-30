@@ -851,6 +851,88 @@ else {
 
 }
 
+
+// ======================================================
+// TRONCO Plano Transversal
+// ======================================================
+
+if (
+    typeof mapaTroncoVistaFrontal !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "tronco-vista-frontal",
+
+            topico:
+                "tronco",
+
+            titulo:
+                "Tronco — Vista Frontal",
+
+            imagem:
+                "imagens/TroncoVistaFrontal.webp",
+
+            estruturas:
+                mapaTroncoVistaFrontal
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaTroncoVistaFrontal não foi carregado."
+    );
+
+}
+
+// ======================================================
+// TRONCO BULBOVisao Obliqua Inferior 
+// ======================================================
+
+if (
+    typeof mapaBulboVisaoObliquaInferior !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "bulbo-vista-obliqua-inferior",
+
+            topico:
+                "tronco",
+
+            titulo:
+                "Bulbo — Vista Anterior Obliqua Inferior",
+
+            imagem:
+                "imagens/BulboVisaoObliquaInferior.webp",
+
+            estruturas:
+                mapaBulboVisaoObliquaInferior
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaTroncoVistaFrontal não foi carregado."
+    );
+
+}
+
+
 // ======================================================
 // VERIFICAÇÃO FINAL
 // ======================================================
