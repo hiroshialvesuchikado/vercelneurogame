@@ -649,7 +649,7 @@ window.definicoesMapas = [
             {
 
             id:
-                "bulbo-vista-obliqua-inferior",
+                "tronco-bulbo-vista-obliqua-inferior",
 
             topico:
             "tronco",

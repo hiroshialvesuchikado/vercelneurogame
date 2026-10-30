@@ -905,7 +905,7 @@ if (
         {
 
             id:
-                "bulbo-vista-obliqua-inferior",
+                "tronco-bulbo-vista-obliqua-inferior",
 
             topico:
                 "tronco",
@@ -927,7 +927,7 @@ if (
 else {
 
     console.warn(
-        "⚠️ mapaTroncoVistaFrontal não foi carregado."
+        "⚠️ mapaBulboVisaoObliquaInferior não foi carregado."
     );
 
 }
