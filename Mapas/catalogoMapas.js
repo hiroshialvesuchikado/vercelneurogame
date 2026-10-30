@@ -932,6 +932,45 @@ else {
 
 }
 
+// ======================================================
+// TRONCO Vista Antero Lateral
+// ======================================================
+
+if (
+    typeof mapaTroncoVistaAnteroLateral !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "tronco-tronco-vista-antero-lateral",
+
+            topico:
+                "tronco",
+
+            titulo:
+                "Tronco — Fissuras Vista Antero Lateral",
+
+            imagem:
+                "imagens/TroncoVistaAnteroLateral.webp",
+
+            estruturas:
+                mapaTroncoVistaAnteroLateral
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaBulboVisaoObliquaInferior não foi carregado."
+    );
+
+}
 
 // ======================================================
 // VERIFICAÇÃO FINAL

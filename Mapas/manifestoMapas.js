@@ -670,4 +670,33 @@ window.definicoesMapas = [
             }
 
         },
+
+          // ==================================================
+    // Tronco - Visão Antero-Lateral
+    // ==================================================
+
+            {
+
+            id:
+                "tronco-tronco-vista-antero-lateral",
+
+            topico:
+            "tronco",
+
+            titulo:
+                "Tronco — Fissuras Vista Antero Lateral",
+
+            imagem:
+                "imagens/TroncoVistaAnteroLateral.webp",
+            
+            arquivo:
+                "Mapas/mapaTroncoVistaAnteroLateral.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaTroncoVistaAnteroLateral;
+            }
+
+        },
 ];
