@@ -1,4 +1,4 @@
-const mapaCerebeloPanoTransversal = [
+const mapaCerebeloPlanoTransversal = [
 {
     id: "cerebelo_verme_uvula",
     nome: "Úvula do Verme",
