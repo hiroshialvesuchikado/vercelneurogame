@@ -757,4 +757,34 @@ window.definicoesMapas = [
             }
 
         },
+
+
+    // ==================================================
+    // Mesencéfalo - Visão Superior
+    // ==================================================
+
+            {
+
+            id:
+                "tronco-mesencefalo-vista-superior-corte-transversal",
+
+            topico:
+            "tronco",
+
+            titulo:
+                "Mesencefalo — Vista Superior (Corte Transversal)",
+
+            imagem:
+                "imagens/MesencefaloVistaSuperiorCorteTransversal.webp",
+            
+            arquivo:
+                "Mapas/mapaMesencefaloVistaSuperiorCorteTransversal.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaMesencefaloVistaSuperiorCorteTransversal;
+            }
+
+        },
 ];

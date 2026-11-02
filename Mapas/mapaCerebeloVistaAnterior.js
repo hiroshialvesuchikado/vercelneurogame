@@ -15,7 +15,7 @@ mapaCerebeloVistaAnterior = [
 
 {
     id: "cerebelo_lobulo_pedunculo",
-    nome: "Pedúnculo do Cerebelo",
+    nome: "Pedúnculo Cerebelar Médio",
     tipo: "area",
     pontos: "1425,1720 1271,1825 1103,1920 936,2060 881,2151 963,2237 1067,2283 1249,2328 1385,2328 1407,2292 1471,2215 1548,2047 1548,1947 1566,1820 1561,1716 1498,1689"
 },

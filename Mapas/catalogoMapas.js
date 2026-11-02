@@ -1053,6 +1053,47 @@ else {
     );
 
 }
+
+// ======================================================
+// Mesencefalo Vista Superior
+// ======================================================
+
+if (
+    typeof mapaMensencefaloVistaSuperiorCorteTransversal !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "tronco-mesencefalo-vista-superior-corte-transversal",
+
+            topico:
+                "tronco",
+
+            titulo:
+                "Mesencefalo — Vista Superior (Corte Transversal)",
+
+            imagem:
+                "imagens/MesencefaloVistaSuperiorCorteTransversal.webp",
+
+            estruturas:
+                mapaMesencefaloVistaSuperiorCorteTransversal
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaBulboVistaPosterior2 não foi carregado."
+    );
+
+}
+
 // ======================================================
 // VERIFICAÇÃO FINAL
 // ======================================================
