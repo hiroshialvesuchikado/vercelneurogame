@@ -1094,6 +1094,47 @@ else {
 
 }
 
+
+
+// ======================================================
+// Núcleo da Rafe
+// ======================================================
+
+if (
+    typeof mapaNucleoDaRafe !==
+    "undefined"
+) {
+
+    registrarMapa(
+        {
+
+            id:
+                "tronco-nucleo-da-rafe",
+
+            topico:
+                "tronco",
+
+            titulo:
+                "Núcleo da Rafe",
+
+            imagem:
+                "imagens/NucleoDaRafe.webp",
+
+            estruturas:
+                mapaNucleoDaRafe
+
+        }
+    );
+
+}
+
+else {
+
+    console.warn(
+        "⚠️ mapaBulboVistaPosterior2 não foi carregado."
+    );
+
+}
 // ======================================================
 // VERIFICAÇÃO FINAL
 // ======================================================

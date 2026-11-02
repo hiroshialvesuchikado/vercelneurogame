@@ -787,4 +787,33 @@ window.definicoesMapas = [
             }
 
         },
+
+    // ==================================================
+    // Núcleo de Rafe - Visão Superior
+    // ==================================================
+
+            {
+
+            id:
+                "tronco-nucleo-da-rafe",
+
+            topico:
+            "tronco",
+
+            titulo:
+                "Núcleo da Rafe",
+
+            imagem:
+                "imagens/NucleoDaRafe.webp",
+            
+            arquivo:
+                "Mapas/mapaNucleoDaRafe.js",
+
+                        obterEstruturas:
+            function() {
+
+                return mapaNucleoDaRafe;
+            }
+
+        },
 ];
